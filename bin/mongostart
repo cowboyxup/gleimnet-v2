@@ -1,0 +1,1 @@
+start /b mongod --storageEngine mmapv1 --dbpath data > NUL
