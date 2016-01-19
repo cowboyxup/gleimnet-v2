@@ -1,17 +1,19 @@
 'use strict';
 
 exports.register = function (server, options, next) {
-
+    // static route
     server.route({
         method: 'GET',
-        path: '/',
-        handler: function (request, reply) {
-
-            return reply.view('index');
+        path: '/{param*}',
+        config: {
+            auth: false,
+            handler: {
+                directory: {
+                    path: 'public'
+                }
+            }
         }
     });
-
-
     next();
 };
 
