@@ -10,12 +10,12 @@ const criteria = {
 
 const config = {
     $meta: 'This file configures the plot device.',
-    projectName: 'Gleimnet v2',
+    projectName: 'gleimNet',
     port: {
         web: {
             $filter: 'env',
             test: 9000,
-            $default: 3000
+            $default: 8000
         }
     },
     authAttempts: {
@@ -32,34 +32,34 @@ const config = {
         },
         test: {
             mongodb: {
-                url: 'mongodb://localhost:27017/gleimnet-test'
+                url: 'mongodb://localhost:27017/frame-test'
             },
             autoIndex: true
         },
         $default: {
             mongodb: {
-                url: 'mongodb://localhost:27017/gleimnet'
+                url: 'mongodb://localhost:27017/frame'
             },
             autoIndex: true
         }
     },
     nodemailer: {
-        host: 'localhost',
+        host: 'smtp.gmail.com',
         port: 465,
         secure: true,
         auth: {
-            user: 'test',
-            pass: 'tester'
+            user: 'gleim@gleim.net',
+            pass: ''
         }
     },
     system: {
         fromAddress: {
-            name: 'Gleimnetv2',
-            address: 'test@test.com'
+            name: 'gleimNet',
+            address: 'gleim@gleim.net'
         },
         toAddress: {
-            name: 'Gleimnet',
-            address: 'test@test.com'
+            name: 'gleimNet',
+            address: 'gleim@gleim.net'
         }
     }
 };
