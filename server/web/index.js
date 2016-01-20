@@ -2,6 +2,8 @@
 
 exports.register = function (server, options, next) {
     // static route
+
+
     server.route({
         method: 'GET',
         path: '/{param*}',
@@ -9,12 +11,15 @@ exports.register = function (server, options, next) {
             auth: false,
             handler: {
                 directory: {
-                    path: 'public'
+                    path: ['public', 'node_modules']
                 }
             }
         }
     });
+
     next();
+
+
 };
 
 exports.register.attributes = {

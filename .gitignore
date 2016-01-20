@@ -49,3 +49,10 @@ crashlytics-build.properties
 
 /node_modules/
 
+#typescript
+
+/public/app/app.component.js
+/public/app/app.component.js.map
+
+/public/app/boot.js
+/public/app/boot.js.map
