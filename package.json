@@ -4,8 +4,11 @@
   "description": "A user system API for Node.js",
   "main": "index.js",
   "scripts": {
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "lite": "lite-server",
     "setup": "setup.js",
-    "start": "nodemon -e js,md ./server.js",
+    "start": "concurrent \"npm run tsc:w\" \"nodemon -e js,md ./server.js\" ",
     "test": "lab -c -L",
     "test-cover": "lab -c -r html -o ./test/artifacts/coverage.html && open ./test/artifacts/coverage.html"
   },
@@ -39,13 +42,24 @@
     "slug": "0.9.x",
     "unicode": "^0.6.1",
     "vision": "4.x.x",
-    "visionary": "4.x.x"
+    "visionary": "4.x.x",
+
+    "angular2": "2.0.0-beta.0",
+    "systemjs": "0.19.6",
+    "es6-promise": "^3.0.2",
+    "es6-shim": "^0.33.3",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.0-beta.0",
+    "zone.js": "0.5.10"
   },
   "devDependencies": {
     "code": "2.x.x",
     "lab": "8.x.x",
     "nodemon": "1.x.x",
     "promptly": "0.2.x",
-    "proxyquire": "1.x.x"
+    "proxyquire": "1.x.x",
+
+    "concurrently": "^1.0.0",
+    "typescript": "^1.7.3"
   }
 }
