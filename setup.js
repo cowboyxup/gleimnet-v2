@@ -18,15 +18,9 @@ if (process.env.NODE_ENV === 'test') {
     const source = Fs.readFileSync(configTemplatePath, options);
     const configTemplateTest = Handlebars.compile(source);
     const context = {
-        projectName: 'Frame',
-        mongodbUrl: 'mongodb://localhost:27017/frame',
-        rootEmail: 'root@root',
+        projectName: 'Gleimnet',
+        mongodbUrl: 'mongodb://localhost:27017/gleimnet',
         rootPassword: 'root',
-        systemEmail: 'sys@tem',
-        smtpHost: 'smtp.gmail.com',
-        smtpPort: 465,
-        smtpUsername: '',
-        smtpPassword: ''
     };
     Fs.writeFileSync(configPath, configTemplateTest(context));
     console.log('Setup complete.');
@@ -35,172 +29,67 @@ if (process.env.NODE_ENV === 'test') {
 
 Async.auto({
     projectName: (done) => {
-
-        Promptly.prompt('Project name: (Frame)', { default: 'Frame' }, done);
+        Promptly.prompt('Project name: (Gleimnet)', { default: 'Gleimnet' }, done);
     },
     mongodbUrl: ['projectName', (done, results) => {
-
         const promptOptions = {
-            default: 'mongodb://localhost:27017/frame'
+            default: 'mongodb://localhost:27017/gleimnet'
         };
-
-        Promptly.prompt('MongoDB URL: (mongodb://localhost:27017/frame)', promptOptions, done);
+        Promptly.prompt('MongoDB URL: (mongodb://localhost:27017/gleimnet)', promptOptions, done);
     }],
     testMongo: ['rootPassword', (done, results) => {
-
         Mongodb.MongoClient.connect(results.mongodbUrl, {}, (err, db) => {
-
             if (err) {
                 console.error('Failed to connect to Mongodb.');
                 return done(err);
             }
-
             db.close();
             done(null, true);
         });
     }],
-    rootEmail: ['mongodbUrl', (done, results) => {
-
-        Promptly.prompt('Root user email:', done);
-    }],
-    rootPassword: ['rootEmail', (done, results) => {
-
+    rootPassword: ['mongodbUrl', (done, results) => {
         Promptly.password('Root user password:', { default: null }, done);
     }],
-    systemEmail: ['rootPassword', (done, results) => {
-
-        const promptOptions = {
-            default: results.rootEmail
-        };
-
-        Promptly.prompt('System email: (' + results.rootEmail + ')', promptOptions, done);
-    }],
-    smtpHost: ['systemEmail', (done, results) => {
-
-        Promptly.prompt('SMTP host: (smtp.gmail.com)', { default: 'smtp.gmail.com' }, done);
-    }],
-    smtpPort: ['smtpHost', (done, results) => {
-
-        Promptly.prompt('SMTP port: (465)', { default: 465 }, done);
-    }],
-    smtpUsername: ['smtpPort', (done, results) => {
-
-        const promptOptions = {
-            default: results.systemEmail
-        };
-
-        Promptly.prompt('SMTP username: (' + results.systemEmail + ')', promptOptions, done);
-    }],
-    smtpPassword: ['smtpUsername', (done, results) => {
-
-        Promptly.password('SMTP password:', done);
-    }],
-    createConfig: ['smtpPassword', (done, results) => {
-
+    createConfig: ['testMongo', (done, results) => {
         const fsOptions = { encoding: 'utf-8' };
-
         Fs.readFile(configTemplatePath, fsOptions, (err, src) => {
-
             if (err) {
                 console.error('Failed to read config template.');
                 return done(err);
             }
-
             const configTemplate = Handlebars.compile(src);
             Fs.writeFile(configPath, configTemplate(results), done);
         });
     }],
     setupRootUser: ['createConfig', (done, results) => {
-
         const BaseModel = require('hapi-mongo-models').BaseModel;
         const User = require('./server/models/user');
-        const Admin = require('./server/models/admin');
-        const AdminGroup = require('./server/models/admin-group');
-
         Async.auto({
             connect: (done) => {
-
                 BaseModel.connect({ url: results.mongodbUrl }, done);
             },
             clean: ['connect', (done) => {
-
                 Async.parallel([
                     User.deleteMany.bind(User, {}),
-                    Admin.deleteMany.bind(Admin, {}),
-                    AdminGroup.deleteMany.bind(AdminGroup, {})
                 ], done);
             }],
-            adminGroup: ['clean', (done) => {
-
-                AdminGroup.create('Root', done);
-            }],
-            admin: ['clean', (done) => {
-
-                Admin.create('Root Admin', done);
-            }],
             user: ['clean', (done, dbResults) => {
-
-                User.create('root', results.rootPassword, results.rootEmail, done);
-            }],
-            adminMembership: ['admin', (done, dbResults) => {
-
-                const id = dbResults.admin._id.toString();
-                const update = {
-                    $set: {
-                        groups: {
-                            root: 'Root'
-                        }
-                    }
-                };
-
-                Admin.findByIdAndUpdate(id, update, done);
-            }],
-            linkUser: ['admin', 'user', (done, dbResults) => {
-
-                const id = dbResults.user._id.toString();
-                const update = {
-                    $set: {
-                        'roles.admin': {
-                            id: dbResults.admin._id.toString(),
-                            name: 'Root Admin'
-                        }
-                    }
-                };
-
-                User.findByIdAndUpdate(id, update, done);
-            }],
-            linkAdmin: ['admin', 'user', (done, dbResults) => {
-
-                const id = dbResults.admin._id.toString();
-                const update = {
-                    $set: {
-                        user: {
-                            id: dbResults.user._id.toString(),
-                            name: 'root'
-                        }
-                    }
-                };
-
-                Admin.findByIdAndUpdate(id, update, done);
+                User.create('root', results.rootPassword, done);
             }]
         }, (err, dbResults) => {
-
             if (err) {
                 console.error('Failed to setup root user.');
                 return done(err);
             }
-
             done(null, true);
         });
     }]
 }, (err, results) => {
-
     if (err) {
         console.error('Setup failed.');
         console.error(err);
         return process.exit(1);
     }
-
     console.log('Setup complete.');
     process.exit(0);
 });

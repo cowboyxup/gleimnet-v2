@@ -9,7 +9,6 @@ const Hapi = require('hapi');
 const HapiAuthBasic = require('hapi-auth-basic');
 const Proxyquire = require('proxyquire');
 const AuthPlugin = require('../../../server/auth');
-const AdminPlugin = require('../../../server/api/admins');
 const AuthenticatedUser = require('../fixtures/credentials-admin');
 
 

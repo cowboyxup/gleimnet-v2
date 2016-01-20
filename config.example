@@ -43,25 +43,6 @@ const config = {
             autoIndex: true
         }
     },
-    nodemailer: {
-        host: '{{smtpHost}}',
-        port: {{smtpPort}},
-        secure: true,
-        auth: {
-            user: '{{smtpUsername}}',
-            pass: '{{smtpPassword}}'
-        }
-    },
-    system: {
-        fromAddress: {
-            name: '{{projectName}}',
-            address: '{{systemEmail}}'
-        },
-        toAddress: {
-            name: '{{projectName}}',
-            address: '{{systemEmail}}'
-        }
-    }
 };
 
 

@@ -12,20 +12,17 @@ internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
 
-
     server.route({
         method: 'GET',
         path: '/users',
         config: {
             auth: {
                 strategy: 'simple',
-                scope: 'admin'
-            },
+        },
             validate: {
                 query: {
                     username: Joi.string().token().lowercase(),
                     isActive: Joi.string(),
-                    role: Joi.string(),
                     fields: Joi.string(),
                     sort: Joi.string().default('_id'),
                     limit: Joi.number().default(20),
@@ -33,11 +30,9 @@ internals.applyRoutes = function (server, next) {
                 }
             },
             pre: [
-                AuthPlugin.preware.ensureAdminGroup('root')
             ]
         },
         handler: function (request, reply) {
-
             const query = {};
             if (request.query.username) {
                 query.username = new RegExp('^.*?' + request.query.username + '.*$', 'i');
@@ -45,76 +40,60 @@ internals.applyRoutes = function (server, next) {
             if (request.query.isActive) {
                 query.isActive = request.query.isActive === 'true';
             }
-            if (request.query.role) {
-                query['roles.' + request.query.role] = { $exists: true };
-            }
             const fields = request.query.fields;
             const sort = request.query.sort;
             const limit = request.query.limit;
             const page = request.query.page;
 
             User.pagedFind(query, fields, sort, limit, page, (err, results) => {
-
                 if (err) {
                     return reply(err);
                 }
-
                 reply(results);
             });
         }
     });
-
 
     server.route({
         method: 'GET',
         path: '/users/{id}',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: 'admin'
+                strategy: 'simple'
             },
             pre: [
-                AuthPlugin.preware.ensureAdminGroup('root')
             ]
         },
         handler: function (request, reply) {
 
             User.findById(request.params.id, (err, user) => {
-
                 if (err) {
                     return reply(err);
                 }
-
                 if (!user) {
                     return reply(Boom.notFound('Document not found.'));
                 }
-
                 reply(user);
             });
         }
     });
-
 
     server.route({
         method: 'GET',
         path: '/users/my',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: ['admin', 'account']
+                strategy: 'simple'
             }
         },
         handler: function (request, reply) {
 
             const id = request.auth.credentials.user._id.toString();
             const fields = User.fieldsAdapter('username email roles');
-
             User.findById(id, fields, (err, user) => {
-
                 if (err) {
                     return reply(err);
                 }
-
                 if (!user) {
                     return reply(Boom.notFound('Document not found. That is strange.'));
                 }
@@ -130,8 +109,7 @@ internals.applyRoutes = function (server, next) {
         path: '/users',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: 'admin'
+                strategy: 'simple'
             },
             validate: {
                 payload: {
@@ -141,46 +119,19 @@ internals.applyRoutes = function (server, next) {
                 }
             },
             pre: [
-                AuthPlugin.preware.ensureAdminGroup('root'),
                 {
                     assign: 'usernameCheck',
                     method: function (request, reply) {
-
                         const conditions = {
                             username: request.payload.username
                         };
-
                         User.findOne(conditions, (err, user) => {
-
                             if (err) {
                                 return reply(err);
                             }
-
                             if (user) {
                                 return reply(Boom.conflict('Username already in use.'));
                             }
-
-                            reply(true);
-                        });
-                    }
-                }, {
-                    assign: 'emailCheck',
-                    method: function (request, reply) {
-
-                        const conditions = {
-                            email: request.payload.email
-                        };
-
-                        User.findOne(conditions, (err, user) => {
-
-                            if (err) {
-                                return reply(err);
-                            }
-
-                            if (user) {
-                                return reply(Boom.conflict('Email already in use.'));
-                            }
-
                             reply(true);
                         });
                     }
@@ -188,17 +139,12 @@ internals.applyRoutes = function (server, next) {
             ]
         },
         handler: function (request, reply) {
-
             const username = request.payload.username;
             const password = request.payload.password;
-            const email = request.payload.email;
-
-            User.create(username, password, email, (err, user) => {
-
+            User.create(username, password, (err, user) => {
                 if (err) {
                     return reply(err);
                 }
-
                 reply(user);
             });
         }
@@ -210,8 +156,7 @@ internals.applyRoutes = function (server, next) {
         path: '/users/{id}',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: 'admin'
+                strategy: 'simple'
             },
             validate: {
                 payload: {
@@ -220,9 +165,7 @@ internals.applyRoutes = function (server, next) {
                     email: Joi.string().email().lowercase().required()
                 }
             },
-            pre: [
-                AuthPlugin.preware.ensureAdminGroup('root'),
-                {
+            pre: [{
                     assign: 'usernameCheck',
                     method: function (request, reply) {
 
@@ -270,7 +213,6 @@ internals.applyRoutes = function (server, next) {
             ]
         },
         handler: function (request, reply) {
-
             const id = request.params.id;
             const update = {
                 $set: {
@@ -279,17 +221,13 @@ internals.applyRoutes = function (server, next) {
                     email: request.payload.email
                 }
             };
-
             User.findByIdAndUpdate(id, update, (err, user) => {
-
                 if (err) {
                     return reply(err);
                 }
-
                 if (!user) {
                     return reply(Boom.notFound('Document not found.'));
                 }
-
                 reply(user);
             });
         }
@@ -301,8 +239,7 @@ internals.applyRoutes = function (server, next) {
         path: '/users/my',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: ['account', 'admin']
+                strategy: 'simple'
             },
             validate: {
                 payload: {
@@ -313,51 +250,40 @@ internals.applyRoutes = function (server, next) {
             pre: [{
                 assign: 'usernameCheck',
                 method: function (request, reply) {
-
                     const conditions = {
                         username: request.payload.username,
                         _id: { $ne: request.auth.credentials.user._id }
                     };
-
                     User.findOne(conditions, (err, user) => {
-
                         if (err) {
                             return reply(err);
                         }
-
                         if (user) {
                             return reply(Boom.conflict('Username already in use.'));
                         }
-
                         reply(true);
                     });
                 }
             }, {
                 assign: 'emailCheck',
                 method: function (request, reply) {
-
                     const conditions = {
                         email: request.payload.email,
                         _id: { $ne: request.auth.credentials.user._id }
                     };
-
                     User.findOne(conditions, (err, user) => {
-
                         if (err) {
                             return reply(err);
                         }
-
                         if (user) {
                             return reply(Boom.conflict('Email already in use.'));
                         }
-
                         reply(true);
                     });
                 }
             }]
         },
         handler: function (request, reply) {
-
             const id = request.auth.credentials.user._id.toString();
             const update = {
                 $set: {
@@ -368,13 +294,10 @@ internals.applyRoutes = function (server, next) {
             const findOptions = {
                 fields: User.fieldsAdapter('username email roles')
             };
-
             User.findByIdAndUpdate(id, update, findOptions, (err, user) => {
-
                 if (err) {
                     return reply(err);
                 }
-
                 reply(user);
             });
         }
@@ -386,8 +309,7 @@ internals.applyRoutes = function (server, next) {
         path: '/users/{id}/password',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: 'admin'
+                strategy: 'simple'
             },
             validate: {
                 payload: {
@@ -395,7 +317,6 @@ internals.applyRoutes = function (server, next) {
                 }
             },
             pre: [
-                AuthPlugin.preware.ensureAdminGroup('root'),
                 {
                     assign: 'password',
                     method: function (request, reply) {
@@ -420,13 +341,10 @@ internals.applyRoutes = function (server, next) {
                     password: request.pre.password.hash
                 }
             };
-
             User.findByIdAndUpdate(id, update, (err, user) => {
-
                 if (err) {
                     return reply(err);
                 }
-
                 reply(user);
             });
         }
@@ -438,8 +356,7 @@ internals.applyRoutes = function (server, next) {
         path: '/users/my/password',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: ['account', 'admin']
+                strategy: 'simple'
             },
             validate: {
                 payload: {
@@ -490,39 +407,31 @@ internals.applyRoutes = function (server, next) {
         path: '/users/{id}',
         config: {
             auth: {
-                strategy: 'simple',
-                scope: 'admin'
+                strategy: 'simple'
             },
             pre: [
-                AuthPlugin.preware.ensureAdminGroup('root')
+
             ]
         },
         handler: function (request, reply) {
 
             User.findByIdAndDelete(request.params.id, (err, user) => {
-
                 if (err) {
                     return reply(err);
                 }
-
                 if (!user) {
                     return reply(Boom.notFound('Document not found.'));
                 }
-
                 reply({ message: 'Success.' });
             });
         }
     });
-
-
     next();
 };
 
 
 exports.register = function (server, options, next) {
-
     server.dependency(['auth', 'hapi-mongo-models'], internals.applyRoutes);
-
     next();
 };
 

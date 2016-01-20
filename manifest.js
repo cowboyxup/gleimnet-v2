@@ -46,29 +46,16 @@ const manifest = {
         'hapi-mongo-models': {
             mongodb: Config.get('/hapiMongoModels/mongodb'),
             models: {
-                Account: './server/models/account',
-                AdminGroup: './server/models/admin-group',
-                Admin: './server/models/admin',
                 AuthAttempt: './server/models/auth-attempt',
                 Session: './server/models/session',
-                Status: './server/models/status',
                 User: './server/models/user'
             },
             autoIndex: Config.get('/hapiMongoModels/autoIndex')
         },
         './server/auth': {},
-        './server/mailer': {},
-        './server/api/accounts': [{ routes: { prefix: '/api' } }],
-        './server/api/admin-groups': [{ routes: { prefix: '/api' } }],
-        './server/api/admins': [{ routes: { prefix: '/api' } }],
-        './server/api/auth-attempts': [{ routes: { prefix: '/api' } }],
-        './server/api/contact': [{ routes: { prefix: '/api' } }],
         './server/api/index': [{ routes: { prefix: '/api' } }],
         './server/api/login': [{ routes: { prefix: '/api' } }],
         './server/api/logout': [{ routes: { prefix: '/api' } }],
-        './server/api/sessions': [{ routes: { prefix: '/api' } }],
-        './server/api/signup': [{ routes: { prefix: '/api' } }],
-        './server/api/statuses': [{ routes: { prefix: '/api' } }],
         './server/api/users': [{ routes: { prefix: '/api' } }],
         './server/web/index': {}
     }

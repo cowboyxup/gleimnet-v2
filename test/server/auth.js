@@ -8,7 +8,6 @@ const Manifest = require('../../manifest');
 const Hapi = require('hapi');
 const Session = require('../../server/models/session');
 const User = require('../../server/models/user');
-const Admin = require('../../server/models/admin');
 const HapiAuthBasic = require('hapi-auth-basic');
 const Proxyquire = require('proxyquire');
 const AuthPlugin = require('../../server/auth');
