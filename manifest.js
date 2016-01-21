@@ -8,7 +8,8 @@ const criteria = {
     env: process.env.NODE_ENV
 };
 const defaultContext = {
-    title: 'My personal site'
+    title: 'Gleimnet Administration',
+    auth: false
 };
 
 const manifest = {
@@ -29,6 +30,7 @@ const manifest = {
     }],
     plugins: {
         'hapi-auth-basic': {},
+        'hapi-auth-cookie': {},
         'lout': {},
         'inert': {},
         'vision': {},

@@ -15,22 +15,23 @@ internals.applyRoutes = function (server, next) {
     });
     server.app.cache = cache;
 
-    server.auth.strategy('admin', 'basic', true, {
-        redirectTo: '/login',
+    server.auth.strategy('admin', 'cookie', true, {
+        password: 'superdfad',
+        cookie: 'gleimnet-admin',
+        redirectTo: 'admin/login',
         isSecure: false,
-        validateFunc: function(request, username, password, callback) {
-            cache.get(username, (err, value, cached, log) => {
-                if (err) {
-                    return callback(err, false);
-                }
-                if (!cached) {
-                    return callback(null, false);
-                }
-                return callback(null, true, cached.account);
-            });
+        validateFunc: function (request, session, callback) {
+           cache.get(session.sid,(err, value, cached, log) => {
+              if(err) {
+                  return callback(err, false);
+              }
+               if(!cached) {
+                   return callback(null, false);
+               }
+               return callback(null, true, cached.account);
+           });
         }
     });
-
 
     server.route([{
         method: 'GET',
@@ -44,8 +45,11 @@ internals.applyRoutes = function (server, next) {
                 strategy: 'admin'
             },
             pre: [],
-            handler: {
-                view: 'index'
+            handler: function(request, reply) {
+                reply.view('index',{
+                    title: 'Gleimnet Administration',
+                    auth: true
+                })
             }
         }
     },{
@@ -69,7 +73,7 @@ internals.applyRoutes = function (server, next) {
                 strategy: 'admin'
             },
             plugins: {
-                'hapi-auth-basic': {
+                'hapi-auth-cookie': {
                     redirectTo: false
                 }
             }
@@ -80,51 +84,52 @@ internals.applyRoutes = function (server, next) {
         config: {
             validate: {
                 payload: {
-                    username: Joi.string().lowercase().required(),
-                    password: Joi.string().required()
+                    username: Joi.string().token().lowercase().required(),
+                    password: Joi.string().required(),
+                    submit: Joi.any().required()
                 }
             },
             pre: [{
-                assign: 'admin',
+                assign: 'isAuthenticated',
                 method: function (request, reply) {
-                    const username = request.payload.username;
-                    const password = request.payload.password;
-                    Admin.findByCredentials(username, password, (err, admin) => {
+                    if (request.auth.isAuthenticated) {
+                        return reply.redirect('/admin/');
+                    }
+                    reply(true);
+                }
+            }, {
+                assign: 'adminCheck',
+                method: function (request, reply) {
+                    Admin.findByCredentials(request.payload.username, request.payload.password, (err, admin) => {
                         if (err) {
                             return reply(err);
+                        }
+                        if (!admin) {
+                            return reply(Boom.conflict('Unkown useranme or password'));
                         }
                         reply(admin);
                     });
                 }
-            },{
-                assign: 'session',
-                method: function (request, reply) {
-                    Session.create(request.pre.admin._id.toString(), (err, session) => {
-                        if (err) {
-                            return reply(err);
-                        }
-                        return reply(session);
-                    });
-                    cache.set(request.pre.admin._id.toString(), { account: user.username }, null, (err) => {
-                        if (err) {
-                            return reply(err);
-                        }
-                        return reply.redirect('/home');
-                    });
+            }],
+            handler: function (request, reply) {
+                const admin = request.pre.adminCheck;
+                cache.set(admin._id.toString(), {account: admin.username}, null, (err) => {
+                    if (err) {
+                        return reply(err);
+                    }
+                    request.auth.session.set({sid: admin._id, account: admin.username});
+                    return reply.redirect('/admin');
+                });
+            },
+            auth: {
+                mode: 'try',
+                strategy: 'admin'
+            },
+            plugins: {
+                'hapi-auth-cookie': {
+                    redirectTo: false
                 }
-            }]
-        },
-        handler: function (request, reply) {
-            const credentials = request.pre.session._id.toString() + ':' + request.pre.session.key;
-            const authHeader = 'Basic ' + new Buffer(credentials).toString('base64');
-            reply({
-                admin: {
-                    _id: request.pre.user._id,
-                    username: request.pre.user.username,
-                },
-                session: request.pre.session,
-                authHeader: authHeader
-            });
+            }
         }
     }, {
         method: 'GET',
@@ -141,7 +146,7 @@ internals.applyRoutes = function (server, next) {
 };
 
 exports.register = function (server, options, next) {
-    server.dependency('hapi-mongo-models', internals.applyRoutes);
+    server.dependency(['hapi-mongo-models','hapi-auth-cookie'], internals.applyRoutes);
     next();
 };
 
