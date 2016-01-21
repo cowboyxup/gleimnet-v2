@@ -50,6 +50,7 @@ const store = new Confidence.Store(config);
 
 
 exports.get = function (key) {
+
     return store.get(key, criteria);
 };
 

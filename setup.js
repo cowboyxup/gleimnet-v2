@@ -63,18 +63,18 @@ Async.auto({
     }],
     setupRootUser: ['createConfig', (done, results) => {
         const BaseModel = require('hapi-mongo-models').BaseModel;
-        const User = require('./server/models/user');
+        const Admin = require('./server/models/admin');
         Async.auto({
             connect: (done) => {
                 BaseModel.connect({ url: results.mongodbUrl }, done);
             },
             clean: ['connect', (done) => {
                 Async.parallel([
-                    User.deleteMany.bind(User, {}),
+                    Admin.deleteMany.bind(Admin, {}),
                 ], done);
             }],
             user: ['clean', (done, dbResults) => {
-                User.create('root', results.rootPassword, done);
+                Admin.create('root', results.rootPassword, done);
             }]
         }, (err, dbResults) => {
             if (err) {

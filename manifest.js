@@ -7,7 +7,9 @@ const Config = require('./config');
 const criteria = {
     env: process.env.NODE_ENV
 };
-
+const defaultContext = {
+    title: 'My personal site'
+};
 
 const manifest = {
     $meta: 'This file defines the plot device.',
@@ -40,15 +42,24 @@ const manifest = {
           }]
         },
         'visionary': {
-            engines: { jade: 'jade' },
-            path: './server/web'
+            engines: {
+                html: 'ejs'
+            },
+            relativeTo: __dirname,
+            path: './server/web/admin',
+            layout: true,
+            layoutPath: './server/web/admin/layout',
+            helpersPath: './server/web/admin/helpers',
+            partialsPath: './server/web/admin/views/partials',
+            context: defaultContext
         },
         'hapi-mongo-models': {
             mongodb: Config.get('/hapiMongoModels/mongodb'),
             models: {
                 AuthAttempt: './server/models/auth-attempt',
                 Session: './server/models/session',
-                User: './server/models/user'
+                User: './server/models/user',
+                Admin: './server/models/admin'
             },
             autoIndex: Config.get('/hapiMongoModels/autoIndex')
         },
@@ -57,6 +68,7 @@ const manifest = {
         './server/api/login': [{ routes: { prefix: '/api' } }],
         './server/api/logout': [{ routes: { prefix: '/api' } }],
         './server/api/users': [{ routes: { prefix: '/api' } }],
+        './server/web/admin/admin': [{ routes: { prefix: '/admin' } }],
         './server/web/index': {}
     }
 };
