@@ -120,7 +120,8 @@ internals.applyRoutes = function (server, next) {
                 assign: 'isAuthenticated',
                 method: function (request, reply) {
                     if (request.auth.isAuthenticated) {
-                        return reply.redirect('/admin/');
+                        //return reply.redirect('/admin/');
+                        return reply.redirect(request.query.next);
                     }
                     reply(true);
                 }
@@ -145,6 +146,7 @@ internals.applyRoutes = function (server, next) {
                         return reply(err);
                     }
                     request.auth.session.set({sid: admin._id, account: admin.username});
+                    //return reply.redirect(request.query.next); // perform redirect
                     return reply.redirect('/admin');
                 });
             },
@@ -236,7 +238,113 @@ internals.applyRoutes = function (server, next) {
                 });
             });
         }
-    }]);
+    },{
+        method: 'POST',
+        path: '/group/new',
+        config: {
+            validate: {
+                payload: {
+                    selectconfig: Joi.string().required(),
+                    submitnewgroup: Joi.any().required()
+                }
+            },
+            pre: [{
+                assign: 'clean',
+                method: function (request, reply) {
+                    const User = server.plugins['hapi-mongo-models'].User;
+                    const Admin = server.plugins['hapi-mongo-models'].Admin;
+                    Async.auto({
+                        clean: (done) => {
+                            Async.parallel([
+                                User.deleteMany.bind(User, {})
+                            ], done);
+                        },
+                        loadconfig: (done, data) => {
+                            const fsOptions = { encoding: 'utf-8' };
+                            Fs.readFile(Path.join(__dirname,'..','..','..','data','config','test.json'),fsOptions, (err, data) => {
+                                if (err) {
+                                    console.error('Failed to read config template.');
+                                    return done(err);
+                                }
+                                return done(null,data);
+                            });
+                        },
+                        user: ['clean','loadconfig', (done, data) => {
+                            const loaddata = JSON.parse(data.loadconfig);
+                            User.insertMany(loaddata,(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
+                            //User.create('test', 'tester', done);
+                            return done;
+                        }]
+                    }, (err, data) => {
+                        if (err) {
+                            console.error('Failed to setup root user.'+err);
+                            return (err);
+                        }
+                        return(null, data);
+                    });
+                    reply(true);
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            return reply.redirect('/admin'); // perform redirect
+        }
+    },{
+        method: 'POST',
+        path: '/group/save',
+        config: {
+            validate: {
+                payload: {
+                    institution: Joi.string().required(),
+                    groupname: Joi.string().required(),
+                    submitsavegroup: Joi.any().required()
+                }
+            },
+            pre: [{
+                assign: 'save',
+                method: function (request, reply) {
+                    const User = server.plugins['hapi-mongo-models'].User;
+                    Async.auto({
+                        loaddata: (done) => {
+                            User.find({}, (err, data) =>{
+                                if (err) {
+                                    return err;
+                                }
+                                return done(null,data);
+                            });
+                        },
+                        savegroup: ['loaddata', (done, data) => {
+                            const savedata = JSON.stringify(data.loaddata, null, '\t');
+                            const fsOptions = { encoding: 'utf-8' };
+                            const date = new Date();
+                            const filename = request.payload.groupname+"-"+date.toLocaleDateString('de-DE')+".json";
+                            Fs.writeFile(Path.join(__dirname,'..','..','..','data','saved',filename),savedata,fsOptions, (err) => {
+                                if (err) throw err;
+                                console.log('It\'s saved!');
+                            });
+                        }]
+                    }, (err, data) => {
+                        if (err) {
+                            console.error('Failed save group data.'+err);
+                            return (err);
+                        }
+                        return(null, data);
+                    });
+                    reply(true);
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            return reply.redirect('/admin'); // perform redirect
+        }
+    }
+    ]);
     next();
 };
 
