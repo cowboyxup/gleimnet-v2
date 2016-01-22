@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Neue Gruppe anlegen</h3>
+    </div>
+    <div class="panel-body">
+        <form>
+            <fieldset>
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <div class="">
+                        <select size="20" id="selectbasic" name="selectbasic" class="form-control">
+                            <% for(var i=0; i<config.length; i++) {%>
+                                <option value="<%= config[i] %>"><%= config[i] %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+                    <div class="">
+                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Button</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

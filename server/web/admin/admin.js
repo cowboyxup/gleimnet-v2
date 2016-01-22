@@ -4,6 +4,9 @@ const Boom = require('boom');
 const Joi = require('joi');
 const Async = require('async');
 
+const Fs = require('fs');
+const Path = require('path');
+
 const internals = {};
 
 internals.applyRoutes = function (server, next) {
@@ -18,7 +21,7 @@ internals.applyRoutes = function (server, next) {
     server.auth.strategy('admin', 'cookie', true, {
         password: 'superdfad',
         cookie: 'gleimnet-admin',
-        redirectTo: 'admin/login',
+        redirectTo: '/admin/login',
         isSecure: false,
         validateFunc: function (request, session, callback) {
            cache.get(session.sid,(err, value, cached, log) => {
@@ -44,11 +47,35 @@ internals.applyRoutes = function (server, next) {
             auth: {
                 strategy: 'admin'
             },
-            pre: [],
+            pre: [[{
+                assign: 'listConfigs',
+                method: function (request, reply) {
+                    Fs.readdir(Path.join(__dirname,'..','..','..','data','config'), (err, files) => {
+                        if(err) {
+                            return (err);
+                        }
+                        return reply(files);
+                    });
+                }
+            },{
+                assign: 'listOldGroups',
+                method: function (request, reply) {
+                    Fs.readdir(Path.join(__dirname,'..','..','..','data','saved'), (err, files) => {
+                        if(err) {
+                            return (err);
+                        }
+                        return reply(files);
+                    });
+                }
+            }]],
             handler: function(request, reply) {
+                const configs = request.pre.listConfigs;
+                const oldGroups = request.pre.listOldGroups;
                 reply.view('index',{
                     title: 'Gleimnet Administration',
-                    auth: true
+                    auth: true,
+                    config: configs,
+                    oldGroup: oldGroups
                 })
             }
         }
@@ -140,6 +167,74 @@ internals.applyRoutes = function (server, next) {
                 request.auth.session.clear();
                 return reply.redirect('login');
             }
+        }
+    },{
+        method: 'GET',
+        path: '/register',
+        handler: function(request, reply) {
+            reply.view('register',{
+                title: 'Registration - Gleimnet Administration',
+                auth: true
+            })
+        }
+    },{
+        method: 'POST',
+        path: '/register',
+        config: {
+            validate: {
+                payload: {
+                    username: Joi.string().token().lowercase().required(),
+                    password: Joi.string().required(),
+                    passwordSecond: Joi.string().required(),
+                    submit: Joi.any().required()
+                }
+            },
+            pre: [{
+                assign: 'passwordCheck',
+                method: function (request, reply) {
+                    if(request.payload.password !== request.payload.passwordSecond) {
+                        return reply(Boom.conflict('Password mismatch.'));
+                    }
+                    reply(true);
+                }
+            },{
+                assign: 'usernameCheck',
+                method: function (request, reply) {
+                    const conditions = {
+                        username: request.payload.username
+                    };
+                    Admin.findOne(conditions, (err, user) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (user) {
+                            return reply(Boom.conflict('Username already in use.'));
+                        }
+                        reply(true);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            Async.auto({
+                admin: function (done) {
+                    const username = request.payload.username;
+                    const password = request.payload.password;
+                    Admin.create(username, password, done);
+                }
+            }, (err, results) => {
+                if (err) {
+                    return reply(err);
+                }
+
+                const admin = results.admin;
+                reply({
+                    admin: {
+                        _id: user._id,
+                        username: user.username
+                    }
+                });
+            });
         }
     }]);
     next();
