@@ -21,7 +21,8 @@ internals.applyRoutes = function (server, next) {
         path: '/login',
         config: {
             auth: {
-                strategy: 'simple',
+                mode: 'try',
+                strategy: 'simple'
             },
             validate: {
                 payload: {
