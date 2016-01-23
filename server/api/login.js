@@ -20,6 +20,10 @@ internals.applyRoutes = function (server, next) {
         method: 'POST',
         path: '/login',
         config: {
+            auth: {
+                mode: 'try',
+                strategy: 'simple'
+            },
             validate: {
                 payload: {
                     username: Joi.string().lowercase().required(),
