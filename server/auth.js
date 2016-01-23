@@ -13,6 +13,7 @@ internals.applyStrategy = function (server, next) {
     const User = server.plugins['hapi-mongo-models'].User;
 
     server.auth.strategy('simple', 'basic', {
+        redirectTo: '/',
         validateFunc: function (request, username, password, callback) {
             Async.auto({
                 session: function (done) {
