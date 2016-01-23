@@ -312,26 +312,86 @@ internals.applyRoutes = function (server, next) {
                     const User = server.plugins['hapi-mongo-models'].User;
                     Async.auto({
                         loaddata: (done) => {
-                            User.find({}, (err, data) =>{
+                            User.find({}, (err, data) => {
                                 if (err) {
                                     return err;
                                 }
-                                return done(null,data);
+                                return done(null, data);
                             });
                         },
                         savegroup: ['loaddata', (done, data) => {
                             const savedata = JSON.stringify(data.loaddata, null, '\t');
-                            const fsOptions = { encoding: 'utf-8' };
+                            const fsOptions = {encoding: 'utf-8'};
                             const date = new Date();
-                            const filename = request.payload.groupname+"-"+date.toLocaleDateString('de-DE')+".json";
-                            Fs.writeFile(Path.join(__dirname,'..','..','..','data','saved',filename),savedata,fsOptions, (err) => {
+                            const filename = request.payload.institution+"_"+request.payload.groupname + "-" + date.toLocaleDateString('de-DE') + ".json";
+                            Fs.writeFile(Path.join(__dirname, '..', '..', '..', 'data', 'saved', filename), savedata, fsOptions, (err) => {
                                 if (err) throw err;
                                 console.log('It\'s saved!');
                             });
                         }]
                     }, (err, data) => {
                         if (err) {
-                            console.error('Failed save group data.'+err);
+                            console.error('Failed save group data.' + err);
+                            return (err);
+                        }
+                        return (null, data);
+                    });
+                    reply(true);
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            return reply.redirect('/admin'); // perform redirect
+        }
+    },{
+        method: 'POST',
+        path: '/group/load',
+        config: {
+            validate: {
+                payload: {
+                    selectloadgroup: Joi.string().required(),
+                    submitloadgroup: Joi.any().required()
+                }
+            },
+            pre: [{
+                assign: 'clean',
+                method: function (request, reply) {
+                    const User = server.plugins['hapi-mongo-models'].User;
+                    const Session = server.plugins['hapi-mongo-models'].Session;
+                    const AuthAttempt = server.plugins['hapi-mongo-models'].AuthAttempt;
+                    Async.auto({
+                        clean: (done) => {
+                            Async.parallel([
+                                User.deleteMany.bind(User, {}),
+                                Session.deleteMany.bind(Session, {}),
+                                AuthAttempt.deleteMany.bind(AuthAttempt, {})
+                            ], done);
+                        },
+                        loadconfig: (done, data) => {
+                            const fsOptions = { encoding: 'utf-8' };
+                            Fs.readFile(Path.join(__dirname,'..','..','..','data','saved',request.payload.selectloadgroup),fsOptions, (err, data) => {
+                                if (err) {
+                                    console.error('Failed to load data.');
+                                    return done(err);
+                                }
+                                return done(null,data);
+                            });
+                        },
+                        user: ['clean','loadconfig', (done, data) => {
+                            const loaddata = JSON.parse(data.loadconfig);
+                            User.insertMany(loaddata,(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
+                            //User.create('test', 'tester', done);
+                            return done;
+                        }]
+                    }, (err, data) => {
+                        if (err) {
+                            console.error('Failed to setup root user.'+err);
                             return (err);
                         }
                         return(null, data);
