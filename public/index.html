@@ -4,23 +4,15 @@
     <title>Angular 2 QuickStart</title>
 
     <!-- 1. Load libraries -->
-    <script src="angular2/bundles/angular2-polyfills.js"></script>
-    <script src="systemjs/dist/system.src.js"></script>
-    <script src="rxjs/bundles/Rx.js"></script>
-    <script src="angular2/bundles/angular2.dev.js"></script>
+    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.js"></script>
+    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
 
     <!-- 2. Configure SystemJS -->
+    <script src="config.js"></script>
     <script>
-        System.config({
-            packages: {
-                app: {
-                    format: 'register',
-                    defaultExtension: 'js'
-                }
-            }
-        });
         System.import('app/boot')
-                .then(null, console.error.bind(console));
     </script>
 
 </head>

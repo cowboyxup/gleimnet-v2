@@ -3,6 +3,10 @@ import {Friend} from './friend';
 import {FriendDetailComponent} from './friend-detail.component';
 import {FriendService} from './friend.service';
 
+import { Router, RouterLink } from 'angular2/router';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
+import { Http, Headers } from 'angular2/http';
+
 @Component({
     selector: 'my-app',
     template:`
@@ -74,6 +78,11 @@ export class AppComponent implements OnInit {
     public friends: Friend[];
     public selectedFriend: Friend;
     constructor(private _friendService: FriendService) { }
+    response: string;
+
+    constructor(public http: Http) {
+
+    }
 
     getFriends() {
         this._friendService.getFriends().then(friends => this.friends = friends);
@@ -84,8 +93,24 @@ export class AppComponent implements OnInit {
     }
 
     onSelect(friend: Friend) {
-        console.log("ff");
+        console.log("f1");
         this.selectedFriend = friend;
-        this._friendService.getFriendsSlowly().then(friends => this.friends = friends)
+        this._friendService.getFriendsSlowly().then(friends => this.friends = friends);
+        this._callApi('http://localhost:3001/api/random-quote');
+    }
+
+    _callApi( url) {
+        this.response = null;
+
+        this.http = new Http();
+
+            // For non-protected routes, just use Http
+            this.http.get(url)
+                .subscribe(
+                    response => this.response = response.text(),
+                    error => this.response = error.text()
+                );
+
+
     }
 }
