@@ -59,7 +59,9 @@ const manifest = {
                 AuthAttempt: './server/models/auth-attempt',
                 Session: './server/models/session',
                 User: './server/models/user',
-                Admin: './server/models/admin'
+                Admin: './server/models/admin',
+                Message: './server/models/message',
+                Conversation: './server/models/conversation'
             },
             autoIndex: Config.get('/hapiMongoModels/autoIndex')
         },

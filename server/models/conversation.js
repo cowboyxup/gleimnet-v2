@@ -3,26 +3,28 @@ const Joi = require('joi');
 const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
 
-const Friend = BaseModel.extend({
+const Conversation = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
     }
 });
 
-Friend._collection = 'friends';
+Conversation._collection = 'conversations';
 
-Friend.schema = Joi.object().keys({
+Conversation.schema = Joi.object().keys({
     _id: Joi.object(),
-    isActive: Joi.boolean().default(false),
-    users: Joi.object().keys({
+    auhors: Joi.object().keys({
+        id: Joi.string().length(24).hex().required()
+    }),
+    messages: Joi.object().keys({
         id: Joi.string().length(24).hex().required()
     })
 });
 
-Friend.indexes = [
+Conversation.indexes = [
 ];
 
-Friend.create = function (friends, callback) {
+Conversation.create = function (conversations, callback) {
     const self = this;
     this.insertOne(self, (err, docs) => {
         if (err) {
@@ -32,4 +34,4 @@ Friend.create = function (friends, callback) {
     });
 };
 
-module.exports = Friend;
+module.exports = Conversation;
