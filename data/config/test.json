@@ -1,10 +1,14 @@
-[{
-  "_id":"56a0d59530fea0d41ac21ae2",
-  "isActive":true,
-  "username":
-  "root",
-  "password":
-  "$2a$10$ov/NZ5RzPYcFCqZnA5MiuuhJsC1srfyqEmNllU8bRyVp7VIMxqbTy",
-  "timeCreated":
-  "2016-01-21T12:56:53.739Z"
-}]
+{
+	"users": [
+		{
+			"_id": "56a774be2f7ac04827346b78",
+			"isActive": true,
+			"username": "ii",
+			"password": "$2a$10$9bhStP0pq0lEehdHBUHZ7uxTXgfg50EJsdX7rvPYCOCrxxy99hJGi",
+			"timeCreated": "2016-01-26T13:29:34.493Z",
+			"givenName": "ii ii",
+			"birthdate": "1980-08-29T22:00:00.000Z",
+			"description": "Inorlkjfsa"
+		}
+	]
+}

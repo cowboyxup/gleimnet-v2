@@ -43,16 +43,17 @@ Async.auto({
         const User = require('./server/models/user');
         Async.auto({
             connect: (done) => {
-                BaseModel.connect({ url: mongodbUrl }, done);
+                BaseModel.connect({mongodbUrl}, done);
             },
             user: ['connect', (done, dbResults) => {
                 User.create(results.username, results.password, results.givenName,results.birthdate, results.description, done);
             }]
         }, (err, dbResults) => {
             if (err) {
-                console.error('Failed to user.');
+                console.error('Failed to create user.');
                 return done(err);
             }
+            console.log('User created');
             done(null, true);
         });
     }]

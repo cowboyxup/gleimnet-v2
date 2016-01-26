@@ -54,7 +54,6 @@ User.generateBirthdate = function(birthdate, callback) {
     Async.auto({
         date: function (results) {
             const dateArray = birthdate.trim().split("-");
-            console.log(dateArray);
             const dateObj = new Date(dateArray[2], (dateArray[1]-1), dateArray[0],6,0,0);
             results(null, dateObj);
         }
@@ -62,7 +61,6 @@ User.generateBirthdate = function(birthdate, callback) {
         if (err) {
             return callback(err);
         }
-        console.log(results.date);
         callback(null, results.date);
     });
 };

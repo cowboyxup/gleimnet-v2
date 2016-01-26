@@ -271,7 +271,7 @@ internals.applyRoutes = function (server, next) {
                         },
                         user: ['clean','loadconfig', (done, data) => {
                             const loaddata = JSON.parse(data.loadconfig);
-                            User.insertMany(loaddata,(err, results) =>{
+                            User.insertMany(loaddata['users'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;
@@ -311,7 +311,7 @@ internals.applyRoutes = function (server, next) {
                 method: function (request, reply) {
                     const User = server.plugins['hapi-mongo-models'].User;
                     Async.auto({
-                        loaddata: (done) => {
+                        loaduserdata: (done) => {
                             User.find({}, (err, data) => {
                                 if (err) {
                                     return err;
@@ -319,8 +319,10 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        savegroup: ['loaddata', (done, data) => {
-                            const savedata = JSON.stringify(data.loaddata, null, '\t');
+                        savegroup: ['loaduserdata', (done, data) => {
+                            const alldata = {};
+                            alldata.users = data.loaduserdata;
+                            const savedata = JSON.stringify(alldata, null, '\t');
                             const fsOptions = {encoding: 'utf-8'};
                             const date = new Date();
                             const filename = request.payload.institution+"_"+request.payload.groupname + "-" + date.toLocaleDateString('de-DE') + ".json";
@@ -379,7 +381,7 @@ internals.applyRoutes = function (server, next) {
                         },
                         user: ['clean','loadconfig', (done, data) => {
                             const loaddata = JSON.parse(data.loadconfig);
-                            User.insertMany(loaddata,(err, results) =>{
+                            User.insertMany(loaddata['users'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;
