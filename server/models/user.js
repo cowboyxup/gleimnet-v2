@@ -19,8 +19,12 @@ User.schema = Joi.object().keys({
     _id: Joi.object(),
     isActive: Joi.boolean().default(true),
     username: Joi.string().token().lowercase().required(),
-    password: Joi.string(),
-    timeCreated: Joi.date()
+    password: Joi.string().required(),
+    timeCreated: Joi.date().required(),
+    givenName: Joi.string().required(),
+    birthdate: Joi.date().required(),
+    description: Joi.string(),
+
 });
 
 User.indexes = [
@@ -46,7 +50,7 @@ User.generatePasswordHash = function (password, callback) {
     });
 };
 
-User.create = function (username, password, callback) {
+User.create = function (username, password, givenName, birthdate, description, callback) {
     const self = this;
     Async.auto({
         passwordHash: this.generatePasswordHash.bind(this, password),
@@ -55,7 +59,10 @@ User.create = function (username, password, callback) {
                 isActive: true,
                 username: username.toLowerCase(),
                 password: results.passwordHash.hash,
-                timeCreated: new Date()
+                timeCreated: new Date(),
+                givenName: givenName,
+                birthdate: new Date(birthdate),
+                description: description
             };
             self.insertOne(document, done);
         }]
