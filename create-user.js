@@ -27,7 +27,7 @@ Async.auto({
         Promptly.prompt('User name:', { default: null }, done);
     }],
     password: ['username', (done, results) => {
-        Promptly.password('User name:', { default: null }, done);
+        Promptly.password('User password:', { default: null }, done);
     }],
     givenName: ['password', (done, results) => {
         Promptly.prompt('Anzeigename:', { default: null }, done);

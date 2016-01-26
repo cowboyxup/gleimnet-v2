@@ -50,18 +50,36 @@ User.generatePasswordHash = function (password, callback) {
     });
 };
 
+User.generateBirthdate = function(birthdate, callback) {
+    Async.auto({
+        date: function (results) {
+            const dateArray = birthdate.trim().split("-");
+            console.log(dateArray);
+            const dateObj = new Date(dateArray[2], (dateArray[1]-1), dateArray[0],6,0,0);
+            results(null, dateObj);
+        }
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        console.log(results.date);
+        callback(null, results.date);
+    });
+};
+
 User.create = function (username, password, givenName, birthdate, description, callback) {
     const self = this;
     Async.auto({
         passwordHash: this.generatePasswordHash.bind(this, password),
-        newUser: ['passwordHash', function (done, results) {
+        birth: this.generateBirthdate.bind(this, birthdate),
+        newUser: ['passwordHash','birth', function (done, results) {
             const document = {
                 isActive: true,
                 username: username.toLowerCase(),
                 password: results.passwordHash.hash,
                 timeCreated: new Date(),
                 givenName: givenName,
-                birthdate: new Date(birthdate),
+                birthdate: results.birth,
                 description: description
             };
             self.insertOne(document, done);
