@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Gespeicherte Gruppe laden</h3>
+    </div>
+    <div class="panel-body">
+        <form action="/admin/group/load"  method="post">
+            <fieldset>
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <div class="">
+                        <select size="20" id="selectloadgroup" name="selectloadgroup" class="form-control">
+                            <% for(var i=0; i<oldGroup.length; i++) {%>
+                                <option value="<%= oldGroup[i] %>"><%= oldGroup[i] %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+                    <div class="">
+                        <button type="submit" id="submitloadgroup" name="submitloadgroup" class="btn btn-primary">Laden</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
