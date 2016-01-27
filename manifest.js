@@ -70,6 +70,7 @@ const manifest = {
         './server/api/login': [{ routes: { prefix: '/api' } }],
         './server/api/logout': [{ routes: { prefix: '/api' } }],
         './server/api/users': [{ routes: { prefix: '/api' } }],
+        './server/api/timeline': [{ routes: { prefix: '/api' } }],
         './server/web/admin/admin': [{ routes: { prefix: '/admin' } }],
         './server/web/index': {}
     }
