@@ -57,3 +57,6 @@ crashlytics-build.properties
 
 /public/app/*.map
 /public/app/*.js
+
+/public/app/*/*.map
+/public/app/*/*.js

@@ -70,6 +70,10 @@
     margin-top: 20px;
 }
 
+.login{
+    width: 40%;
+}
+
 .modal-backdrop {
     background: rgb(181,189,200); /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */

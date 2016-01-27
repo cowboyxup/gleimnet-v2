@@ -1,0 +1,19 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a [routerLink]="['/Page1']" class="link navbar-brand">Page1</a>
+            <a [routerLink]="['/Page2']" class="link navbar-brand">Page2</a>
+            <a [routerLink]="['/Home']" class="link navbar-brand">Home</a>
+            <a [routerLink]="['/Chat']" class="link navbar-brand">Chat</a>
+            <a (click)="onSelect()" class="link navbar-brand">{{logInOut}}</a>
+        </div>
+    </div>
+</nav>
+<div class="content">
+
+<router-outlet></router-outlet>
+
+</div>
+
+<footer>
+</footer>
