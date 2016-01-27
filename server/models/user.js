@@ -5,7 +5,7 @@ const Async = require('async');
 const Bcrypt = require('bcryptjs');
 const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
-
+const Conversation = require('./conversation');
 
 const User = BaseModel.extend({
     constructor: function (attrs) {
@@ -24,7 +24,9 @@ User.schema = Joi.object().keys({
     givenName: Joi.string().required(),
     birthdate: Joi.date().required(),
     description: Joi.string(),
-
+    timeline: Joi.object().keys({
+        id: Joi.string().length(24).hex().required()
+    })
 });
 
 User.indexes = [
@@ -68,9 +70,12 @@ User.generateBirthdate = function(birthdate, callback) {
 User.create = function (username, password, givenName, birthdate, description, callback) {
     const self = this;
     Async.auto({
+        createTimeline: (results) => {
+            Conversation.create(username.toLowerCase(), results);
+        },
         passwordHash: this.generatePasswordHash.bind(this, password),
         birth: this.generateBirthdate.bind(this, birthdate),
-        newUser: ['passwordHash','birth', function (done, results) {
+        newUser: ['passwordHash','birth','createTimeline', function (done, results) {
             const document = {
                 isActive: true,
                 username: username.toLowerCase(),
@@ -78,7 +83,8 @@ User.create = function (username, password, givenName, birthdate, description, c
                 timeCreated: new Date(),
                 givenName: givenName,
                 birthdate: results.birth,
-                description: description
+                description: description,
+                timeline: results.createTimeline._id
             };
             self.insertOne(document, done);
         }]
