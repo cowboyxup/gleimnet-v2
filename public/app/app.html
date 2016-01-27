@@ -5,7 +5,7 @@
             <a [routerLink]="['/Page2']" class="link navbar-brand">Page2</a>
             <a [routerLink]="['/Home']" class="link navbar-brand">Home</a>
             <a [routerLink]="['/Chat']" class="link navbar-brand">Chat</a>
-            <a [routerLink]="['/Login']" class="link navbar-brand">Login</a>
+            <a (click)="onSelect()" class="link navbar-brand">{{logInOut}}</a>
         </div>
     </div>
 </nav>

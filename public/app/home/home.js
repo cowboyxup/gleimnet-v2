@@ -9,7 +9,7 @@ System.register(['angular2/core'], function(exports_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var Home;
+    var Home, User;
     return {
         setters:[
             function (core_1_1) {
@@ -29,6 +29,11 @@ System.register(['angular2/core'], function(exports_1) {
                 return Home;
             })();
             exports_1("Home", Home);
+            User = (function () {
+                function User() {
+                }
+                return User;
+            })();
         }
     }
 });
