@@ -22,15 +22,30 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
             },
-            pre: [
+            pre: [{
+                assign: 'user',
+                method: function (request, reply) {
+                    const userid = request.auth.credentials.session.userId;
+                    User.findById(userid, (err, user) => {
+                        if (err) {
+                            return reply(Boom.badRequest('Username not found'));
+                        }
+                        reply(user);
+                    });
+                }
+            },
             ]
         },
         handler: function (request, reply) {
-            User.pagedFind(query, fields, sort, limit, page, (err, results) => {
+            console.log(request.headers);
+            Conversation.findById(request.pre.user.timeline.id, (err, timeline) => {
                 if (err) {
                     return reply(err);
                 }
-                reply(results);
+                if (!timeline) {
+                    return reply(Boom.notFound('Document not found.'));
+                }
+                reply(timeline);
             });
         }
     });
@@ -51,7 +66,6 @@ internals.applyRoutes = function (server, next) {
                 assign: 'user',
                 method: function (request, reply) {
                     const username = request.params.username;
-                    console.log(username);
                     User.findByUsername(username, (err, user) => {
                         if (err) {
                             return reply(Boom.badRequest('Username not found'));
@@ -59,11 +73,10 @@ internals.applyRoutes = function (server, next) {
                         reply(user);
                     });
                 }
-            },
-            ]
+            }]
         },
         handler: function (request, reply) {
-            console.log(request.pre.user.timeline.id)
+            console.log(request.headers);
             Conversation.findById(request.pre.user.timeline.id, (err, timeline) => {
                 if (err) {
                     return reply(err);
