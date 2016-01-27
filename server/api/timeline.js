@@ -50,8 +50,8 @@ internals.applyRoutes = function (server, next) {
             pre: [{
                 assign: 'user',
                 method: function (request, reply) {
-                    const username = request.payload.username;
-                    const password = request.payload.password;
+                    const username = request.params.username;
+                    console.log(username);
                     User.findByUsername(username, (err, user) => {
                         if (err) {
                             return reply(Boom.badRequest('Username not found'));
@@ -63,7 +63,8 @@ internals.applyRoutes = function (server, next) {
             ]
         },
         handler: function (request, reply) {
-            Conversation.findById(request.pre.user._id, (err, timeline) => {
+            console.log(request.pre.user.timeline.id)
+            Conversation.findById(request.pre.user.timeline.id, (err, timeline) => {
                 if (err) {
                     return reply(err);
                 }
