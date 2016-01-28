@@ -22,18 +22,19 @@ internals.applyRoutes = function (server, next) {
                 if (err) {
                     return callback(err);
                 }
-                if (message.comments.length !== 0){
-                    console.log("dinge");
-                    outputComments(message,(err, message) => {
-                        console.log(message);
-                        if (err) {
-                            return (err);
-                        }
+                readableAuthor(message, (err, readableMessage) => {
+                    if (readableMessage.comments.length !== 0){
+                        outputComments(readableMessage,(err, message) => {
+                            if (err) {
+                                return (err);
+                            }
+                            callback(null, message);
+                        });
+                    } else   {
                         callback(null, message);
-                    });
-                } else   {
-                    callback(null, message);
-                }
+                    }
+                });
+
             })
         }, function(err, messages) {
             if (err) {
@@ -52,9 +53,11 @@ internals.applyRoutes = function (server, next) {
                 if (err) {
                     return callback(err);
                 }
-                const showcomment = comment;
-                showcomment.comments = undefined;
-                callback(null, showcomment);
+                readableAuthor(comment, (err, readableComment) => {
+                    const showcomment = readableComment;
+                    showcomment.comments = undefined;
+                    callback(null, showcomment);
+                });
             })
         }, function(err, comments) {
             if (err) {
@@ -65,6 +68,17 @@ internals.applyRoutes = function (server, next) {
             return callback(null,updatedMessage);
         });
 
+    };
+
+    const readableAuthor = function(message, callback) {
+        User.findById(message.author, (err, user) => {
+            if (err) {
+                return callback(err);
+            }
+            const updatedMessage = message;
+            updatedMessage.author = user.username;
+            return callback(null, updatedMessage);
+        });
     };
     server.route([{
         method: 'GET',
@@ -329,7 +343,7 @@ internals.applyRoutes = function (server, next) {
                 return outputTimeline(conversation, reply);
             });
         }
-    },]);
+    }]);
     next();
 };
 
