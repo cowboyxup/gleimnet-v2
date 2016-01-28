@@ -38,7 +38,13 @@ Async.auto({
     description: ['birthdate', (done, results) => {
         Promptly.prompt('Informationstext', { default: null }, done);
     }],
-    setupUser: ['description', (done, results) => {
+    avatar: ['description', (done, results) => {
+        Promptly.prompt('Profilbild Pfad relativ zu public', { default: null }, done);
+    }],
+    titlePicture: ['avatar', (done, results) => {
+        Promptly.prompt('Titel Bild Pfad relativ zu public', { default: null }, done);
+    }],
+    setupUser: ['titlePicture', (done, results) => {
         const BaseModel = require('hapi-mongo-models').BaseModel;
         const User = require('./server/models/user');
         Async.auto({
@@ -46,7 +52,7 @@ Async.auto({
                 BaseModel.connect({url: mongodbUrl}, done);
             },
             user: ['connect', (done, dbResults) => {
-                User.create(results.username, results.password, results.givenName, results.birthdate, results.description, done);
+                User.create(results.username, results.password, results.givenName, results.birthdate, results.description, results.avatar, results.titlePicture, done);
             }]
         }, (err, dbResults) => {
             if (err) {

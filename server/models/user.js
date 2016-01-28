@@ -24,6 +24,8 @@ User.schema = Joi.object().keys({
     givenName: Joi.string().required(),
     birthdate: Joi.date().required(),
     description: Joi.string(),
+    avatar: Joi.string().required(),
+    titlePicture: Joi.string().required(),
     timeline: Joi.object().keys({
         id: Joi.string().length(24).hex().required()
     })
@@ -67,7 +69,7 @@ User.generateBirthdate = function(birthdate, callback) {
     });
 };
 
-User.create = function (username, password, givenName, birthdate, description, callback) {
+User.create = function (username, password, givenName, birthdate, description, avatar, titlePicture, callback) {
     const self = this;
     Async.auto({
         createTimeline: (results) => {
@@ -84,6 +86,8 @@ User.create = function (username, password, givenName, birthdate, description, c
                 givenName: givenName,
                 birthdate: results.birth,
                 description: description,
+                avatar: avatar,
+                titlePicture: titlePicture,
                 timeline: results.createTimeline._id
             };
             self.insertOne(document, done);

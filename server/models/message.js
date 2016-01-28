@@ -32,6 +32,7 @@ Message.create = function (userId, content, callback) {
         newMessage: function (done, results) {
             const document = {
                 author: userId,
+                timeCreated: new Date(),
                 content: content,
                 comments: []
             };
