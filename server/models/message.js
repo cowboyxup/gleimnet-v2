@@ -8,7 +8,23 @@ const User = require('./user');
 const Message = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
-    }
+    },
+    addComment: function(userId, messageId, callback) {
+        const self = this;
+        Async.auto({
+            updateMessage: function (results) {
+                const pushcomment = {
+                    id: messageId
+                }
+                Message.findByIdAndUpdate(self._id,{$push: {comments: {$each: [pushcomment],$position: 0}}},{safe: true, upsert: true, new: true},results);
+            }
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.updateMessage);
+        });
+    },
 });
 
 Message._collection = 'messages';

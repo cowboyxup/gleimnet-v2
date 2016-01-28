@@ -22,7 +22,18 @@ internals.applyRoutes = function (server, next) {
                 if (err) {
                     return callback(err);
                 }
-                callback(null, message);
+                if (message.comments.length !== 0){
+                    console.log("dinge");
+                    outputComments(message,(err, message) => {
+                        console.log(message);
+                        if (err) {
+                            return (err);
+                        }
+                        callback(null, message);
+                    });
+                } else   {
+                    callback(null, message);
+                }
             })
         }, function(err, messages) {
             if (err) {
@@ -34,7 +45,27 @@ internals.applyRoutes = function (server, next) {
             reply(timeline);
         });
 
-    }
+    };
+    const outputComments = function(message, callback) {
+        Async.map(message.comments, function(id, callback) {
+            Message.findById(id.id, (err, comment) => {
+                if (err) {
+                    return callback(err);
+                }
+                const showcomment = comment;
+                showcomment.comments = undefined;
+                callback(null, showcomment);
+            })
+        }, function(err, comments) {
+            if (err) {
+                return callback(err);
+            }
+            const updatedMessage = message;
+            updatedMessage.comments = comments;
+            return callback(null,updatedMessage);
+        });
+
+    };
     server.route([{
         method: 'GET',
         path: '/timeline',
@@ -133,6 +164,66 @@ internals.applyRoutes = function (server, next) {
                     return reply(err);
                 }
                 return outputTimeline(conversation, reply);
+            });
+        }
+    },{
+        method: 'POST',
+        path: '/timeline/message/{messageId}',
+        config: {
+            auth: {
+                strategy: 'simple'
+            },
+            validate: {
+                params: {
+                    messageId: Joi.string().length(24).hex().required()
+                },
+                payload: {
+                    content: Joi.string().required()
+                }
+            },
+            pre: [{
+                assign: 'user',
+                method: function (request, reply) {
+                    const userid = request.auth.credentials.session.userId;
+                    User.findById(userid, (err, user) => {
+                        if (err) {
+                            return reply(Boom.badRequest('Username not found'));
+                        }
+                        reply(user);
+                    });
+                }
+            },{
+                assign: 'message',
+                method: function(request, reply) {
+                    Message.findById(request.params.messageId, (err, message) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!message) {
+                            return reply(Boom.notFound('Message not found.'));
+                        }
+                        reply(message);
+                    });
+                }
+            }, {
+                assign: 'comment',
+                method: function (request, reply) {
+                    const userid = request.pre.user._id;
+                    Message.create(userid, request.payload.content, (err, comment) => {
+                        if (err) {
+                            return reply(Boom.badRequest('Message not created'));
+                        }
+                        reply(comment);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            request.pre.message.addComment(request.pre.user._id.toString(),request.pre.comment._id.toString(), (err, message) => {
+                if (err) {
+                    return reply(err);
+                }
+                return outputComments(message, reply);
             });
         }
     },{
