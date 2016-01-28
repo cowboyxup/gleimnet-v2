@@ -1,5 +1,6 @@
 'use strict';
 const Joi = require('joi');
+const Async = require('async');
 const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
 const Message = require('./message');
@@ -8,13 +9,57 @@ const User = require('./user');
 const Conversation = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
+    },
+    addMessage: function(userId, messageId, callback) {
+        const self = this;
+        Async.auto({
+            ensureAuthord: (results) => {
+                self.ensureAuthor(userId, results);
+            },
+            updateConveration: ['ensureAuthord', function (done, results) {
+                const pushmessages = {
+                    id: messageId
+                }
+                Conversation.findByIdAndUpdate(self._id,{$push: {messages: {$each: [pushmessages],$position: 0}}},{safe: true, upsert: true, new: true},done);
+            }]
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.updateConveration);
+        });
+    },
+    ensureAuthor: function (userId, callback) {
+        const self = this;
+        Async.auto({
+            authorsf: function (done, results) {
+                if (!results.user) {
+                    return done(null, false);
+                }
+                if (self.authors.contains({id: userId})) {
+                    return self.authors
+                }
+                self.findByIdAndUpdate(self._id, {$push: {"authors": {id: userId}}}, {
+                    safe: true,
+                    upsert: true,
+                    new: true
+                }, done);
+            }
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.authorsf);
+        })
     }
+
 });
 
 Conversation._collection = 'conversations';
 
 Conversation.schema = Joi.object().keys({
     _id: Joi.object(),
+    timeCreated: Joi.date().required(),
     auhors: Joi.array().items(Joi.object().keys({
         id: Joi.string().length(24).hex().required()
     })).required(),
@@ -26,7 +71,7 @@ Conversation.schema = Joi.object().keys({
 Conversation.indexes = [
 ];
 
-Conversation.create = function (authorname, callback) {
+Conversation.create = function (callback) {
     const self = this;
     const document = {
         messages: [],
@@ -36,19 +81,20 @@ Conversation.create = function (authorname, callback) {
         if (err) {
             return callback(err);
         }
-        //this.ensureAuthor(authorname, callback)
         callback(null, docs[0]);
     });
 };
 
-Conversation.ensureAuthor = function (username, callback) {
+Conversation.ensureAuthor = function (userId, callback) {
+    const self = this;
     Async.auto({
         user: function (done) {
-            const query = {
+            /*const query = {
                 isActive: true
             };
-            query.username = username.toLowerCase();
-            User.findOne(query, done);
+            query.username = username.toLowerCase();*/
+            User.findById(userId,done);
+            //User.findOne(query, done);
         },
         authorsf: ['user', function (done, results) {
             if (!results.user) {
@@ -57,7 +103,7 @@ Conversation.ensureAuthor = function (username, callback) {
             if (this.authors.contains({id: results.user._id})) {
                 return this.authors
             }
-            self.findByIdAndUpdate(this._id,{$push: {"authors": {id: results.user._id}}},{safe: true, upsert: true, new: true},done);
+            self.findByIdAndUpdate(this._id,{$push: {"authors": {id: results.user._id.toString()}}},{safe: true, upsert: true, new: true},done);
         }]
     }, (err, results) => {
         if (err) {
@@ -68,32 +114,5 @@ Conversation.ensureAuthor = function (username, callback) {
         }
         callback();
     });
-}
-
-Conversation.addMessage = function (username, messageId, callback) {
-    const self = this;
-    Async.auto({
-        findMessage: (results) => {
-            Message.findById.bind(Message, messageId, results);
-        },
-        ensureAuthor: this.ensureAuthor.bind(this, username),
-        updateConveration: ['findMessage','ensureAuthor', function (done, results) {
-            self.findByIdAndUpdate(this._id,{$push: {"messages": {id: results.findMessage._id}}},{safe: true, upsert: true, new: true},done);
-        }]
-    }, (err, results) => {
-        if (err) {
-            return callback(err);
-        }
-        callback(null, results.updateConveration[0]);
-    });
-
-    const item = {
-        title: 'title of the new item',
-        price: '4242'
-    };
 };
-
-
-
-
 module.exports = Conversation;

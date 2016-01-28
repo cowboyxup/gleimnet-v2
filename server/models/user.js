@@ -71,7 +71,7 @@ User.create = function (username, password, givenName, birthdate, description, c
     const self = this;
     Async.auto({
         createTimeline: (results) => {
-            Conversation.create(username.toLowerCase(), results);
+            Conversation.create(results);
         },
         passwordHash: this.generatePasswordHash.bind(this, password),
         birth: this.generateBirthdate.bind(this, birthdate),

@@ -24,6 +24,7 @@ internals.applyRoutes = function (server, next) {
         redirectTo: '/admin/login',
         isSecure: false,
         validateFunc: function (request, session, callback) {
+            console.log(server.app.cache);
            cache.get(session.sid,(err, value, cached, log) => {
               if(err) {
                   return callback(err, false);
@@ -310,8 +311,10 @@ internals.applyRoutes = function (server, next) {
                 assign: 'save',
                 method: function (request, reply) {
                     const User = server.plugins['hapi-mongo-models'].User;
+                    const Message = server.plugins['hapi-mongo-models'].Message;
+                    const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     Async.auto({
-                        loaduserdata: (done) => {
+                        loadUserdata: (done) => {
                             User.find({}, (err, data) => {
                                 if (err) {
                                     return err;
@@ -319,9 +322,27 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        savegroup: ['loaduserdata', (done, data) => {
+                        loadMessages: (done) => {
+                            Message.find({}, (err, data) => {
+                                if (err) {
+                                    return err;
+                                }
+                                return done(null, data);
+                            });
+                        },
+                        loadConversations: (done) => {
+                            Conversation.find({}, (err, data) => {
+                                if (err) {
+                                    return err;
+                                }
+                                return done(null, data);
+                            });
+                        },
+                        savegroup: ['loadUserdata','loadMessages','loadConversations', (done, data) => {
                             const alldata = {};
-                            alldata.users = data.loaduserdata;
+                            alldata.users = data.loadUserdata;
+                            alldata.messages = data.loadMessages;
+                            alldata.conversations = data.loadConversations;
                             const savedata = JSON.stringify(alldata, null, '\t');
                             const fsOptions = {encoding: 'utf-8'};
                             const date = new Date();
@@ -361,12 +382,16 @@ internals.applyRoutes = function (server, next) {
                     const User = server.plugins['hapi-mongo-models'].User;
                     const Session = server.plugins['hapi-mongo-models'].Session;
                     const AuthAttempt = server.plugins['hapi-mongo-models'].AuthAttempt;
+                    const Message = server.plugins['hapi-mongo-models'].Message;
+                    const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     Async.auto({
                         clean: (done) => {
                             Async.parallel([
                                 User.deleteMany.bind(User, {}),
                                 Session.deleteMany.bind(Session, {}),
-                                AuthAttempt.deleteMany.bind(AuthAttempt, {})
+                                AuthAttempt.deleteMany.bind(AuthAttempt, {}),
+                                Message.deleteMany.bind(Message, {}),
+                                Conversation.deleteMany.bind(Conversation, {})
                             ], done);
                         },
                         loadconfig: (done, data) => {
@@ -388,7 +413,28 @@ internals.applyRoutes = function (server, next) {
                                 }
                                 return results;
                             });
-                            //User.create('test', 'tester', done);
+                            return done;
+                        }],
+                        message: ['clean','loadconfig', (done, data) => {
+                            const loaddata = JSON.parse(data.loadconfig);
+                            Message.insertMany(loaddata['messages'],(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });;
+                            return done;
+                        }],
+                        conversation: ['clean','loadconfig', (done, data) => {
+                            const loaddata = JSON.parse(data.loadconfig);
+                            Conversation.insertMany(loaddata['conversations'],(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
                             return done;
                         }]
                     }, (err, data) => {
