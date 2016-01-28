@@ -30,9 +30,15 @@ Async.auto({
         Promptly.password('User password:', { default: null }, done);
     }],
     givenName: ['password', (done, results) => {
-        Promptly.prompt('Anzeigename:', { default: null }, done);
+        Promptly.prompt('Vorname(n):', { default: null }, done);
     }],
-    birthdate: ['givenName', (done, results) => {
+    surename: ['givenName', (done, results) => {
+        Promptly.prompt('Nachname:', { default: null }, done);
+    }],
+    nickname: ['surename', (done, results) => {
+        Promptly.prompt('Kurz- oder Spitzname:', { default: null }, done);
+    }],
+    birthdate: ['nickname', (done, results) => {
         Promptly.prompt('Geburtsdatum im Format: DD-MM-YYYY', { default: null }, done);
     }],
     description: ['birthdate', (done, results) => {
@@ -52,7 +58,7 @@ Async.auto({
                 BaseModel.connect({url: mongodbUrl}, done);
             },
             user: ['connect', (done, dbResults) => {
-                User.create(results.username, results.password, results.givenName, results.birthdate, results.description, results.avatar, results.titlePicture, done);
+                User.create(results.username, results.password, results.givenName,results.surename,results.nickname, results.birthdate, results.description, results.avatar, results.titlePicture, done);
             }]
         }, (err, dbResults) => {
             if (err) {
