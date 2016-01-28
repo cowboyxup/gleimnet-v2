@@ -1,4 +1,4 @@
-System.register(['angular2/core', "angular2/http", "angular2/router", '../common/headers', '../common/consts', "angular2/common"], function(exports_1) {
+System.register(['angular2/core', "angular2/http", "angular2/router", '../common/headers', '../common/consts', "angular2/common", "../common/consts"], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', "angular2/http", "angular2/router", '../common
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, router_1, headers_1, consts_1, router_2, common_1, common_2;
+    var core_1, http_1, router_1, headers_1, consts_1, router_2, common_1, common_2, consts_2;
     var Login;
     return {
         setters:[
@@ -31,6 +31,9 @@ System.register(['angular2/core', "angular2/http", "angular2/router", '../common
             function (common_1_1) {
                 common_1 = common_1_1;
                 common_2 = common_1_1;
+            },
+            function (consts_2_1) {
+                consts_2 = consts_2_1;
             }],
         execute: function() {
             Login = (function () {
@@ -52,6 +55,7 @@ System.register(['angular2/core', "angular2/http", "angular2/router", '../common
                         var authHeaderString = response.json().authHeader;
                         console.log(authHeaderString);
                         localStorage.setItem(consts_1.autKey, response.json().authHeader);
+                        localStorage.setItem(consts_2.usernameKey, response.json().user.username);
                         _this.router.parent.navigateByUrl('/home');
                     })
                         .subscribe(function (response) {

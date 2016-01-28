@@ -38,10 +38,13 @@
     <div class="row">
         <div class="col-lg-6 timelineWriteSomeThing">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Was machst du grade?">
-      			<span class="input-group-btn">
-        			<button class="btn btn-default" type="button">Posten</button>
-      			</span>
+                <input #newPosting
+                       (keyup.enter)="postNewPosting(newPosting.value)"
+                       (blur)="postNewPosting(newPosting.value); newPosting.value=''"
+                       type="text" class="form-control" placeholder="Was machst du grade?">
+                        <span class="input-group-btn">
+                            <button (click)="postNewPosting(newPosting.value)" class="btn btn-default" type="button">Posten</button>
+                        </span>
             </div>
             <!-- /input-group -->
         </div>
@@ -81,9 +84,12 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Was machst du grade?">
+                        <input #newPosting
+                               (keyup.enter)="postNewPosting(newPosting.value)"
+                               (blur)="postNewPosting(newPosting.value); newPosting.value=''"
+                               type="text" class="form-control" placeholder="Was machst du grade?">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Posten</button>
+                            <button (click)="postNewPosting(newPosting.value)" class="btn btn-default" type="button">Posten</button>
                         </span>
                     </div>
                     <!-- /input-group -->

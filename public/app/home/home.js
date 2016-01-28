@@ -49,8 +49,9 @@ System.register(['angular2/core', "angular2/router", "angular2/http"], function(
                 //}
                 Home.prototype.ngOnInit = function () {
                     var _this = this;
-                    var headers = new http_2.Headers();
-                    headers.append('Content-Type', 'application/json');
+                    var headers = this.headers();
+                    //var headers = new Headers();
+                    //headers.append('Content-Type', 'application/json');
                     this.http.get('app/testdata/person', { headers: headers })
                         .map(function (res) { return res.json(); })
                         .subscribe(function (res) {
@@ -58,12 +59,36 @@ System.register(['angular2/core', "angular2/router", "angular2/http"], function(
                         _this.friends = _this.user.friends;
                         console.log(_this.user.friends);
                     });
-                    this.http.get('app/testdata/timeline', { headers: headers })
+                    var timelinepath = 'api/timeline/root';
+                    this.http.get(timelinepath, { headers: headers })
                         .map(function (res) { return res.json(); })
                         .subscribe(function (res) {
                         _this.messages = res.messages;
                         //console.log(this.messages);
                     });
+                };
+                Home.prototype.postNewPosting = function (content) {
+                    //var conntet = "lol";
+                    var _this = this;
+                    var body = JSON.stringify({ content: content });
+                    this.http.post('api/timeline', body, { headers: this.headers() })
+                        .map(function (response) {
+                        console.log(response);
+                        _this.router.parent.navigateByUrl('/home');
+                    })
+                        .subscribe(function (response) {
+                        console.log(response);
+                    }, function (error) {
+                        //this.message = error.json().message;
+                        //this.error = error
+                    });
+                };
+                Home.prototype.headers = function () {
+                    var headers = new http_2.Headers();
+                    headers.append('Content-Type', 'application/json');
+                    var basicAuth = localStorage.getItem('AuthKey');
+                    headers.append('Authorization', basicAuth);
+                    return headers;
                 };
                 Home = __decorate([
                     core_1.Component({

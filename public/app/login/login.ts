@@ -12,6 +12,7 @@ import {RouterLink} from "angular2/router";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {FORM_DIRECTIVES} from "angular2/common";
 import {View} from "angular2/core";
+import {usernameKey} from "../common/consts";
 
 
 
@@ -47,6 +48,7 @@ export class Login {
                 var authHeaderString = response.json().authHeader;
                 console.log(authHeaderString);
                 localStorage.setItem(autKey, response.json().authHeader);
+                localStorage.setItem(usernameKey, response.json().user.username)
                 this.router.parent.navigateByUrl('/home');
             })
             .subscribe(
@@ -60,3 +62,4 @@ export class Login {
             );
     }
 }
+

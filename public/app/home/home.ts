@@ -29,6 +29,8 @@ export class Home implements OnInit{
     friends:Friend[];
     user = new User();
 
+    newPosting:string;
+
     constructor(public router: Router, public http: Http) {
         this.router = router;
         this.http = http;
@@ -52,8 +54,11 @@ export class Home implements OnInit{
     //}
 
     ngOnInit() {
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
+
+        var headers = this.headers();
+
+        //var headers = new Headers();
+        //headers.append('Content-Type', 'application/json');
 
         this.http.get('app/testdata/person', {headers })
             .map((res: Response) => res.json())
@@ -65,7 +70,9 @@ export class Home implements OnInit{
                 }
             );
 
-        this.http.get('app/testdata/timeline', {headers })
+        var timelinepath ='api/timeline/root';
+
+        this.http.get(timelinepath, {headers })
             .map((res: Response) => res.json())
             .subscribe(
                 (res:Timeline) => {
@@ -74,6 +81,39 @@ export class Home implements OnInit{
                 }
             );
     }
+
+    postNewPosting(content:string){
+
+        //var conntet = "lol";
+
+        let body = JSON.stringify({content });
+
+        this.http.post('api/timeline', body, { headers: this.headers() })
+            .map(response =>  {
+                console.log(response);
+                this.router.parent.navigateByUrl('/home');
+            })
+            .subscribe(
+                response => {
+                    console.log(response);
+                },
+                error => {
+                    //this.message = error.json().message;
+                    //this.error = error
+                }
+            );
+    }
+
+    headers(){
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var basicAuth =  localStorage.getItem('AuthKey');
+        headers.append('Authorization',basicAuth);
+
+        return headers;
+
+    }
+
 }
 
 class User{
