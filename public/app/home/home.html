@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-2 col-md-offset-1" >
             <a href="#" class="thumbnail profilimage">
-                <img src="img/ich.jpg" alt="...">
+                <img src="img/profilimages/240x240/{{user.lastName}}.png" alt="...">
             </a>
         </div>
     </div>
@@ -10,47 +10,24 @@
 
 <div class="row">
     <div class="col-md-9 col-md-offset-3 profilname">
-        <h2>Vorname Nachname <a class="btn btn-default" href="#" role="button">Nachricht senden</a></h2>
+        <h2>{{user.firstName}} {{user.lastName}} <a class="btn btn-default" href="#" role="button">Nachricht senden</a></h2>
     </div>
 </div>
 
 <div class="container col-md-3">
     <div class="row">
-        <div class="col-md-4">
-            <p>
-                Geburtsdatum:
-            </p>
-            <p>
-                Info:
-            </p>
+        <div class="col-md-12">
+            <h5>Geburtsdatum:</h5>
+            <p>{{user.birthday}}
+            <h5>Info:</h5>
+            <p>{{user.information}}</p>
         </div>
     </div>
 
-    <div class="col-md-4 friendImage">
-        <img alt="" src="img/64x64.svg">
+    <div class="col-md-4 friendImage" *ngFor="#Friend of friends">
+        <img alt="" src="img/profilimages/64x64/{{Friend.lastName}}.png">
         <div class="caption">
-            <a class="" href="#" role="button">vorname nachname</a>
-        </div>
-    </div>
-
-    <div class="col-md-4 friendImage">
-        <img alt="" src="img/64x64.svg">
-        <div class="caption">
-            <a class="" href="#" role="button">vorname nachname</a>
-        </div>
-    </div>
-
-    <div class="col-md-4 friendImage">
-        <img alt="" src="img/64x64.svg">
-        <div class="caption">
-            <a class="" href="#" role="button">vorname nachname</a>
-        </div>
-    </div>
-
-    <div class="col-md-4 friendImage">
-        <img alt="" src="img/64x64.svg">
-        <div class="caption">
-            <a class="" href="#" role="button">vorname nachname</a>
+            <a class="" href="#" role="button">{{Friend.lastName}}</a>
         </div>
     </div>
 
@@ -76,98 +53,47 @@
 
 <div class="container col-md-9 timeline">
     <!-- Post-->
-    <div class="media post">
+
+
+    <div class="media post" *ngFor="#Posting of messages">
         <div class="media-left">
             <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
+                <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Posting.author}}.png">
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">Media heading</h4>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras
-            purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate
-            fringilla. Donec lacinia congue felis in faucibus.
+            <h4 class="media-heading">{{Posting.author}}</h4>
+            {{Posting.content}}
 
-            <div class="media">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object timelineImage" alt="" src="img/64x64.svg">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Ich</h4>
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Was machst du grade?">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">Posten</button>
-                                    </span>
-                            </div>
-                            <!-- /input-group -->
-                        </div>
-                        <!-- /.col-lg-6 -->
+            <div class="media post" *ngFor="#Comment of Posting.comments">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Comment.author}}.png">
+                        </a>
                     </div>
-                    <!-- /.row -->
+                    <div class="media-body">
+                        <h4 class="media-heading">{{Comment.author}}</h4>
+                        {{Comment.content}}
+                    </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Was machst du grade?">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Posten</button>
+                        </span>
+                    </div>
+                    <!-- /input-group -->
+                </div>
+                <!-- /.col-lg-6 -->
+            </div>
+            <!-- /.row -->
         </div>
     </div>
 
-
-    <div class="media post">
-        <div class="media-left">
-            <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
-            </a>
-        </div>
-        <div class="media-body">
-            <h4 class="media-heading">Media heading</h4>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras
-            purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate
-            fringilla. Donec lacinia congue felis in faucibus.
-
-
-            <div class="media">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object timelineImage" alt="" src="img/64x64.svg">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Nested media heading</h4>
-                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin
-                    commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum
-                    nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                </div>
-            </div>
-            <div class="media">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object timelineImage" alt="" src="img/64x64.svg">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Ich</h4>
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Was machst du grade?">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">Posten</button>
-                                    </span>
-                            </div>
-                            <!-- /input-group -->
-                        </div>
-                        <!-- /.col-lg-6 -->
-                    </div>
-                    <!-- /.row -->
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <hr>
