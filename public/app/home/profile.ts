@@ -20,26 +20,29 @@ import {autKey} from "../common/consts";
     templateUrl: './app/home/home.html'
 })
 
-export class Home implements OnInit{
+export class Profile implements OnInit{
 
     http: Http;
     router: Router;
-    //routeParams:RouteParams;
+    routeParams:RouteParams;
 
     timeline:Timeline;
     messages:Messages[];
     friends:Friend[];
 
-    username:string;
 
     user = new User();
-
+    username:string;
+    timelinepath = 'api/timeline/';
 
     constructor(public router: Router,
-                public http: Http) {
+                private routeParams:RouteParams,
+                public http: Http,) {
         this.router = router;
         this.http = http;
-        this.username = localStorage.getItem('username');
+        this.routeParams = routeParams;
+        this.username = this.routeParams.get('id');
+        this.timelinepath +=  this.username;
     }
 
     ngOnInit() {
@@ -64,9 +67,8 @@ export class Home implements OnInit{
 
     loadTimeline(){
         var headers = this.headers();
-        var timelinepath ='api/timeline';
 
-        this.http.get(timelinepath, {headers })
+        this.http.get(this.timelinepath, {headers })
             .map((res: Response) => res.json())
             .subscribe(
                 (res:Timeline) => {
@@ -80,7 +82,7 @@ export class Home implements OnInit{
 
         let body = JSON.stringify({content });
 
-        this.http.post('api/timeline', body, { headers: this.headers() })
+        this.http.post(this.timelinepath, body, { headers: this.headers() })
             .map(response =>  {
 
             })
@@ -89,8 +91,7 @@ export class Home implements OnInit{
                     this.loadTimeline();
                 },
                 error => {
-                    //this.message = error.json().message;
-                    //this.error = error
+
                 }
             );
     }
