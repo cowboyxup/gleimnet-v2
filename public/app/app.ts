@@ -18,8 +18,8 @@ import {ROUTER_DIRECTIVES,
     AsyncRoute,
     Router} from 'angular2/router';
 
-import {Page1} from './pages/page1';
-import {Page2} from './pages/page2';
+//import {Page1} from './pages/page1';
+//import {Page2} from './pages/page2';
 import {Home} from './home/home';
 import {Chat} from './chat/chat';
 import {Login} from './login/login'
@@ -35,8 +35,8 @@ declare var System:any;
     })
 
 @RouteConfig([
-    new Route({path: '/page1', component: Page1, name: 'Page1'}),
-    new Route({path: '/page2', component: Page2, name: 'Page2'}),
+    //new Route({path: '/page1', component: Page1, name: 'Page1'}),
+    //new Route({path: '/page2', component: Page2, name: 'Page2'}),
     new Route({path: '/home', component: Home, name: 'Home'}),
     new Route({path: '/chat', component: Chat, name: 'Chat'}),
     new Route({path: '/login', component: Login, name: 'Login'})

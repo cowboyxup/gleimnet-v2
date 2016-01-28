@@ -1,0 +1,29 @@
+{
+  "_id": "56a8d0196614ba68176ead3f",
+  "messages": [
+    {
+      "_id": "56a8d0196614ba68176ead3f",
+      "author": "von Goethe",
+      "content": "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ",
+      "comments": [
+                    {
+                      "_id": "56a8d0196614ba68176ead3f",
+                      "author": "Schiller",
+                      "content": "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla "
+                    }
+      ]
+    },
+    {
+      "_id": "56a8d0196614ba68176ead3f",
+      "author": "von Stein",
+      "content": "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ",
+      "comments": [
+                    {
+                      "_id": "56a8d0196614ba68176ead3f",
+                      "author": "von Goethe",
+                      "content": "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla "
+                    }
+      ]
+    }
+  ]
+}
