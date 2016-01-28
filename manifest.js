@@ -196,7 +196,8 @@ const manifest = {
                 User: './server/models/user',
                 Admin: './server/models/admin',
                 Message: './server/models/message',
-                Conversation: './server/models/conversation'
+                Conversation: './server/models/conversation',
+                Friend: './server/models/friend'
             },
             autoIndex: Config.get('/hapiMongoModels/autoIndex')
         },

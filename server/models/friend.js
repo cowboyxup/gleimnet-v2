@@ -1,5 +1,6 @@
 'use strict';
 const Joi = require('joi');
+const Async = require('async');
 const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
 
@@ -29,6 +30,26 @@ Friend.create = function (friends, callback) {
             return callback(err);
         }
         callback(null, docs[0]);
+    });
+};
+
+Friend.findByUserId = function (userId, callback) {
+    const self = this;
+    Async.auto({
+        friends: function (done) {
+            const query = {
+                users: [{id: userId}]
+            };
+            self.findOne(query, done);
+        }
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        if(!results.friends) {
+            return callback(null, []);
+        }
+        return callback(null, results.friends);
     });
 };
 

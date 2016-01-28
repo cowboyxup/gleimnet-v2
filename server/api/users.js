@@ -11,6 +11,7 @@ const internals = {};
 internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
+    const Friend = server.plugins['hapi-mongo-models'].Friend;
 
     server.route({
         method: 'GET',
@@ -44,7 +45,6 @@ internals.applyRoutes = function (server, next) {
             const sort = request.query.sort;
             const limit = request.query.limit;
             const page = request.query.page;
-
             User.pagedFind(query, fields, sort, limit, page, (err, results) => {
                 if (err) {
                     return reply(err);
@@ -65,7 +65,6 @@ internals.applyRoutes = function (server, next) {
             ]
         },
         handler: function (request, reply) {
-
             User.findById(request.params.id, (err, user) => {
                 if (err) {
                     return reply(err);
@@ -75,6 +74,51 @@ internals.applyRoutes = function (server, next) {
                 }
                 reply(user);
             });
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/users/username/{username}',
+        config: {
+            auth: {
+                strategy: 'simple'
+            },
+            pre: [{
+                assign: 'user',
+                method: function (request, reply) {
+                    User.findByUsername(request.params.username, (err, user) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!user) {
+                            return reply(Boom.notFound('Document not found.'));
+                        }
+                        reply(user);
+                    });
+                }
+            },{
+                assign: 'friends',
+                method: function(request, reply) {
+                    console.log(request.pre.user);
+                    Friend.findByUserId(request.pre.user._id, (err, friends) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!friends) {
+                            return reply(Boom.notFound('No Friends not found.'));
+                        }
+                        reply(friends);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            let wellUser = request.pre.user;
+            wellUser.password = undefined;
+            wellUser.isActive = undefined;
+
+            reply(wellUser);
         }
     });
 
@@ -146,280 +190,6 @@ internals.applyRoutes = function (server, next) {
                     return reply(err);
                 }
                 reply(user);
-            });
-        }
-    });
-
-
-    server.route({
-        method: 'PUT',
-        path: '/users/{id}',
-        config: {
-            auth: {
-                strategy: 'simple'
-            },
-            validate: {
-                payload: {
-                    isActive: Joi.boolean().required(),
-                    username: Joi.string().token().lowercase().required(),
-                    email: Joi.string().email().lowercase().required()
-                }
-            },
-            pre: [{
-                    assign: 'usernameCheck',
-                    method: function (request, reply) {
-
-                        const conditions = {
-                            username: request.payload.username,
-                            _id: { $ne: User._idClass(request.params.id) }
-                        };
-
-                        User.findOne(conditions, (err, user) => {
-
-                            if (err) {
-                                return reply(err);
-                            }
-
-                            if (user) {
-                                return reply(Boom.conflict('Username already in use.'));
-                            }
-
-                            reply(true);
-                        });
-                    }
-                }, {
-                    assign: 'emailCheck',
-                    method: function (request, reply) {
-
-                        const conditions = {
-                            email: request.payload.email,
-                            _id: { $ne: User._idClass(request.params.id) }
-                        };
-
-                        User.findOne(conditions, (err, user) => {
-                            if (err) {
-                                return reply(err);
-                            }
-                            if (user) {
-                                return reply(Boom.conflict('Email already in use.'));
-                            }
-                            reply(true);
-                        });
-                    }
-                }
-            ]
-        },
-        handler: function (request, reply) {
-            const id = request.params.id;
-            const update = {
-                $set: {
-                    isActive: request.payload.isActive,
-                    username: request.payload.username,
-                    email: request.payload.email
-                }
-            };
-            User.findByIdAndUpdate(id, update, (err, user) => {
-                if (err) {
-                    return reply(err);
-                }
-                if (!user) {
-                    return reply(Boom.notFound('Document not found.'));
-                }
-                reply(user);
-            });
-        }
-    });
-
-
-    server.route({
-        method: 'PUT',
-        path: '/users/my',
-        config: {
-            auth: {
-                strategy: 'simple'
-            },
-            validate: {
-                payload: {
-                    username: Joi.string().token().lowercase().required(),
-                    email: Joi.string().email().lowercase().required()
-                }
-            },
-            pre: [{
-                assign: 'usernameCheck',
-                method: function (request, reply) {
-                    const conditions = {
-                        username: request.payload.username,
-                        _id: { $ne: request.auth.credentials.user._id }
-                    };
-                    User.findOne(conditions, (err, user) => {
-                        if (err) {
-                            return reply(err);
-                        }
-                        if (user) {
-                            return reply(Boom.conflict('Username already in use.'));
-                        }
-                        reply(true);
-                    });
-                }
-            }, {
-                assign: 'emailCheck',
-                method: function (request, reply) {
-                    const conditions = {
-                        email: request.payload.email,
-                        _id: { $ne: request.auth.credentials.user._id }
-                    };
-                    User.findOne(conditions, (err, user) => {
-                        if (err) {
-                            return reply(err);
-                        }
-                        if (user) {
-                            return reply(Boom.conflict('Email already in use.'));
-                        }
-                        reply(true);
-                    });
-                }
-            }]
-        },
-        handler: function (request, reply) {
-            const id = request.auth.credentials.user._id.toString();
-            const update = {
-                $set: {
-                    username: request.payload.username,
-                    email: request.payload.email
-                }
-            };
-            const findOptions = {
-                fields: User.fieldsAdapter('username email roles')
-            };
-            User.findByIdAndUpdate(id, update, findOptions, (err, user) => {
-                if (err) {
-                    return reply(err);
-                }
-                reply(user);
-            });
-        }
-    });
-
-
-    server.route({
-        method: 'PUT',
-        path: '/users/{id}/password',
-        config: {
-            auth: {
-                strategy: 'simple'
-            },
-            validate: {
-                payload: {
-                    password: Joi.string().required()
-                }
-            },
-            pre: [
-                {
-                    assign: 'password',
-                    method: function (request, reply) {
-
-                        User.generatePasswordHash(request.payload.password, (err, hash) => {
-
-                            if (err) {
-                                return reply(err);
-                            }
-
-                            reply(hash);
-                        });
-                    }
-                }
-            ]
-        },
-        handler: function (request, reply) {
-
-            const id = request.params.id;
-            const update = {
-                $set: {
-                    password: request.pre.password.hash
-                }
-            };
-            User.findByIdAndUpdate(id, update, (err, user) => {
-                if (err) {
-                    return reply(err);
-                }
-                reply(user);
-            });
-        }
-    });
-
-
-    server.route({
-        method: 'PUT',
-        path: '/users/my/password',
-        config: {
-            auth: {
-                strategy: 'simple'
-            },
-            validate: {
-                payload: {
-                    password: Joi.string().required()
-                }
-            },
-            pre: [{
-                assign: 'password',
-                method: function (request, reply) {
-
-                    User.generatePasswordHash(request.payload.password, (err, hash) => {
-
-                        if (err) {
-                            return reply(err);
-                        }
-
-                        reply(hash);
-                    });
-                }
-            }]
-        },
-        handler: function (request, reply) {
-
-            const id = request.auth.credentials.user._id.toString();
-            const update = {
-                $set: {
-                    password: request.pre.password.hash
-                }
-            };
-            const findOptions = {
-                fields: User.fieldsAdapter('username email')
-            };
-
-            User.findByIdAndUpdate(id, update, findOptions, (err, user) => {
-
-                if (err) {
-                    return reply(err);
-                }
-
-                reply(user);
-            });
-        }
-    });
-
-
-    server.route({
-        method: 'DELETE',
-        path: '/users/{id}',
-        config: {
-            auth: {
-                strategy: 'simple'
-            },
-            pre: [
-
-            ]
-        },
-        handler: function (request, reply) {
-
-            User.findByIdAndDelete(request.params.id, (err, user) => {
-                if (err) {
-                    return reply(err);
-                }
-                if (!user) {
-                    return reply(Boom.notFound('Document not found.'));
-                }
-                reply({ message: 'Success.' });
             });
         }
     });
