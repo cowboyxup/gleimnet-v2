@@ -197,15 +197,12 @@ internals.applyRoutes = function (server, next) {
                         };
 
                         User.findOne(conditions, (err, user) => {
-
                             if (err) {
                                 return reply(err);
                             }
-
                             if (user) {
                                 return reply(Boom.conflict('Email already in use.'));
                             }
-
                             reply(true);
                         });
                     }
