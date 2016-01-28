@@ -15,7 +15,7 @@ internals.applyRoutes = function (server, next) {
 
     server.route({
         method: 'GET',
-        path: '/users',
+        path: '/friends',
         config: {
             auth: {
                 strategy: 'simple',
@@ -56,7 +56,7 @@ internals.applyRoutes = function (server, next) {
 
     server.route({
         method: 'GET',
-        path: '/users/{id}',
+        path: '/friends/{id}',
         config: {
             auth: {
                 strategy: 'simple'
@@ -65,14 +65,14 @@ internals.applyRoutes = function (server, next) {
             ]
         },
         handler: function (request, reply) {
-            User.findById(request.params.id, (err, user) => {
+            Friend.findById(request.params.id, (err, friend) => {
                 if (err) {
                     return reply(err);
                 }
-                if (!user) {
+                if (!friend) {
                     return reply(Boom.notFound('Document not found.'));
                 }
-                reply(user);
+                reply(friend);
             });
         }
     });

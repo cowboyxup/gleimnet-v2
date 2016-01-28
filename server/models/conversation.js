@@ -74,6 +74,7 @@ Conversation.indexes = [
 Conversation.create = function (callback) {
     const self = this;
     const document = {
+        timeCreated: new Date(),
         messages: [],
         authors: []
     };
