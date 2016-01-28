@@ -22,6 +22,8 @@ User.schema = Joi.object().keys({
     password: Joi.string().required(),
     timeCreated: Joi.date().required(),
     givenName: Joi.string().required(),
+    surname: Joi.string().required(),
+    nickname: Joi.string().required(),
     birthdate: Joi.date().required(),
     description: Joi.string(),
     avatar: Joi.string().required(),
@@ -69,7 +71,7 @@ User.generateBirthdate = function(birthdate, callback) {
     });
 };
 
-User.create = function (username, password, givenName, birthdate, description, avatar, titlePicture, callback) {
+User.create = function (username, password, givenName,surename,nickname, birthdate, description, avatar, titlePicture, callback) {
     const self = this;
     Async.auto({
         createTimeline: (results) => {
@@ -84,6 +86,8 @@ User.create = function (username, password, givenName, birthdate, description, a
                 password: results.passwordHash.hash,
                 timeCreated: new Date(),
                 givenName: givenName,
+                surename: surename,
+                nickname: nickname,
                 birthdate: results.birth,
                 description: description,
                 avatar: avatar,
