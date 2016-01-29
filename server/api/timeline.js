@@ -65,7 +65,7 @@ internals.applyRoutes = function (server, next) {
                 return callback(err);
             }
             const updatedMessage = message;
-            updatedMessage.comments = comments;
+            updatedMessage.comments = comments.reverse();
             return callback(null,updatedMessage);
         });
 
