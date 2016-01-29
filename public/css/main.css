@@ -74,3 +74,6 @@
     width: 40%;
 }
 
+.posting-body{
+    min-height: 70px;
+}

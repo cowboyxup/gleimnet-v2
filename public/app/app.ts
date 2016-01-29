@@ -24,6 +24,8 @@ import {Home} from './home/home';
 import {Chat} from './chat/chat';
 import {Login} from './login/login'
 import {LoggedInRouterOutlet} from "./LoggedInRouterOutlet";
+import {Profile} from "./home/profile";
+import {Friends} from "./friends/friends";
 
 declare var System:any;
 
@@ -37,8 +39,10 @@ declare var System:any;
 @RouteConfig([
     //new Route({path: '/page1', component: Page1, name: 'Page1'}),
     //new Route({path: '/page2', component: Page2, name: 'Page2'}),
-    new Route({path: '/home', component: Home, name: 'Home'}),
+    new Route({path: '/', component: Home, name: 'Home'}),
+    new Route({path: '/profile/:id', component: Profile, name: 'Profile'}),
     new Route({path: '/chat', component: Chat, name: 'Chat'}),
+    new Route({path: '/friends', component: Friends, name: 'Friends'}),
     new Route({path: '/login', component: Login, name: 'Login'})
 ])
 
@@ -72,10 +76,10 @@ class MyDemoApp {
     onSelect() {
         if (localStorage.getItem('AuthKey')) {
             localStorage.removeItem('AuthKey');
-
-            this.logInOut = "Logout"
-        }else {
+            localStorage.removeItem('username');
             this.logInOut = "Login"
+        }else {
+            this.logInOut = "Logout"
         }
 
         this.router.navigateByUrl('/login');

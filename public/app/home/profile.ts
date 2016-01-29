@@ -15,32 +15,35 @@ import {Subject } from 'rxjs/Subject';
 import {contentHeaders} from "../common/headers";
 import {autKey} from "../common/consts";
 
+
 @Component({
     selector: 'Home',
     templateUrl: './app/home/home.html'
 })
 
-export class Home implements OnInit{
+export class Profile implements OnInit{
 
     http: Http;
     router: Router;
-    //routeParams:RouteParams;
+    routeParams:RouteParams;
 
     timeline:Timeline;
     messages:Messages[];
     friends:Friend[];
 
-    username:string;
-    timelinepath = 'api/timeline';
 
     user = new User();
-
+    username:string;
+    timelinepath = 'api/timeline/';
 
     constructor(public router: Router,
-                public http: Http) {
+                private routeParams:RouteParams,
+                public http: Http,) {
         this.router = router;
         this.http = http;
-        this.username = localStorage.getItem('username');
+        this.routeParams = routeParams;
+        this.username = this.routeParams.get('id');
+        this.timelinepath +=  this.username;
     }
 
     ngOnInit() {
@@ -91,8 +94,7 @@ export class Home implements OnInit{
                     this.loadTimeline();
                 },
                 error => {
-                    //this.message = error.json().message;
-                    //this.error = error
+
                 }
             );
     }
@@ -114,7 +116,6 @@ export class Home implements OnInit{
             );
     }
 
-
     headers(){
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -127,13 +128,11 @@ export class Home implements OnInit{
 }
 
 class User{
-    _id:string;
-    username:string;
-    timeCreated:string;
-    givenName:string;
-    birthdate:string;
-    description:string;
-    timeline:string;
+    firstName:string;
+    lastName:string;
+    birthday:string;
+    information:string;
+    friends:Friend[];
 }
 
 interface Friend{

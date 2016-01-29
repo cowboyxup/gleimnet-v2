@@ -27,43 +27,72 @@ System.register(['angular2/core', "angular2/router", "angular2/http"], function(
                 function Home(router, http) {
                     this.router = router;
                     this.http = http;
+                    this.timelinepath = 'api/timeline';
                     this.user = new User();
                     this.router = router;
                     this.http = http;
+                    this.username = localStorage.getItem('username');
                 }
-                //ngOnInit() {
-                //
-                //    var headers = new Headers();
-                //    headers.append('Content-Type', 'application/json');
-                //    var basicAuth =  localStorage.getItem('AuthKey');
-                //    //headers.append('WWW-Authenticate',basicAuth);
-                //
-                //    this.http.get('app/testdata/person', {headers })
-                //        .map(response =>  response.json())
-                //        .subscribe(response => {
-                //            this.getResponse = response;
-                //            console.log(this.timeline);
-                //
-                //            }
-                //        );
-                //}
                 Home.prototype.ngOnInit = function () {
+                    var basicAuth = localStorage.getItem('AuthKey');
+                    if (basicAuth) {
+                        this.loadProfilInfos();
+                        this.loadTimeline();
+                    }
+                };
+                Home.prototype.loadProfilInfos = function () {
                     var _this = this;
-                    var headers = new http_2.Headers();
-                    headers.append('Content-Type', 'application/json');
-                    this.http.get('app/testdata/person', { headers: headers })
+                    var headers = this.headers();
+                    this.http.get('api/users/username/' + this.username, { headers: headers })
                         .map(function (res) { return res.json(); })
                         .subscribe(function (res) {
                         _this.user = res;
-                        _this.friends = _this.user.friends;
-                        console.log(_this.user.friends);
+                        //this.friends = this.user.friends;
+                        //console.log(this.user);
                     });
-                    this.http.get('app/testdata/timeline', { headers: headers })
+                };
+                Home.prototype.loadTimeline = function () {
+                    var _this = this;
+                    var headers = this.headers();
+                    this.http.get(this.timelinepath, { headers: headers })
                         .map(function (res) { return res.json(); })
                         .subscribe(function (res) {
                         _this.messages = res.messages;
                         //console.log(this.messages);
                     });
+                };
+                Home.prototype.postNewPosting = function (content) {
+                    var _this = this;
+                    var body = JSON.stringify({ content: content });
+                    this.http.post(this.timelinepath, body, { headers: this.headers() })
+                        .map(function (response) {
+                    })
+                        .subscribe(function (response) {
+                        _this.loadTimeline();
+                    }, function (error) {
+                        //this.message = error.json().message;
+                        //this.error = error
+                    });
+                };
+                Home.prototype.commentOnPosting = function (content, postId) {
+                    var _this = this;
+                    var body = JSON.stringify({ content: content });
+                    this.http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
+                        .map(function (response) {
+                    })
+                        .subscribe(function (response) {
+                        _this.loadTimeline();
+                    }, function (error) {
+                        //this.message = error.json().message;
+                        //this.error = error
+                    });
+                };
+                Home.prototype.headers = function () {
+                    var headers = new http_2.Headers();
+                    headers.append('Content-Type', 'application/json');
+                    var basicAuth = localStorage.getItem('AuthKey');
+                    headers.append('Authorization', basicAuth);
+                    return headers;
                 };
                 Home = __decorate([
                     core_1.Component({
