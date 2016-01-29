@@ -78,8 +78,44 @@ internals.applyRoutes = function (server, next) {
     });
 
     server.route({
+        method: 'POST',
+        path: '/friends/{id}',
+        config: {
+            auth: {
+                strategy: 'simple'
+            },
+            validate: {
+                params: {
+                    id: Joi.string().length(24).hex().required()
+                },
+                payload: {
+                    activate: Joi.boolean().required()
+                }
+            },
+            pre: [{
+                assign: 'friendship',
+                method: function(request, reply) {
+                    Friend.findByIdAndUpdate(request.params.id.toString(),{$set:{isActive: true}}, (err, friendship) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!friendship) {
+                            return reply(Boom.notFound('Friendship not found.'));
+                        }
+                        reply(friendship);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            const friendship = request.pre.friendship;
+            reply (friendship)
+        }
+    });
+
+    server.route({
         method: 'GET',
-        path: '/users/username/{username}',
+        path: '/friends/username/{username}',
         config: {
             auth: {
                 strategy: 'simple'
@@ -100,13 +136,12 @@ internals.applyRoutes = function (server, next) {
             },{
                 assign: 'friends',
                 method: function(request, reply) {
-                    console.log(request.pre.user);
-                    Friend.findByUserId(request.pre.user._id, (err, friends) => {
+                    Friend.findConfirmedByUserId(request.pre.user._id.toString(), (err, friends) => {
                         if (err) {
                             return reply(err);
                         }
                         if (!friends) {
-                            return reply(Boom.notFound('No Friends not found.'));
+                            return reply(Boom.notFound('No friendship found.'));
                         }
                         reply(friends);
                     });
@@ -114,82 +149,100 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            let wellUser = request.pre.user;
-            wellUser.password = undefined;
-            wellUser.isActive = undefined;
-
-            reply(wellUser);
+            let wellFriends = request.pre.friends;
+            reply(wellFriends);
         }
     });
-
     server.route({
         method: 'GET',
-        path: '/users/my',
+        path: '/friends/my',
         config: {
             auth: {
                 strategy: 'simple'
-            }
+            },
+            pre: [{
+                assign: 'friends',
+                method: function(request, reply) {
+                    const id = request.auth.credentials.user._id.toString();
+                    Friend.findConfirmedByUserId(id, (err, friends) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!friends) {
+                            return reply(Boom.notFound('No friendship found.'));
+                        }
+                        reply(friends);
+                    });
+                }
+            }]
         },
         handler: function (request, reply) {
-
-            const id = request.auth.credentials.user._id.toString();
-            const fields = User.fieldsAdapter('username email roles');
-            User.findById(id, fields, (err, user) => {
-                if (err) {
-                    return reply(err);
-                }
-                if (!user) {
-                    return reply(Boom.notFound('Document not found. That is strange.'));
-                }
-
-                reply(user);
-            });
+            let wellFriends = request.pre.friends;
+            reply(wellFriends);
         }
     });
-
-
+    server.route({
+        method: 'GET',
+        path: '/friends/my/unconfirmed',
+        config: {
+            auth: {
+                strategy: 'simple'
+            },
+            pre: [{
+                assign: 'friends',
+                method: function(request, reply) {
+                    const id = request.auth.credentials.user._id.toString();
+                    Friend.findUnconfirmedByUserId(id, (err, friends) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!friends) {
+                            return reply(Boom.notFound('No friendship found.'));
+                        }
+                        reply(friends);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            let wellFriends = request.pre.friends;
+            reply(wellFriends);
+        }
+    });
     server.route({
         method: 'POST',
-        path: '/users',
+        path: '/friends',
         config: {
             auth: {
                 strategy: 'simple'
             },
             validate: {
                 payload: {
-                    username: Joi.string().token().lowercase().required(),
-                    password: Joi.string().required(),
-                    email: Joi.string().email().lowercase().required()
+                    username: Joi.string().token().lowercase().required()
                 }
             },
             pre: [
                 {
-                    assign: 'usernameCheck',
+                    assign: 'userCheck',
                     method: function (request, reply) {
-                        const conditions = {
-                            username: request.payload.username
-                        };
-                        User.findOne(conditions, (err, user) => {
+                        User.findByUsername(request.payload.username, (err, user) => {
                             if (err) {
                                 return reply(err);
                             }
-                            if (user) {
-                                return reply(Boom.conflict('Username already in use.'));
-                            }
-                            reply(true);
+                            return reply(user);
                         });
                     }
                 }
             ]
         },
         handler: function (request, reply) {
-            const username = request.payload.username;
-            const password = request.payload.password;
-            User.create(username, password, (err, user) => {
+            const id = request.auth.credentials.user._id.toString();
+            const userId = request.pre.userCheck._id.toString();
+            Friend.create(id, userId, (err, friends) => {
                 if (err) {
                     return reply(err);
                 }
-                reply(user);
+                reply(friends);
             });
         }
     });
@@ -204,5 +257,5 @@ exports.register = function (server, options, next) {
 
 
 exports.register.attributes = {
-    name: 'users'
+    name: 'friends'
 };

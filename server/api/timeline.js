@@ -14,6 +14,7 @@ internals.applyRoutes = function (server, next) {
     const User = server.plugins['hapi-mongo-models'].User;
     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
     const Message = server.plugins['hapi-mongo-models'].Message;
+    const Friend = server.plugins['hapi-mongo-models'].Friend;
 
 
     const outputTimeline = function(conversation, reply) {

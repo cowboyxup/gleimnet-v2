@@ -2,6 +2,7 @@
 
 const Boom = require('boom');
 const Joi = require('joi');
+const Async = require('async');
 const AuthPlugin = require('../auth');
 
 
@@ -12,6 +13,40 @@ internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
     const Friend = server.plugins['hapi-mongo-models'].Friend;
+
+
+    const outputWellFriends = function(ownid,rawfriends, reply) {
+        const lightfriends = rawfriends.reduce(function(memo, curr) {
+            memo.push(curr.friends.filter(function checkAdult(i) {return i.id !== ownid})[0]);
+            return memo;
+        }, []);
+        Async.map(lightfriends, function(friend, callback) {
+            console.log('friend:'+JSON.stringify(friend));
+            User.findById(friend.id, (err, user) => {
+                if (err) {
+                    return callback(err);
+                }
+                const wellUser = user
+                wellUser.isActive = undefined;
+                wellUser.username = undefined;
+                wellUser.password = undefined;
+                wellUser.timeCreated = undefined;
+                wellUser.birthdate = undefined;
+                wellUser.description = undefined;
+                wellUser.avatar = undefined;
+                wellUser.titlePicture = undefined;
+                wellUser.timeline = undefined;
+                return callback(null, wellUser);
+            });
+        }, function(err, friends) {
+            if (err) {
+                return reply(err);
+            }
+            const wellFriends = friends;
+            reply(wellFriends);
+        });
+
+    };
 
     server.route({
         method: 'GET',
@@ -100,8 +135,7 @@ internals.applyRoutes = function (server, next) {
             },{
                 assign: 'friends',
                 method: function(request, reply) {
-                    console.log(request.pre.user);
-                    Friend.findByUserId(request.pre.user._id, (err, friends) => {
+                    Friend.findConfirmedByUserId(request.pre.user._id.toString(), (err, friends) => {
                         if (err) {
                             return reply(err);
                         }
@@ -111,13 +145,18 @@ internals.applyRoutes = function (server, next) {
                         reply(friends);
                     });
                 }
+            },{
+                assign: 'wellFriends',
+                method: function(request, reply) {
+                    return outputWellFriends(request.pre.user._id.toString(),request.pre.friends, reply);
+                }
             }]
         },
         handler: function (request, reply) {
             let wellUser = request.pre.user;
             wellUser.password = undefined;
             wellUser.isActive = undefined;
-
+            wellUser.friends = request.pre.wellFriends;
             reply(wellUser);
         }
     });
@@ -142,53 +181,6 @@ internals.applyRoutes = function (server, next) {
                     return reply(Boom.notFound('Document not found. That is strange.'));
                 }
 
-                reply(user);
-            });
-        }
-    });
-
-
-    server.route({
-        method: 'POST',
-        path: '/users',
-        config: {
-            auth: {
-                strategy: 'simple'
-            },
-            validate: {
-                payload: {
-                    username: Joi.string().token().lowercase().required(),
-                    password: Joi.string().required(),
-                    email: Joi.string().email().lowercase().required()
-                }
-            },
-            pre: [
-                {
-                    assign: 'usernameCheck',
-                    method: function (request, reply) {
-                        const conditions = {
-                            username: request.payload.username
-                        };
-                        User.findOne(conditions, (err, user) => {
-                            if (err) {
-                                return reply(err);
-                            }
-                            if (user) {
-                                return reply(Boom.conflict('Username already in use.'));
-                            }
-                            reply(true);
-                        });
-                    }
-                }
-            ]
-        },
-        handler: function (request, reply) {
-            const username = request.payload.username;
-            const password = request.payload.password;
-            User.create(username, password, (err, user) => {
-                if (err) {
-                    return reply(err);
-                }
                 reply(user);
             });
         }
