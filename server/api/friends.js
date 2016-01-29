@@ -79,7 +79,7 @@ internals.applyRoutes = function (server, next) {
 
     server.route({
         method: 'GET',
-        path: '/users/username/{username}',
+        path: '/friends/username/{username}',
         config: {
             auth: {
                 strategy: 'simple'
@@ -100,8 +100,7 @@ internals.applyRoutes = function (server, next) {
             },{
                 assign: 'friends',
                 method: function(request, reply) {
-                    console.log(request.pre.user);
-                    Friend.findByUserId(request.pre.user._id, (err, friends) => {
+                    Friend.findByUserId(request.pre.user._id.toString(), (err, friends) => {
                         if (err) {
                             return reply(err);
                         }
@@ -114,24 +113,20 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            let wellUser = request.pre.user;
-            wellUser.password = undefined;
-            wellUser.isActive = undefined;
-
-            reply(wellUser);
+            let wellFriends = request.pre.friends;
+            reply(wellFriends);
         }
     });
 
     server.route({
         method: 'GET',
-        path: '/users/my',
+        path: '/friends/my',
         config: {
             auth: {
                 strategy: 'simple'
             }
         },
         handler: function (request, reply) {
-
             const id = request.auth.credentials.user._id.toString();
             const fields = User.fieldsAdapter('username email roles');
             User.findById(id, fields, (err, user) => {
@@ -150,46 +145,38 @@ internals.applyRoutes = function (server, next) {
 
     server.route({
         method: 'POST',
-        path: '/users',
+        path: '/friends',
         config: {
             auth: {
                 strategy: 'simple'
             },
             validate: {
                 payload: {
-                    username: Joi.string().token().lowercase().required(),
-                    password: Joi.string().required(),
-                    email: Joi.string().email().lowercase().required()
+                    username: Joi.string().token().lowercase().required()
                 }
             },
             pre: [
                 {
-                    assign: 'usernameCheck',
+                    assign: 'userCheck',
                     method: function (request, reply) {
-                        const conditions = {
-                            username: request.payload.username
-                        };
-                        User.findOne(conditions, (err, user) => {
+                        User.findByUsername(request.payload.username, (err, user) => {
                             if (err) {
                                 return reply(err);
                             }
-                            if (user) {
-                                return reply(Boom.conflict('Username already in use.'));
-                            }
-                            reply(true);
+                            return reply(user);
                         });
                     }
                 }
             ]
         },
         handler: function (request, reply) {
-            const username = request.payload.username;
-            const password = request.payload.password;
-            User.create(username, password, (err, user) => {
+            const id = request.auth.credentials.user._id.toString();
+            const userId = request.pre.userCheck._id.toString();
+            Friend.create(id, userId, (err, friends) => {
                 if (err) {
                     return reply(err);
                 }
-                reply(user);
+                reply(friends);
             });
         }
     });
@@ -204,5 +191,5 @@ exports.register = function (server, options, next) {
 
 
 exports.register.attributes = {
-    name: 'users'
+    name: 'friends'
 };
