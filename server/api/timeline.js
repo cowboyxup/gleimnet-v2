@@ -325,7 +325,7 @@ internals.applyRoutes = function (server, next) {
             }, {
                 assign: 'message',
                 method: function (request, reply) {
-                    const userid = request.pre.user._id;
+                    const userid = request.auth.credentials.session.userId;
                     Message.create(userid, request.payload.content, (err, message) => {
                         if (err) {
                             return reply(Boom.badRequest('Message not created'));
