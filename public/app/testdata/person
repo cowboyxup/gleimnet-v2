@@ -1,0 +1,17 @@
+{
+    "firstName":"Johann Wolfgang",
+    "lastName":"von Goethe",
+    "birthday": "28 August 1832",
+    "information": "habe nun ach ...",
+    "username":"Goethe",
+    "friends":[
+            {
+                "_id": "56a8d0196614ba68176ead3f",
+                "lastName":"Schiller"
+            },
+            {
+                "_id": "56a8d0196614ba68176ead3f",
+                "lastName":"von Stein"
+            }
+        ]
+}

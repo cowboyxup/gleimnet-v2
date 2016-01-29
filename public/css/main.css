@@ -1,0 +1,79 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+.titelImage {
+   height: 250px;
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+}
+
+.profilimage{
+   margin-top: 120px;
+   width: 150px;
+   height: 150px
+}
+
+.profilname{
+   margin-top: -3em;
+   margin-bottom: 1em;
+}
+
+.timelineImage{
+   width: 64px;
+   height: 64px;
+}
+
+
+.timeline{
+   border-style: solid;
+   border-color: lightgrey;
+   border-width: 0px 0px 0px 1px;
+}
+
+.timelineWriteSomeThing{
+    margin-top: 10px;
+    margin-bottom:30px;
+}
+
+.timelineWriteSomeThing button {
+    float: right;
+}
+.post{
+   padding-bottom: 25px;
+   /*background-color: #fafafa;*/
+}
+
+.friendImage .caption {
+    bottom:8px;
+    left:8px;
+    position: absolute;
+    font-size: 80%;
+    line-height: 90%;
+}
+.friendImage {
+    display: block;
+    padding: 4px;
+    margin-bottom: 4px;
+    background-color: #ffffff;
+}
+
+.ChatName-right{
+    text-align: right;
+}
+
+.content{
+    margin-top: 20px;
+}
+
+.login{
+    width: 40%;
+}
+
+.posting-body{
+    min-height: 70px;
+}

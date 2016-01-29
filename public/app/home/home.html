@@ -1,0 +1,112 @@
+<div  class="titelImage" style="background-image:url('img/bg.jpg')">
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1" >
+                <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.username}}.png" alt="...">
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-9 col-md-offset-3 profilname">
+        <h2>{{user.givenName}} {{user.username}} </h2>
+    </div>
+</div>
+
+<div class="container col-md-3">
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Geburtsdatum:</h4>
+            <p>{{user.birthdate}}
+            <h4>Info:</h4>
+            <p>{{user.description}}</p>
+        </div>
+    </div>
+
+
+    <h4>Freunde</h4>
+    <div class="col-md-4 friendImage" *ngFor="#Friend of friends">
+        <img alt="" src="img/profilimages/64x64/{{Friend.lastName}}.png">
+        <div class="caption">
+            <a class="" href="#" role="button">{{Friend.lastName}}</a>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="container col-md-9 timeline">
+
+    <div class="row">
+        <div class="col-lg-6 timelineWriteSomeThing">
+            <div class="input-group">
+                <input #newPosting
+                       (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
+                       type="text" class="form-control" placeholder="Was machst du grade?">
+                        <span class="input-group-btn">
+                            <button (click)="postNewPosting(newPosting.value); newPosting.value=''"
+                                    class="btn btn-default" type="button">post</button>
+                        </span>
+            </div>
+            <!-- /input-group -->
+        </div>
+        <!-- /.col-lg-6 -->
+    </div>
+    <!-- /.row -->
+
+</div>
+
+<div class="container col-md-9 timeline">
+    <!-- Post-->
+
+
+    <div class="media post" *ngFor="#Posting of messages">
+        <div class="media-left">
+            <a href="#/profile/{{Posting.author}}">
+                <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Posting.author}}.png">
+            </a>
+        </div>
+        <div class="media-body">
+            <div class="posting-body">
+                <a href="#/profile/{{Posting.author}}">
+                    <h4 class="media-heading">{{Posting.author}}</h4>
+                </a>
+                {{Posting.content}}
+            </div>
+            <div class="media post" *ngFor="#Comment of Posting.comments">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#/profile/{{Posting.author}}">
+                            <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Comment.author}}.png">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <a href="#/profile/{{Comment.author}}">
+                            <h4 class="media-heading">{{Comment.author}}</h4>
+                        </a>
+                        {{Comment.content}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <input #newComment
+                               (keyup.enter)="commentOnPosting(newComment.value, Posting._id); newPosting.value=''"
+                               type="text" class="form-control" placeholder="Schreibe einen Kommentar ...">
+                        <span class="input-group-btn">
+                            <button (click)="commentOnPosting(newComment.value, Posting._id); newPosting.value=''"
+                                    class="btn btn-default" type="button">Posten</button>
+                        </span>
+                    </div>
+                    <!-- /input-group -->
+                </div>
+                <!-- /.col-lg-6 -->
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+
+</div>
+
+<hr>

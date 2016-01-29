@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>Gleim.net</title>
+
+    <!-- 1. Load libraries -->
+    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.js"></script>
+    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px;
+            padding-bottom: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- 2. Configure SystemJS -->
+    <script src="config.js"></script>
+    <script>
+        System.import('app/app')
+    </script>
+
+</head>
+
+<!-- 3. Display the application -->
+<body>
+<my-app>Loading...</my-app>
+</body>
+
+</html>
