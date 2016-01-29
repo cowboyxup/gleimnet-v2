@@ -1,7 +1,7 @@
-<div class="titelImage" style="background-image:url('img/bg.jpg')">
+<div  class="titelImage" style="background-image:url('img/bg.jpg')">
     <div class="row">
         <div class="col-md-2 col-md-offset-1" >
-                <img class="thumbnail profilimage" src="img/profilimages/240x240/{{user.lastName}}.png" alt="...">
+                <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.username}}.png" alt="...">
 
         </div>
     </div>
@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-9 col-md-offset-3 profilname">
-        <h2>{{user.firstName}} {{user.lastName}} <a class="btn btn-default" href="#" role="button">Nachricht senden</a></h2>
+        <h2>{{user.givenName}} {{user.username}} </h2>
     </div>
 </div>
 
@@ -19,7 +19,7 @@
             <h4>Geburtsdatum:</h4>
             <p>{{user.birthday}}
             <h4>Info:</h4>
-            <p>{{user.information}}</p>
+            <p>{{user.description}}</p>
         </div>
     </div>
 
@@ -62,23 +62,28 @@
 
     <div class="media post" *ngFor="#Posting of messages">
         <div class="media-left">
-            <a href="#">
+            <a href="#/profile/{{Posting.author}}">
                 <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Posting.author}}.png">
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{Posting.author}}</h4>
-            {{Posting.content}}
-
+            <div class="posting-body">
+                <a href="#/profile/{{Posting.author}}">
+                    <h4 class="media-heading">{{Posting.author}}</h4>
+                </a>
+                {{Posting.content}}
+            </div>
             <div class="media post" *ngFor="#Comment of Posting.comments">
                 <div class="media">
                     <div class="media-left">
-                        <a href="#">
+                        <a href="#/profile/{{Posting.author}}">
                             <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Comment.author}}.png">
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading">{{Comment.author}}</h4>
+                        <a href="#/profile/{{Comment.author}}">
+                            <h4 class="media-heading">{{Comment.author}}</h4>
+                        </a>
                         {{Comment.content}}
                     </div>
                 </div>
@@ -86,12 +91,12 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="input-group">
-                        <input #newPosting
-                               (keyup.enter)="postNewPosting(newPosting.value)"
-                               (blur)="postNewPosting(newPosting.value); newPosting.value=''"
-                               type="text" class="form-control" placeholder="Was machst du grade?">
+                        <input #newComment
+                               (keyup.enter)="commentOnPosting(newComment.value, Posting._id); newPosting.value=''"
+                               type="text" class="form-control" placeholder="Schreibe einen Kommentar ...">
                         <span class="input-group-btn">
-                            <button (click)="postNewPosting(newPosting.value)" class="btn btn-default" type="button">Posten</button>
+                            <button (click)="commentOnPosting(newComment.value, Posting._id); newPosting.value=''"
+                                    class="btn btn-default" type="button">Posten</button>
                         </span>
                     </div>
                     <!-- /input-group -->

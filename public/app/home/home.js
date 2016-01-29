@@ -27,19 +27,23 @@ System.register(['angular2/core', "angular2/router", "angular2/http"], function(
                 function Home(router, http) {
                     this.router = router;
                     this.http = http;
+                    this.timelinepath = 'api/timeline';
                     this.user = new User();
                     this.router = router;
                     this.http = http;
                     this.username = localStorage.getItem('username');
                 }
                 Home.prototype.ngOnInit = function () {
-                    this.loadProfilInfos();
-                    this.loadTimeline();
+                    var basicAuth = localStorage.getItem('AuthKey');
+                    if (basicAuth) {
+                        this.loadProfilInfos();
+                        this.loadTimeline();
+                    }
                 };
                 Home.prototype.loadProfilInfos = function () {
                     var _this = this;
                     var headers = this.headers();
-                    this.http.get('app/testdata/person', { headers: headers })
+                    this.http.get('api/users/username/' + this.username, { headers: headers })
                         .map(function (res) { return res.json(); })
                         .subscribe(function (res) {
                         _this.user = res;
@@ -50,8 +54,7 @@ System.register(['angular2/core', "angular2/router", "angular2/http"], function(
                 Home.prototype.loadTimeline = function () {
                     var _this = this;
                     var headers = this.headers();
-                    var timelinepath = 'api/timeline';
-                    this.http.get(timelinepath, { headers: headers })
+                    this.http.get(this.timelinepath, { headers: headers })
                         .map(function (res) { return res.json(); })
                         .subscribe(function (res) {
                         _this.messages = res.messages;
@@ -61,7 +64,20 @@ System.register(['angular2/core', "angular2/router", "angular2/http"], function(
                 Home.prototype.postNewPosting = function (content) {
                     var _this = this;
                     var body = JSON.stringify({ content: content });
-                    this.http.post('api/timeline', body, { headers: this.headers() })
+                    this.http.post(this.timelinepath, body, { headers: this.headers() })
+                        .map(function (response) {
+                    })
+                        .subscribe(function (response) {
+                        _this.loadTimeline();
+                    }, function (error) {
+                        //this.message = error.json().message;
+                        //this.error = error
+                    });
+                };
+                Home.prototype.commentOnPosting = function (content, postId) {
+                    var _this = this;
+                    var body = JSON.stringify({ content: content });
+                    this.http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
                         .map(function (response) {
                     })
                         .subscribe(function (response) {

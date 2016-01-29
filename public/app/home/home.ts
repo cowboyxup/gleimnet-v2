@@ -31,6 +31,7 @@ export class Home implements OnInit{
     friends:Friend[];
 
     username:string;
+    timelinepath = 'api/timeline';
 
     user = new User();
 
@@ -43,14 +44,16 @@ export class Home implements OnInit{
     }
 
     ngOnInit() {
-        this.loadProfilInfos();
-        this.loadTimeline();
-
+        var basicAuth =  localStorage.getItem('AuthKey');
+        if(basicAuth){
+            this.loadProfilInfos();
+            this.loadTimeline();
+        }
     }
 
     loadProfilInfos(){
         var headers = this.headers();
-        this.http.get('app/testdata/person', {headers })
+        this.http.get('api/users/username/' + this.username, {headers })
             .map((res: Response) => res.json())
             .subscribe(
                 (res:User) => {
@@ -64,9 +67,9 @@ export class Home implements OnInit{
 
     loadTimeline(){
         var headers = this.headers();
-        var timelinepath ='api/timeline';
 
-        this.http.get(timelinepath, {headers })
+
+        this.http.get(this.timelinepath, {headers })
             .map((res: Response) => res.json())
             .subscribe(
                 (res:Timeline) => {
@@ -80,7 +83,7 @@ export class Home implements OnInit{
 
         let body = JSON.stringify({content });
 
-        this.http.post('api/timeline', body, { headers: this.headers() })
+        this.http.post(this.timelinepath, body, { headers: this.headers() })
             .map(response =>  {
 
             })
@@ -95,6 +98,24 @@ export class Home implements OnInit{
             );
     }
 
+    commentOnPosting(content:string, postId:string){
+        let body = JSON.stringify({content });
+
+        this.http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
+            .map(response =>  {
+            })
+            .subscribe(
+                response => {
+                    this.loadTimeline();
+                },
+                error => {
+                    //this.message = error.json().message;
+                    //this.error = error
+                }
+            );
+    }
+
+
     headers(){
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -107,11 +128,13 @@ export class Home implements OnInit{
 }
 
 class User{
-    firstName:string;
-    lastName:string;
+    _id:string;
+    username:string;
+    timeCreated:string;
+    givenName:string;
     birthday:string;
-    information:string;
-    friends:Friend[];
+    description:string;
+    timeline:string;
 }
 
 interface Friend{

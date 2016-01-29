@@ -15,6 +15,7 @@ import {Subject } from 'rxjs/Subject';
 import {contentHeaders} from "../common/headers";
 import {autKey} from "../common/consts";
 
+
 @Component({
     selector: 'Home',
     templateUrl: './app/home/home.html'
@@ -53,7 +54,7 @@ export class Profile implements OnInit{
 
     loadProfilInfos(){
         var headers = this.headers();
-        this.http.get('app/testdata/person', {headers })
+        this.http.get('api/users/username/' + this.username, {headers })
             .map((res: Response) => res.json())
             .subscribe(
                 (res:User) => {
@@ -92,6 +93,23 @@ export class Profile implements OnInit{
                 },
                 error => {
 
+                }
+            );
+    }
+
+    commentOnPosting(content:string, postId:string){
+        let body = JSON.stringify({content });
+
+        this.http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
+            .map(response =>  {
+            })
+            .subscribe(
+                response => {
+                    this.loadTimeline();
+                },
+                error => {
+                    //this.message = error.json().message;
+                    //this.error = error
                 }
             );
     }
