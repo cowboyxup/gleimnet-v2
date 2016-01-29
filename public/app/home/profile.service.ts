@@ -12,10 +12,8 @@ import {error} from "util";
 @Injectable()
 export class ProfileService {
 
-    http: Http;
 
-    constructor(public http: Http) {
-        this.http = http;
+    constructor(public _http: Http) {
     }
 
     headers(){
@@ -32,17 +30,16 @@ export class ProfileService {
         var url = 'api/users/username/' + username;
         var headers = this.headers();
 
-        return this.http.get(url, {headers})
+        return this._http.get(url, {headers})
             .map((res:Response) => res.json());
     }
-
 
     loadTimeline(username:string){
 
         var url = 'api/timeline/' + username;
         var headers = this.headers();
 
-        return this.http.get(url, {headers})
+        return this._http.get(url, {headers})
             .map((res:Response) => res.json());
     }
 
@@ -51,9 +48,8 @@ export class ProfileService {
         var url = 'api/timeline/' + username;
         let body = JSON.stringify({content });
 
-        return this.http.post(url, body, { headers: this.headers() })
+        return this._http.post(url, body, { headers: this.headers() })
             .map(response =>  { });
-
     }
 
     commentOnPosting(content:string, postId:string){
@@ -61,7 +57,7 @@ export class ProfileService {
         var url = 'api/timeline/message/' + postId;
         let body = JSON.stringify({content });
 
-        return this.http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
+        return this._http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
             .map(response =>  {
             });
     }
@@ -72,10 +68,10 @@ export class User{
     lastName:string;
     birthday:string;
     information:string;
-    friends:Friend[];
+    friends:ProfileFriend[];
 }
 
-export interface Friend{
+export interface ProfileFriend{
     _id: string;
     lastName:string;
 }

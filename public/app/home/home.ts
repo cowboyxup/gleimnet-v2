@@ -4,7 +4,7 @@ import {OnInit} from "angular2/core";
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 
-import {ProfileService,User,Friend,Messages, Timeline} from "./profile.service";
+import {ProfileService,User,ProfileFriend,Messages, Timeline} from "./profile.service";
 
 import {autKey} from "../common/consts";
 
@@ -17,7 +17,7 @@ import {autKey} from "../common/consts";
 export class Home implements OnInit{
 
     messages:Messages[];
-    friends:Friend[];
+    friends:ProfileFriend[];
 
     user = new User();
     username;

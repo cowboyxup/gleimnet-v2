@@ -5,11 +5,10 @@ import {ROUTER_DIRECTIVES} from 'angular2/router';
 
 
 @Component({
-    selector: 'Chat',
-    templateUrl: './app/chat/chat.html'
+    selector: 'notFound',
+    templateUrl: './app/pages/NotFound.html'
 })
 
-export class Chat {
-
+export class NotFound {
 
 }

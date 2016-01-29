@@ -8,7 +8,7 @@ import {Router} from "angular2/router";
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 
-import {ProfileService,User,Friend,Messages, Timeline} from "./profile.service";
+import {ProfileService,User,ProfileFriend,Messages, Timeline} from "./profile.service";
 
 @Component({
     selector: 'Profile',
@@ -20,7 +20,7 @@ import {ProfileService,User,Friend,Messages, Timeline} from "./profile.service";
 export class Profile implements OnInit{
 
     messages:Messages[];
-    friends:Friend[];
+    friends:ProfileFriend[];
 
     user = new User();
     username;
