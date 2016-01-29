@@ -1,8 +1,8 @@
 # Gleim.net
 
-Gleim.net ist ein soziales netzwerk das im Museum GLEIMHAUS eingesetzt wird. Es dient zur vermittlung von Medienkompetenz an Schüler. 
+Gleim.net is a social network that is used in the museum Gleimhaus. It is used for switching of media literacy to pupils.
 
-Es benutzt Node.js als Server und Angular 2 als Frontend.
+It uses Node.js as a server and Angular 2 as frontend.
 
 
 # Technology
