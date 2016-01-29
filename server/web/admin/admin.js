@@ -311,6 +311,7 @@ internals.applyRoutes = function (server, next) {
                 assign: 'save',
                 method: function (request, reply) {
                     const User = server.plugins['hapi-mongo-models'].User;
+                    const Friend = server.plugins['hapi-mongo-models'].Friend;
                     const Message = server.plugins['hapi-mongo-models'].Message;
                     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     Async.auto({
@@ -338,11 +339,20 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        savegroup: ['loadUserdata','loadMessages','loadConversations', (done, data) => {
+                        loadFriends: (done) => {
+                            Friend.find({}, (err, data) => {
+                                if (err) {
+                                    return err;
+                                }
+                                return done(null, data);
+                            });
+                        },
+                        savegroup: ['loadUserdata','loadFriends','loadMessages','loadConversations', (done, data) => {
                             const alldata = {};
                             alldata.users = data.loadUserdata;
                             alldata.messages = data.loadMessages;
                             alldata.conversations = data.loadConversations;
+                            alldata.friends = data.loadFriends;
                             const savedata = JSON.stringify(alldata, null, '\t');
                             const fsOptions = {encoding: 'utf-8'};
                             const date = new Date();
@@ -380,6 +390,7 @@ internals.applyRoutes = function (server, next) {
                 assign: 'clean',
                 method: function (request, reply) {
                     const User = server.plugins['hapi-mongo-models'].User;
+                    const Friend = server.plugins['hapi-mongo-models'].Friend;
                     const Session = server.plugins['hapi-mongo-models'].Session;
                     const AuthAttempt = server.plugins['hapi-mongo-models'].AuthAttempt;
                     const Message = server.plugins['hapi-mongo-models'].Message;
@@ -391,7 +402,8 @@ internals.applyRoutes = function (server, next) {
                                 Session.deleteMany.bind(Session, {}),
                                 AuthAttempt.deleteMany.bind(AuthAttempt, {}),
                                 Message.deleteMany.bind(Message, {}),
-                                Conversation.deleteMany.bind(Conversation, {})
+                                Conversation.deleteMany.bind(Conversation, {}),
+                                Friend.deleteMany.bind(Friend, {})
                             ], done);
                         },
                         loadconfig: (done, data) => {
@@ -407,6 +419,17 @@ internals.applyRoutes = function (server, next) {
                         user: ['clean','loadconfig', (done, data) => {
                             const loaddata = JSON.parse(data.loadconfig);
                             User.insertMany(loaddata['users'],(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
+                            return done;
+                        }],
+                        friend: ['clean','loadconfig', (done, data) => {
+                            const loaddata = JSON.parse(data.loadconfig);
+                            Friend.insertMany(loaddata['friends'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;

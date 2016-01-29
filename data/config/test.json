@@ -1,14 +1,50 @@
 {
 	"users": [
 		{
-			"_id": "56a774be2f7ac04827346b78",
+			"_id": "56ab9f994858069021d5da2f",
 			"isActive": true,
-			"username": "ii",
-			"password": "$2a$10$9bhStP0pq0lEehdHBUHZ7uxTXgfg50EJsdX7rvPYCOCrxxy99hJGi",
-			"timeCreated": "2016-01-26T13:29:34.493Z",
-			"givenName": "ii ii",
-			"birthdate": "1980-08-29T22:00:00.000Z",
-			"description": "Inorlkjfsa"
+			"username": "schiller",
+			"password": "$2a$10$0OJyzH.Prr0fCprHhdSIEebknOkH5uXIhb/XXew.8OUp5MqRgTI3i",
+			"timeCreated": "2016-01-29T17:21:29.064Z",
+			"givenName": "Johann Christoph Friedrich",
+			"surename": "von Schiller",
+			"nickname": "Friedrich Schiller",
+			"birthdate": "1759-10-10T04:00:00.000Z",
+			"description": "Johann Christoph Friedrich von Schiller, 1802 geadelt, war ein deutscher Dichter, Philosoph und Historiker. Er gilt als einer der bedeutendsten deutschsprachigen Dramatiker, Lyriker und Essayisten.",
+			"avatar": "schiller",
+			"titlePicture": "schiller",
+			"timeline": "56ab9f984858069021d5da2e"
+		},
+		{
+			"_id": "56aba05cc27c09201c388045",
+			"isActive": true,
+			"username": "goethe",
+			"password": "$2a$10$7Nq4B1RbyeM77ryn.Cn2AueefO7LJZNai3HDwR8ZqOJxjwA2f6ee.",
+			"timeCreated": "2016-01-29T17:24:44.108Z",
+			"givenName": "Johann Wolfgang",
+			"surename": "von Goethe",
+			"nickname": "Goethe",
+			"birthdate": "1832-03-22T05:00:00.000Z",
+			"description": "Johann Wolfgang von Goethe gilt als einer der bedeutendsten Repräsentanten deutschsprachiger Dichtung.",
+			"avatar": "goethe",
+			"titlePicture": "goethe",
+			"timeline": "56aba05bc27c09201c388044"
+		}
+	],
+	"friends": [],
+	"messages": [],
+	"conversations": [
+		{
+			"_id": "56ab9f984858069021d5da2e",
+			"timeCreated": "2016-01-29T17:21:28.821Z",
+			"messages": [],
+			"authors": []
+		},
+		{
+			"_id": "56aba05bc27c09201c388044",
+			"timeCreated": "2016-01-29T17:24:43.855Z",
+			"messages": [],
+			"authors": []
 		}
 	]
 }

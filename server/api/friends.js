@@ -114,6 +114,29 @@ internals.applyRoutes = function (server, next) {
     });
 
     server.route({
+        method: 'DELETE',
+        path: '/friends/{id}',
+        config: {
+            auth: {
+                strategy: 'simple',
+            },
+            pre: [
+            ]
+        },
+        handler: function (request, reply) {
+            Friend.findByIdAndDelete(request.params.id, (err, friendship) => {
+                if (err) {
+                    return reply(err);
+                }
+                if (!friendship) {
+                    return reply(Boom.notFound('Friendship not found.'));
+                }
+                reply({ message: 'Success.' });
+            });
+        }
+    });
+
+    server.route({
         method: 'GET',
         path: '/friends/username/{username}',
         config: {
