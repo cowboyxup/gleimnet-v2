@@ -49,7 +49,7 @@ export class Login {
                 console.log(authHeaderString);
                 localStorage.setItem(autKey, response.json().authHeader);
                 localStorage.setItem(usernameKey, response.json().user.username)
-                this.router.parent.navigateByUrl('/profile');
+                this.router.parent.navigateByUrl('/');
             })
             .subscribe(
                 response => {

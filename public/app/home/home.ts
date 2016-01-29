@@ -58,8 +58,8 @@ export class Home implements OnInit{
             .subscribe(
                 (res:User) => {
                     this.user = res;
-                    this.friends = this.user.friends;
-                    console.log(this.user.friends);
+                    //this.friends = this.user.friends;
+                    //console.log(this.user);
                 }
             );
     }
@@ -67,7 +67,6 @@ export class Home implements OnInit{
 
     loadTimeline(){
         var headers = this.headers();
-
 
         this.http.get(this.timelinepath, {headers })
             .map((res: Response) => res.json())
@@ -132,7 +131,7 @@ class User{
     username:string;
     timeCreated:string;
     givenName:string;
-    birthday:string;
+    birthdate:string;
     description:string;
     timeline:string;
 }

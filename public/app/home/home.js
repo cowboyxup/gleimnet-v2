@@ -47,8 +47,8 @@ System.register(['angular2/core', "angular2/router", "angular2/http"], function(
                         .map(function (res) { return res.json(); })
                         .subscribe(function (res) {
                         _this.user = res;
-                        _this.friends = _this.user.friends;
-                        console.log(_this.user.friends);
+                        //this.friends = this.user.friends;
+                        //console.log(this.user);
                     });
                 };
                 Home.prototype.loadTimeline = function () {

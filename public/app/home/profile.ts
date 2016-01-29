@@ -47,9 +47,11 @@ export class Profile implements OnInit{
     }
 
     ngOnInit() {
-        this.loadProfilInfos();
-        this.loadTimeline();
-
+        var basicAuth =  localStorage.getItem('AuthKey');
+        if(basicAuth){
+            this.loadProfilInfos();
+            this.loadTimeline();
+        }
     }
 
     loadProfilInfos(){
@@ -59,8 +61,8 @@ export class Profile implements OnInit{
             .subscribe(
                 (res:User) => {
                     this.user = res;
-                    this.friends = this.user.friends;
-                    console.log(this.user.friends);
+                    //this.friends = this.user.friends;
+                    //console.log(this.user);
                 }
             );
     }

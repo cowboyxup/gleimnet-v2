@@ -56,7 +56,7 @@ System.register(['angular2/core', "angular2/http", "angular2/router", '../common
                         console.log(authHeaderString);
                         localStorage.setItem(consts_1.autKey, response.json().authHeader);
                         localStorage.setItem(consts_2.usernameKey, response.json().user.username);
-                        _this.router.parent.navigateByUrl('/profile');
+                        _this.router.parent.navigateByUrl('/');
                     })
                         .subscribe(function (response) {
                         console.log(response);
