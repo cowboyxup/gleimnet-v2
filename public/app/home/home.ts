@@ -1,45 +1,30 @@
 import {Component} from 'angular2/core';
 import {OnInit} from "angular2/core";
 
-import {RouteParams,RouteData} from 'angular2/router';
-import {ROUTER_DIRECTIVES} from 'angular2/router';
-import {Router} from "angular2/router";
-
-import {Http} from "angular2/http";
-import {Headers} from "angular2/http";
-import {Response} from "angular2/http";
-
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 
-import {contentHeaders} from "../common/headers";
+import {ProfileService,User,Friend,Messages, Timeline} from "./profile.service";
+
 import {autKey} from "../common/consts";
 
 @Component({
     selector: 'Home',
-    templateUrl: './app/home/home.html'
+    templateUrl: './app/home/home.html',
+    providers:[ProfileService]
 })
 
 export class Home implements OnInit{
 
-    http: Http;
-    router: Router;
-    //routeParams:RouteParams;
-
-    timeline:Timeline;
     messages:Messages[];
     friends:Friend[];
 
-    username:string;
-    timelinepath = 'api/timeline';
-
     user = new User();
+    username;
 
+    isMe = true;
 
-    constructor(public router: Router,
-                public http: Http) {
-        this.router = router;
-        this.http = http;
+    constructor(private _profileService: ProfileService) {
         this.username = localStorage.getItem('username');
     }
 
@@ -52,109 +37,48 @@ export class Home implements OnInit{
     }
 
     loadProfilInfos(){
-        var headers = this.headers();
-        this.http.get('api/users/username/' + this.username, {headers })
-            .map((res: Response) => res.json())
-            .subscribe(
-                (res:User) => {
-                    this.user = res;
-                    //this.friends = this.user.friends;
-                    //console.log(this.user);
-                }
-            );
+        if(this.username){
+            this._profileService.loadProfilInfos(this.username)
+                .subscribe(
+                    (res:User) => {this.user = res;
+                    },
+                    error => {console.log(error.message);}
+                )
+        }
     }
 
 
     loadTimeline(){
-        var headers = this.headers();
-
-        this.http.get(this.timelinepath, {headers })
-            .map((res: Response) => res.json())
-            .subscribe(
-                (res:Timeline) => {
-                    this.messages = res.messages;
-                    //console.log(this.messages);
-                }
-            );
+        if(this.username){
+            this._profileService.loadTimeline(this.username)
+                .subscribe(
+                    (res:Timeline) => {this.messages = res.messages; },
+                    error => { console.log(error.message);}
+                );
+        }
     }
 
     postNewPosting(content:string){
-
-        let body = JSON.stringify({content });
-
-        this.http.post(this.timelinepath, body, { headers: this.headers() })
-            .map(response =>  {
-
-            })
-            .subscribe(
-                response => {
-                    this.loadTimeline();
-                },
-                error => {
-                    //this.message = error.json().message;
-                    //this.error = error
-                }
-            );
+        if(this.username){
+            this._profileService.postNewPosting(this.username, content)
+                .subscribe(
+                    response => {
+                        this.loadTimeline();
+                    },
+                    error => { console.log(error.message);}
+                );
+        }
     }
 
     commentOnPosting(content:string, postId:string){
-        let body = JSON.stringify({content });
-
-        this.http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
-            .map(response =>  {
-            })
-            .subscribe(
-                response => {
-                    this.loadTimeline();
-                },
-                error => {
-                    //this.message = error.json().message;
-                    //this.error = error
-                }
-            );
+        if(this.username){
+            this._profileService.commentOnPosting(content, postId)
+                .subscribe(
+                    response => {
+                        this.loadTimeline();
+                    },
+                    error => { console.log(error.message);}
+                );
+        }
     }
-
-
-    headers(){
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        var basicAuth =  localStorage.getItem('AuthKey');
-        headers.append('Authorization',basicAuth);
-
-        return headers;
-    }
-
-}
-
-class User{
-    _id:string;
-    username:string;
-    timeCreated:string;
-    givenName:string;
-    birthdate:string;
-    description:string;
-    timeline:string;
-}
-
-interface Friend{
-    _id: string;
-    lastName:string;
-}
-
-interface Timeline{
-    _id:string;
-    messages:Messages[];
-}
-
-interface Messages{
-    _id:string;
-    author:string;
-    content:string;
-    comments:Comment[];
-}
-
-interface Comment{
-    _id:string;
-    author:string;
-    content:string;
 }
