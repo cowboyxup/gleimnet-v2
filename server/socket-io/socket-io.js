@@ -27,7 +27,7 @@ internals.applyRoutes = function (server, next) {
         //get credentials sent by the client
         var authBasic = data.auth;
 
-        const credentialsPart = new Buffer(authBasic, 'base64').toString();
+        const credentialsPart = new Buffer(authBasic.toString(), 'base64').toString();
         const sep = credentialsPart.indexOf(':');
 
         const username = credentialsPart.slice(0, sep);
