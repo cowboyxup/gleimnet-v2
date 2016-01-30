@@ -256,12 +256,7 @@ internals.applyRoutes = function (server, next) {
                         reply(friends);
                     });
                 }
-            },{
-                assign: 'wellFriends',
-                method: function(request, reply) {
-                    const id = request.auth.credentials.user._id.toString();
-                    return outputWellFriends(request.auth.credentials.user._id.toString(),request.pre.friends, reply);
-            }}]
+            }]
         },
         handler: function (request, reply) {
             let wellFriends = request.pre.friends;

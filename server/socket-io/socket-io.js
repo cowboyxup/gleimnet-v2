@@ -53,7 +53,7 @@ internals.applyRoutes = function (server, next) {
     });
 
 
-    ioAuth.sockets.on('authenticated', function(socket){
+    io.on('authenticated', function(data){
         console.log('Wait.....');
         socket.on('join-conversation', function (conversation) {
             socket.join(conversation);
@@ -67,7 +67,7 @@ internals.applyRoutes = function (server, next) {
                 });
 
             }
-        });
+        })
 
 
     });
