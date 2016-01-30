@@ -32,7 +32,7 @@ export class ChatService {
            socket.emit('authentication', body);
            socket.on('authenticated', function() {
                // use the socket as usual
-               socket.emit('join-conversation','56ac968fb047f7f003dd828f');
+               socket.emit('joinConversation','56ac968fb047f7f003dd828f');
 
            });
        });

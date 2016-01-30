@@ -121,8 +121,9 @@ Conversation.findAllConversationsByUserId = function (userId, callback) {
     const self = this;
     Async.auto({
         conversations: function (done) {
+            console.log(userId);
             const query = {
-                authors: { $elemMatch: { id: userId }}
+                authors: { $elemMatch:{id: userId}}
             };
             self.find(query, done);
         }
@@ -130,7 +131,9 @@ Conversation.findAllConversationsByUserId = function (userId, callback) {
         if (err) {
             return callback(err);
         }
-        return callback(null, results.friends);
+        console.log(results);
+
+        return callback(null, results.conversations);
     });
 };
 
