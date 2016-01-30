@@ -40,7 +40,9 @@ export class Home implements OnInit{
         if(this.username){
             this._profileService.loadProfilInfos(this.username)
                 .subscribe(
-                    (res:User) => {this.user = res;
+                    (res:User) => {
+                        this.user = res;
+
                     },
                     error => {console.log(error.message);}
                 )

@@ -15,7 +15,7 @@ export class FriendsService {
     constructor(public _http: Http) {
     }
 
-    headers(){
+    headers():Headers{
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
         var basicAuth =  localStorage.getItem('AuthKey');
@@ -25,9 +25,51 @@ export class FriendsService {
     }
 
 
-    loadMyFriends(){
+    loadMyFriends():any{
 
-        var url = 'api/friends/my';
+        var url = 'api/users/username/root';
+        var headers = this.headers();
+
+        return this._http.get(url, {headers})
+            .map((res:Response) => res.json());
+    }
+
+    requestFriendship(username:string):any{
+
+        var url = 'api/friends';
+        var headers = this.headers();
+        let body = JSON.stringify({username });
+
+        return this._http.post(url,body, {headers})
+            .map(res => {
+                console.log(res);
+            }
+            );
+    }
+
+    loadUnconfirmedFriends():any {
+        var url = '/friends/my/unconfirmed';
+        var headers = this.headers();
+
+        return this._http.get(url, {headers})
+            .map((res:Response) => res.json());
+    }
+
+    confirmFriendship(friendshipId:String):any {
+        var url = 'api/friends/' + friendshipId;
+        var headers = this.headers();
+        let activate = true;
+        let body = JSON.stringify({activate });
+
+        return this._http.post(url,body, {headers})
+            .map(res => {
+                    console.log(res);
+                }
+            );
+    }
+
+    findNewFriend(friendName:String):any {
+        var url = '/friends?username=' + friendName;
         var headers = this.headers();
 
         return this._http.get(url, {headers})

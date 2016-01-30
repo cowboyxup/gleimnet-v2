@@ -8,9 +8,19 @@
 </div>
 
 <div class="row">
-    <div class="col-md-9 col-md-offset-3 profilname">
-        <h2>{{user.givenName}} {{user.username}} </h2>
+    <div class="col-md-8 col-md-offset-3 profilname">
+        <h2>
+            {{user.givenName}} {{user.username}}
+            <button type="button"
+                    class="btn btn-default btn-sm pull-right"
+                    (click)="addAsFriend()">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                als Freund hinzufügen
+            </button>
+        </h2>
     </div>
+
+
 </div>
 
 <div class="container col-md-3">

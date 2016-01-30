@@ -9,11 +9,12 @@ import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 
 import {ProfileService,User,ProfileFriend,Messages, Timeline} from "./profile.service";
+import {FriendsService} from "../friends/friendsService";
 
 @Component({
     selector: 'Profile',
     templateUrl: './app/home/home.html',
-    providers:[ProfileService]
+    providers:[ProfileService,FriendsService]
 
 })
 
@@ -26,10 +27,12 @@ export class Profile implements OnInit{
     username;
 
     isMe = false;
+    addFriendButton=true;
 
 
     constructor(private _routeParams:RouteParams,
-                private _profileService: ProfileService) {
+                private _profileService: ProfileService,
+                private _friendsService:FriendsService) {
         this.username = this._routeParams.get('id');
     }
 
@@ -84,6 +87,18 @@ export class Profile implements OnInit{
                     },
                     error => { console.log(error.message);}
                 );
+        }
+    }
+
+    addAsFriend(){
+        if(this.username) {
+            this._friendsService.requestFriendship(this.username)
+                .subscribe(
+                    response => {
+                        this.addFriendButton = false;
+                    },
+                    error => { console.log(error.message);}
+                )
         }
     }
 }

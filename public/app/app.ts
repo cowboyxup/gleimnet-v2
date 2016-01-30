@@ -58,6 +58,8 @@ class MyDemoApp {
         this.router = router;
         this.location = location;
 
+
+
         if (!localStorage.getItem('AuthKey')) {
             this.logInOut = "Login";
         }else {
