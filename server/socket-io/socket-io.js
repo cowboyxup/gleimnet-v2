@@ -1,3 +1,4 @@
+const Async = require('async');
 
 const internals = {};
 
@@ -6,6 +7,15 @@ const internals = {};
 internals.applyRoutes = function (server, next) {
 
     const Session = server.plugins['hapi-mongo-models'].Session;
+    const Conversation = server.plugins['hapi-mongo-models'].Conversation;
+    const Message = server.plugins['hapi-mongo-models'].Message;
+
+    var q = Async.queue(function (task, callback) {
+        console.log('hello ' + task.name);
+        callback();
+    }, 2);
+
+
     const io = require('socket.io').listen(server.listener,
         {
             path:server.realm.modifiers.route.prefix
@@ -42,9 +52,24 @@ internals.applyRoutes = function (server, next) {
         timeout: 1000
     });
 
-    io.sockets.on('authenticated', function(socket){
+
+    ioAuth.sockets.on('authenticated', function(socket){
         console.log('Wait.....');
-        socket.join('some room');
+        socket.on('join-conversation', function (conversation) {
+            socket.join(conversation);
+            socket.emit('message', 'for your eyes only');
+
+            socket.on('message'), function(message) {
+                Message.create(message.userid, message.content, (err, mes)=> {
+                    io.sockets.to(conversation).send(message);
+                    Conversation.addMessage()
+
+                });
+
+            }
+        });
+
+
     });
 
     server.route([

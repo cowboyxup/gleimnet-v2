@@ -39,7 +39,6 @@ System.register(['angular2/core', "./profile.service"], function(exports_1) {
                         this._profileService.loadProfilInfos(this.username)
                             .subscribe(function (res) {
                             _this.user = res;
-                            _this.friends = _this.user.friends;
                         }, function (error) { console.log(error.message); });
                     }
                 };
