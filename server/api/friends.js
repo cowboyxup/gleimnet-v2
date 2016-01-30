@@ -3,6 +3,7 @@
 const Boom = require('boom');
 const Joi = require('joi');
 const AuthPlugin = require('../auth');
+const Async = require('async');
 
 
 const internals = {};
@@ -13,6 +14,38 @@ internals.applyRoutes = function (server, next) {
     const User = server.plugins['hapi-mongo-models'].User;
     const Friend = server.plugins['hapi-mongo-models'].Friend;
 
+    const outputWellFriends = function(ownid,rawfriends, reply) {
+        const lightfriends = [];
+        for(var i=0; i < rawfriends.length;i++) {
+            Async.map(rawfriends[i].friends, function(friend, lightfriends) {
+                console.log('friendd:'+JSON.stringify(friend));
+                User.findById(friend.id, (err, user) => {
+                    if (err) {
+                        return callback(err);
+                    }
+                    const wellUser = user
+                    wellUser.isActive = undefined;
+                    wellUser.nickname = undefined;
+                    wellUser.password = undefined;
+                    wellUser.timeCreated = undefined;
+                    wellUser.birthdate = undefined;
+                    wellUser.description = undefined;
+                    wellUser.avatar = undefined;
+                    wellUser.titlePicture = undefined;
+                    wellUser.timeline = undefined;
+                    console.log('we:'+JSON.stringify(wellUser));
+                    lightfriends.push(wellUser);
+                    console.log('wes:'+JSON.stringify(lightfriends));
+                    return (wellUser);
+                });
+            }, function(err, friends) {
+                if (err) {
+                    return reply(err);
+                }
+                console.log(friends);
+            });
+        }
+    };
     server.route({
         method: 'GET',
         path: '/friends',
@@ -225,10 +258,15 @@ internals.applyRoutes = function (server, next) {
                         reply(friends);
                     });
                 }
-            }]
+            },{
+                assign: 'wellFriends',
+                method: function(request, reply) {
+                    const id = request.auth.credentials.user._id.toString();
+                    return outputWellFriends(request.auth.credentials.user._id.toString(),request.pre.friends, reply);
+            }}]
         },
         handler: function (request, reply) {
-            let wellFriends = request.pre.friends;
+            let wellFriends = request.pre.wellFriends;
             reply(wellFriends);
         }
     });

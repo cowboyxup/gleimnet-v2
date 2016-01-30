@@ -28,7 +28,7 @@ internals.applyRoutes = function (server, next) {
                 }
                 const wellUser = user
                 wellUser.isActive = undefined;
-                wellUser.username = undefined;
+                wellUser.nickname = undefined;
                 wellUser.password = undefined;
                 wellUser.timeCreated = undefined;
                 wellUser.birthdate = undefined;
