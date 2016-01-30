@@ -55,21 +55,39 @@ internals.applyRoutes = function (server, next) {
 
     io.on('authenticated', function(data){
         console.log('Wait.....');
+        socket.on('all-conversations', function(data) {
+            Connection
+
+        });
+
+        socket.on('new-conversation', function (userId) {
+            Conversation.create((err, newConversation) => {
+                if(err) {
+                    return new Error("Fehler");
+                }
+                newConversation.ensureAuthor(userId, (err, finish) => {
+                    io.sockets.to(SocketId).send('conversation',finish);
+                    return finish;
+                });
+                return newConversation;
+            });
+        })
         socket.on('join-conversation', function (conversation) {
             socket.join(conversation);
             socket.emit('message', 'for your eyes only');
 
-            socket.on('message'), function(message) {
+            socket.on('new-message'), function(message) {
                 Message.create(message.userid, message.content, (err, mes)=> {
-                    io.sockets.to(conversation).send(message);
-                    Conversation.addMessage()
-
+                    Conversation.findById(conversation, (err,con) => {
+                        con.addMessage(userIdm, mes._id.toString())
+                        io.sockets.to(conversation).emit('message', message);
+                        return message;
+                    })
                 });
 
+                return mes;
             }
         })
-
-
     });
 
     server.route([

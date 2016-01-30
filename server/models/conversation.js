@@ -116,4 +116,22 @@ Conversation.ensureAuthor = function (userId, callback) {
         callback();
     });
 };
+
+Conversation.findAllConversationsByUserId = function (userId, callback) {
+    const self = this;
+    Async.auto({
+        conversations: function (done) {
+            const query = {
+                authors: { $elemMatch: { id: userId }}
+            };
+            self.find(query, done);
+        }
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        return callback(null, results.friends);
+    });
+};
+
 module.exports = Conversation;
