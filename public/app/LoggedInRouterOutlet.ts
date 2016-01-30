@@ -5,6 +5,7 @@ import {Login} from '../login/login';
 @Directive({
     selector: 'router-outlet'
 })
+
 export class LoggedInRouterOutlet extends RouterOutlet {
     publicRoutes: any;
     public parentRouter: Router;

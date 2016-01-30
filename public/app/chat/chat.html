@@ -1,27 +1,22 @@
 <div class="container col-md-3">
 
-    <div class="media post">
+    <div *ngFor="#Conversation of conversations" class="media post">
         <div class="media-left">
             <a href="#">
                 <img class="media-object timelineImage" alt="" src="img/64x64.svg">
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">Bernd</h4>
+            <h4 class="media-heading">
+                <span *ngFor="#user of Conversation.users">
+                    {{user.username}}
+                </span>
+            </h4>
         </div>
     </div>
-    <div class="media post">
-        <div class="media-left">
-            <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
-            </a>
-        </div>
-        <div class="media-body">
-            <h4 class="media-heading">Horst</h4>
-        </div>
-    </div>
-
 </div>
+
+
 
 
 <div class="container col-md-9 timeline">

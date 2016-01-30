@@ -48,12 +48,13 @@
    /*background-color: #fafafa;*/
 }
 
-.friendImage .caption {
+.friendImage .caption a{
     bottom:8px;
     left:8px;
     position: absolute;
-    font-size: 120%;
+    font-size: 80%;
     line-height: 90%;
+    color: #ffffff;
 }
 .friendImage {
     display: block;

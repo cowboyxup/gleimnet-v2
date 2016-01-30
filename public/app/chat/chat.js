@@ -9,7 +9,7 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, chat_service_1;
-    var Chat;
+    var Chat, CONVERSATIONS;
     return {
         setters:[
             function (core_1_1) {
@@ -22,7 +22,7 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
             Chat = (function () {
                 function Chat(_chatService) {
                     this._chatService = _chatService;
-                    //this._chatService.sendMessage("lol");
+                    this.conversations = CONVERSATIONS;
                 }
                 Chat = __decorate([
                     core_1.Component({
@@ -35,6 +35,256 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
                 return Chat;
             })();
             exports_1("Chat", Chat);
+            CONVERSATIONS = [
+                {
+                    "_id": "string",
+                    "users": [
+                        {
+                            "username": "Schiller"
+                        },
+                        {
+                            "username": "Goethe"
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        },
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        }
+                    ]
+                },
+                {
+                    "_id": "string",
+                    "users": [
+                        {
+                            "username": "Schiller"
+                        },
+                        {
+                            "username": "Goethe"
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        },
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        }
+                    ]
+                },
+                {
+                    "_id": "string",
+                    "users": [
+                        {
+                            "username": "Schiller"
+                        },
+                        {
+                            "username": "Goethe"
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        },
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        }
+                    ]
+                }
+            ];
+            CONVERSATIONS = [
+                {
+                    "_id": "string",
+                    "users": [
+                        {
+                            "username": "Schiller"
+                        },
+                        {
+                            "username": "Goethe"
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        },
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        }
+                    ]
+                },
+                {
+                    "_id": "string",
+                    "users": [
+                        {
+                            "username": "Schiller"
+                        },
+                        {
+                            "username": "Goethe"
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        },
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        }
+                    ]
+                },
+                {
+                    "_id": "string",
+                    "users": [
+                        {
+                            "username": "Schiller"
+                        },
+                        {
+                            "username": "Goethe"
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        },
+                        {
+                            "author": {
+                                "username": "Schiller"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo"
+                        },
+                        {
+                            "author": {
+                                "username": "Goethe"
+                            },
+                            "time": "jetzt",
+                            "content": "Hallo du"
+                        }
+                    ]
+                }
+            ];
         }
     }
 });

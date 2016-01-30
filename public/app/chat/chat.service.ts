@@ -16,9 +16,9 @@ export class ChatService {
 
     socket
 
-   constructor(){
-       console.log("lol");
+    socketIsOpen:boolean = false;
 
+   constructor(){
        var origin = location.origin;
 
        var socket = io.connect(origin, {path :"/api/chat"});
@@ -28,12 +28,24 @@ export class ChatService {
 
        let body = JSON.stringify({ auth});
 
+
+
        socket.on('connect', function(){
            socket.emit('authentication', body);
            socket.on('authenticated', function() {
                // use the socket as usual
-               socket.emit('joinConversation','56ac968fb047f7f003dd828f');
 
+               this.socketIsOpen = true;
+
+              // socket.emit('join-conversation','56ac968fb047f7f003dd828f');
+
+               socket.on('message',function(content){
+                   this.getMessage(content);
+               })
+
+               socket.on('disconnect', function(){
+                   this.socketIsOpen = false;
+               });
            });
        });
 
@@ -42,11 +54,28 @@ export class ChatService {
    }
 
     public sendMessage(content){
-        //let body = JSON.stringify({content });
-        //
-        //this.ws.send(body);
-        //this.message = '';
+        if(this.socketIsOpen){
+            this.socket.emit('message','56ac968fb047f7f003dd828f')
+        }
     }
 
+    private getMessage(content:any):void {
+        console.log(content);
+    }
 }
 
+export class Conversation{
+    _id:string;
+    users:ConversationUser[];
+    messages:Message[];
+}
+
+export class Message{
+    author:ConversationUser;
+    time:string;
+    content:string;
+}
+
+export class ConversationUser{
+    username:string;
+}
