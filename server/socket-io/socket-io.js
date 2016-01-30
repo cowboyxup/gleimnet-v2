@@ -1,3 +1,4 @@
+const Async = require('async');
 
 const internals = {};
 
@@ -6,6 +7,15 @@ const internals = {};
 internals.applyRoutes = function (server, next) {
 
     const Session = server.plugins['hapi-mongo-models'].Session;
+    const Conversation = server.plugins['hapi-mongo-models'].Conversation;
+    const Message = server.plugins['hapi-mongo-models'].Message;
+
+    var q = Async.queue(function (task, callback) {
+        console.log('hello ' + task.name);
+        callback();
+    }, 2);
+
+
     const io = require('socket.io').listen(server.listener,
         {
             path:server.realm.modifiers.route.prefix
@@ -42,9 +52,42 @@ internals.applyRoutes = function (server, next) {
         timeout: 1000
     });
 
-    io.sockets.on('authenticated', function(socket){
+
+    io.on('authenticated', function(data){
         console.log('Wait.....');
-        socket.join('some room');
+        socket.on('all-conversations', function(data) {
+            Connection
+
+        });
+
+        socket.on('new-conversation', function (userId) {
+            Conversation.create((err, newConversation) => {
+                if(err) {
+                    return new Error("Fehler");
+                }
+                newConversation.ensureAuthor(userId, (err, finish) => {
+                    io.sockets.to(SocketId).send('conversation',finish);
+                    return finish;
+                });
+                return newConversation;
+            });
+        })
+        socket.on('join-conversation', function (conversation) {
+            socket.join(conversation);
+            socket.emit('message', 'for your eyes only');
+
+            socket.on('new-message'), function(message) {
+                Message.create(message.userid, message.content, (err, mes)=> {
+                    Conversation.findById(conversation, (err,con) => {
+                        con.addMessage(userIdm, mes._id.toString())
+                        io.sockets.to(conversation).emit('message', message);
+                        return message;
+                    })
+                });
+
+                return mes;
+            }
+        })
     });
 
     server.route([

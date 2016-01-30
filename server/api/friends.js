@@ -33,9 +33,7 @@ internals.applyRoutes = function (server, next) {
                     wellUser.avatar = undefined;
                     wellUser.titlePicture = undefined;
                     wellUser.timeline = undefined;
-                    console.log('we:'+JSON.stringify(wellUser));
                     lightfriends.push(wellUser);
-                    console.log('wes:'+JSON.stringify(lightfriends));
                     return (wellUser);
                 });
             }, function(err, friends) {
@@ -258,12 +256,7 @@ internals.applyRoutes = function (server, next) {
                         reply(friends);
                     });
                 }
-            },{
-                assign: 'wellFriends',
-                method: function(request, reply) {
-                    const id = request.auth.credentials.user._id.toString();
-                    return outputWellFriends(request.auth.credentials.user._id.toString(),request.pre.friends, reply);
-            }}]
+            }]
         },
         handler: function (request, reply) {
             let wellFriends = request.pre.friends;
