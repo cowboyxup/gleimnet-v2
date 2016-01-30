@@ -13,6 +13,7 @@ const internals = {};
 
 internals.applyRoutes = function (server, next) {
     const Admin = server.plugins['hapi-mongo-models'].Admin;
+    const prefix = server.realm.modifiers.route.prefix;
 
     const cache = server.cache({
         segment: 'sessions',
@@ -23,7 +24,7 @@ internals.applyRoutes = function (server, next) {
     server.auth.strategy('admin', 'cookie', true, {
         password: 'superdfad',
         cookie: 'gleimnet-admin',
-        redirectTo: '/admin/login',
+        redirectTo: (prefix+'/login'),
         isSecure: false,
         validateFunc: function (request, session, callback) {
            cache.get(session.sid,(err, value, cached, log) => {
@@ -149,7 +150,7 @@ internals.applyRoutes = function (server, next) {
                     }
                     request.auth.session.set({sid: admin._id, account: admin.username});
                     //return reply.redirect(request.query.next); // perform redirect
-                    return reply.redirect('/admin');
+                    return reply.redirect(prefix);
                 });
             },
             auth: {
@@ -348,7 +349,7 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply.redirect('/admin'); // perform redirect
+            return reply.redirect(prefix); // perform redirect
         }
     },{
         method: 'POST',
@@ -428,7 +429,7 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply.redirect('/admin'); // perform redirect
+            return reply.redirect(prefix); // perform redirect
         }
     },{
         method: 'POST',
@@ -535,7 +536,7 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply.redirect('/admin'); // perform redirect
+            return reply.redirect(prefix); // perform redirect
         }
     }
     ]);

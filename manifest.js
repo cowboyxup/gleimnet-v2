@@ -210,7 +210,7 @@ const manifest = {
         './server/api/timeline': [{ routes: { prefix: '/api' } }],
         './server/web/admin/admin': [{ routes: { prefix: '/admin' } }],
         './server/web/index': {},
-        './server/socket-io/socket-io': [{ routes: { prefix: '/chat' } }],
+        './server/socket-io/socket-io': [{ routes: { prefix: '/api/chat' } }],
     }
 };
 

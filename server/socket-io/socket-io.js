@@ -4,8 +4,13 @@ const internals = {};
 // https://www.npmjs.com/package/socketio-auth
 
 internals.applyRoutes = function (server, next) {
+
     const Session = server.plugins['hapi-mongo-models'].Session;
-    const io = require('socket.io').listen(server.listener);
+    const io = require('socket.io').listen(server.listener,
+        {
+            path:server.realm.modifiers.route.prefix
+        }
+    );
 
 
     const auth = function (socket, data, callback) {
@@ -41,6 +46,20 @@ internals.applyRoutes = function (server, next) {
         console.log('Wait.....');
         socket.join('some room');
     });
+
+    server.route([
+        {
+            method: 'GET',
+            path: '/socket.io',
+            config: {
+                auth: false,
+                pre: []
+            },
+            handler: {
+                file: './node_modules/socket.io-client/socket.io.js'
+            }
+        }
+    ]);
 
     next();
 };
