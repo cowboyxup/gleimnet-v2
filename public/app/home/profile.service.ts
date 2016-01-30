@@ -61,15 +61,36 @@ export class ProfileService {
             .map(response =>  {
             });
     }
+
+    getDateString(dateString:string):string{
+        var date = new Date(dateString)
+        var options = {
+            year: "numeric", month: "short",
+            day: "numeric"
+        };
+
+        return date.toLocaleDateString('de-de',options);
+    }
 }
 
 export class User{
     _id:string;
+    avatar:string;
+    description:string;
+    givenName:string;
+    nickname:string;
+    surename:string;
+    timeCreated:string;
+    timeline:string;
+    titlePicture:string;
+    username:string;
     firstName:string;
     lastName:string;
-    birthday:string;
+    birthdate:string;
     information:string;
     friends:ProfileFriend[];
+
+    dateString:string;
 }
 
 export interface ProfileFriend{

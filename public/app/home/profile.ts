@@ -34,6 +34,12 @@ export class Profile implements OnInit{
                 private _profileService: ProfileService,
                 private _friendsService:FriendsService) {
         this.username = this._routeParams.get('id');
+
+        if(this.username == localStorage.getItem('username')){
+            this.isMe = true;
+        }else {
+            this.isMe = false;
+        }
     }
 
     ngOnInit() {
@@ -50,6 +56,7 @@ export class Profile implements OnInit{
                 .subscribe(
                     (res:User) => {
                         this.user = res;
+                        this.user.dateString = this._profileService.getDateString(this.user.birthdate);
                         this.friends = this.user.friends;
                     },
                     error => {console.log(error.message);}

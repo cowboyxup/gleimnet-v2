@@ -46,8 +46,8 @@ export class FriendsService {
         return this._http.get(url, {headers})
             .map(
                 (res:Response) => {
-                    console.log(res)
-                    ;                    res.json()
+                    console.log(res);
+                    res.json();
                 }
             );
     }

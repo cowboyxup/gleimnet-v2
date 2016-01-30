@@ -6,12 +6,14 @@
 
     <div class="media post" *ngFor="#Friend of myfriends">
         <div class="media-left">
-            <a href="#">
+            <a href="#/profile/{{Friend.username}}">
                 <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{Friend.givenName}}</h4>
+            <a href="#/profile/{{Friend.username}}">
+                <h4 class="media-heading">{{Friend.surename}}</h4>
+            </a>
             <a (click)="removeFriend(Friend)">Freundschaft beenden</a>
         </div>
     </div>
@@ -21,17 +23,19 @@
 
 <div class="container col-md-9 timeline">
 
-    <div *ngIf="unconfirmedFriends != null">
+    <div >
+        <!--<div *ngIf="unconfirmedFriends != null">-->
+
         <h4>Freundschaftsanfragen:</h4>
 
         <div class="media post" *ngFor="#Friend of unconfirmedFriends">
             <div class="media-left">
-                <a href="#">
+                <a href="#/profile/{{Friend.username}}">
                     <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
                 </a>
             </div>
             <div class="media-body">
-                <h4 class="media-heading">{{Friend.givenName}} {{Friend.username}}</h4>
+                <h4 class="media-heading">{{Friend.givenName}} {{Friend.surename}}</h4>
                 <p>{{Friend.description}}</p>
                 <a (click)="requestFriendship(Friend)">als Freund hinzufügen</a>
             </div>
@@ -64,14 +68,16 @@
 
     <div class="media post" *ngFor="#Friend of searchedFriends">
         <div class="media-left">
-            <a href="#">
+            <a href="/profile/{{Friend.username}}">
                 <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{Friend.givenName}} {{Friend.username}}</h4>
+            <a href="#/profile/{{Friend.username}}">
+                <h4 class="media-heading">{{Friend.givenName}} {{Friend.surename}}</h4>
+            </a>
             <p>{{Friend.description}}</p>
-            <a (click)="requestFriendship(Friend)">als Freund hinzufügen</a>
+            <a (click)="confirmFriendship(Friend)">als Freund hinzufügen</a>
         </div>
     </div>
 

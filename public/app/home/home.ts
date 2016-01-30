@@ -42,6 +42,7 @@ export class Home implements OnInit{
                 .subscribe(
                     (res:User) => {
                         this.user = res;
+                        this.user.dateString = this._profileService.getDateString(this.user.birthdate);
                         this.friends = this.user.friends;
                     },
                     error => {console.log(error.message);}

@@ -1,7 +1,7 @@
 <div  class="titelImage" style="background-image:url('img/banner/{{user.username}}.jpg')">
     <div class="row">
         <div class="col-md-2 col-md-offset-1" >
-            <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.username}}.png" alt="...">
+            <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.avatar}}.png" alt="...">
 
         </div>
     </div>
@@ -10,8 +10,8 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-3 profilname">
         <h2>
-            {{user.givenName}} {{user.username}}
-            <button type="button"
+            {{user.givenName}} {{user.surename}}
+            <button *ngIf="isME" type="button"
                     class="btn btn-default btn-sm pull-right"
                     (click)="addAsFriend()">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-md-12">
             <h4>Geburtsdatum:</h4>
-            <p>{{user.birthdate}}
+            <p>{{user.dateString}}
             <h4>Info:</h4>
             <p>{{user.description}}</p>
         </div>

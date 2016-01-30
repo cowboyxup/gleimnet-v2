@@ -1,17 +1,49 @@
-import 'socketio'
+import {Injectable} from 'angular2/core';
+import {Headers} from "angular2/http";
 
+import {Observable} from 'rxjs/Observable';
+import {Subject } from 'rxjs/Subject';
+import {error} from "util";
 
+//noinspection TypeScriptCheckImport
+import * as io from 'node_modules/socket.io-client/socket.io.js';
 
+@Injectable()
+export class ChatService {
 
-const BASE_URL = 'ws://echo.websocket.org';
-var ws = new WebSocket(BASE_URL);
+    messages = [];
+    message = '';
 
-this.ws.onerror   = (evt) => this.messages.unshift(`Error: ${evt}`);
-this.ws.onmessage = (evt) => this.messages.unshift(evt.data);
-this.ws.onclose   = (evt) => this.messages.unshift("** Closed **");
-this.ws.onopen    = (evt) => this.messages.unshift("** Openned ***");
+    socket
 
-this.sendMessage = (name) => {
-    this.ws.send(`${ name }: ${ this.message }`);
-    this.message = '';
+   constructor(){
+       console.log("lol");
+
+       var origin = location.origin;
+
+       var socket = io.connect(origin, {path :"/api/chat"});
+
+       var password =  localStorage.getItem('AuthKey');
+       var username = localStorage.getItem('username')
+
+       let body = JSON.stringify({username,  password});
+
+       socket.on('connect', function(){
+           socket.emit('authentication', body);
+           socket.on('authenticated', function() {
+               // use the socket as usual
+           });
+       });
+
+       this.socket = socket;
+   }
+
+    public sendMessage(content){
+        //let body = JSON.stringify({content });
+        //
+        //this.ws.send(body);
+        //this.message = '';
+    }
+
 }
+
