@@ -23,17 +23,20 @@ export class ChatService {
 
        var socket = io.connect(origin, {path :"/api/chat"});
 
-       var password =  localStorage.getItem('AuthKey');
+       var auth =  localStorage.getItem('AuthKey');
        var username = localStorage.getItem('username')
 
-       let body = JSON.stringify({username,  password});
+       let body = JSON.stringify({ auth});
 
        socket.on('connect', function(){
            socket.emit('authentication', body);
            socket.on('authenticated', function() {
                // use the socket as usual
+               socket.emit('join-conversation','56ac968fb047f7f003dd828f');
+
            });
        });
+
 
        this.socket = socket;
    }
