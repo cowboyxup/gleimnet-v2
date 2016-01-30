@@ -1,7 +1,7 @@
 <div  class="titelImage" style="background-image:url('img/banner/{{user.username}}.jpg')">
     <div class="row">
         <div class="col-md-2 col-md-offset-1" >
-                <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.username}}.png" alt="...">
+            <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.username}}.png" alt="...">
 
         </div>
     </div>
@@ -36,13 +36,11 @@
 
     <h4>Freunde</h4>
     <div class="col-md-4 friendImage" *ngFor="#Friend of friends">
-        <img alt="" src="img/profilimages/64x64/{{Friend.lastName}}.png">
+        <img style="width: 100%" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
         <div class="caption">
-            <a class="" href="#" role="button">{{Friend.lastName}}</a>
+            <a class="" href="#" role="button">{{Friend.givenName}}</a>
         </div>
     </div>
-
-
 </div>
 
 <div class="container col-md-9 timeline">

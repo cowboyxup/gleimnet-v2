@@ -3,46 +3,49 @@ import {Component} from 'angular2/core';
 import {RouteParams,RouteData} from 'angular2/router';
 import {ROUTER_DIRECTIVES} from 'angular2/router';
 import {FriendsService} from "./friendsService";
+import {ProfileService} from "../home/profile.service";
+import {User} from "../home/profile.service";
+import {SearchResult} from "./friendsService";
 
 
 @Component({
     selector: 'Friends',
     templateUrl: './app/friends/friends.html',
-    providers:[FriendsService]
+    providers:[FriendsService, ProfileService]
 })
 
 export class Friends {
 
     auth:string;
+    private username;
+
     myfriends:Friend[];
     unconfirmedFriends:Friend[];
-    searchedFriends:Friend[];
+    searchedFriends:User[];
 
     constructor(private _routeParams:RouteParams,
-                private _friendsService: FriendsService) {
+                private _friendsService: FriendsService,
+                private _profileService: ProfileService) {
         this.auth = localStorage.getItem('AuthKey');
-
+        this.username = localStorage.getItem('username');
     }
 
     ngOnInit() {
         if(this.auth){
             this.loadMyFriends();
-            //this.loadUnconfirmedFriends();
-            //this.findNewFriend("r");
-            //this.confirmFriendship("56abda583e8aeae701b4f25b");
-            //this.confirmFriendship("56abe2bd1ee9a7f103f4bb29");
+            this.loadUnconfirmedFriends();
         }
     }
 
     private loadMyFriends():void {
-        if(this.auth){
-            this._friendsService.loadMyFriends()
+        if(this.username){
+            this._profileService.loadProfilInfos(this.username)
                 .subscribe(
-                    res => {
-                        console.log(res);
+                    (res:User) => {
+                        this.myfriends = res.friends;
                     },
                     error => {console.log(error.message);}
-                );
+                )
         }
     }
 
@@ -93,15 +96,18 @@ export class Friends {
         if(this.auth) {
             this._friendsService.findNewFriend(friendName)
                 .subscribe(
-                    response => {
-                        //this.loadMyFriends();
-                        //this.loadUnconfirmedFriends();
-                        //this.loadSuggestedFriendship();
-                        console.log(response);
+                    (response:SearchResult) => {
+                        this.searchedFriends = response.data;
                     },
-                    error => { console.log(error.message);}
+                    error => { console.log(error.message);
+                    }
                 )
         }
+    }
+
+
+    public removeFriend(){
+
     }
 }
 

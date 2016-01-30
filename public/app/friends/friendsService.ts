@@ -8,6 +8,7 @@ import {Response} from "angular2/http";
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 import {error} from "util";
+import {User} from "../home/profile.service";
 
 @Injectable()
 export class FriendsService {
@@ -25,15 +26,6 @@ export class FriendsService {
     }
 
 
-    loadMyFriends():any{
-
-        var url = 'api/users/username/root';
-        var headers = this.headers();
-
-        return this._http.get(url, {headers})
-            .map((res:Response) => res.json());
-    }
-
     requestFriendship(username:string):any{
 
         var url = 'api/friends';
@@ -42,21 +34,26 @@ export class FriendsService {
 
         return this._http.post(url,body, {headers})
             .map(res => {
-                console.log(res);
-            }
+                    console.log(res);
+                }
             );
     }
 
     loadUnconfirmedFriends():any {
-        var url = '/friends/my/unconfirmed';
+        var url = '/api/friends/my/unconfirmed';
         var headers = this.headers();
 
         return this._http.get(url, {headers})
-            .map((res:Response) => res.json());
+            .map(
+                (res:Response) => {
+                    console.log(res)
+                    ;                    res.json()
+                }
+            );
     }
 
     confirmFriendship(friendshipId:String):any {
-        var url = 'api/friends/' + friendshipId;
+        var url = '/api/friends/' + friendshipId;
         var headers = this.headers();
         let activate = true;
         let body = JSON.stringify({activate });
@@ -69,10 +66,20 @@ export class FriendsService {
     }
 
     findNewFriend(friendName:String):any {
-        var url = '/friends?username=' + friendName;
+        var url = '/api/friends?username=' + friendName;
         var headers = this.headers();
 
         return this._http.get(url, {headers})
-            .map((res:Response) => res.json());
+            .map(
+                (res:Response) => res.json(),
+                error => {
+                    error
+                });
     }
+}
+
+export class SearchResult{
+    data: User[];
+    items:any;
+    pages:any;
 }

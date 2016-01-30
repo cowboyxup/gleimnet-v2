@@ -74,7 +74,8 @@ export class User{
 
 export interface ProfileFriend{
     _id: string;
-    lastName:string;
+    givenName:string;
+    username:string;
 }
 
 export interface Timeline{
