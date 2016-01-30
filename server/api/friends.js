@@ -266,7 +266,7 @@ internals.applyRoutes = function (server, next) {
             }}]
         },
         handler: function (request, reply) {
-            let wellFriends = request.pre.wellFriends;
+            let wellFriends = request.pre.friends;
             reply(wellFriends);
         }
     });

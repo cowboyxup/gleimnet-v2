@@ -471,7 +471,6 @@ internals.applyRoutes = function (server, next) {
                             });
                         },
                         user: ['clean','loadconfig', (done, data) => {
-                            console.log(data.loadconfig);
                             const loaddata = EJSON.parse(data.loadconfig);
                             if (loaddata['users'].length === 0) {
                                 return done;

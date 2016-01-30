@@ -4,49 +4,44 @@ const internals = {};
 // https://www.npmjs.com/package/socketio-auth
 
 internals.applyRoutes = function (server, next) {
-    const io = require('socket.io')(server.listener, {
-        serveClient: false,
-        path: "/socketpath",
-        log: true
-    });
-    io.on("connection", function (socket) {
-        console.log("client incoming");
-    });
-    io.use(function (socket, next) {
-        var cookies = socket.request.headers.cookie;
-        server.select("<your descriptive server label>").connections[0].states.parse(cookies, function (err, state, failed) {
-            //if no session is set, connection will be refused
-            if (!state.session) {
-                return next(new Error("Cookie not found"));
+    const Session = server.plugins['hapi-mongo-models'].Session;
+    const io = require('socket.io').listen(server.listener);
+
+
+    const auth = function (socket, data, callback) {
+        //get credentials sent by the client
+        var authBasic = data.auth;
+
+        const credentialsPart = new Buffer(authBasic, 'base64').toString();
+        const sep = credentialsPart.indexOf(':');
+
+        const username = credentialsPart.slice(0, sep);
+        const password = credentialsPart.slice(sep + 1);
+
+        Session.findByCredentials(username, password, (err, session) => {
+
+            //inform the callback of auth success/failure
+            if (err || !session) {
+                return callback(new Error('User unauthenticated'));
             }
-            //first we get the arangodb channel to request a connection
-            var channel = server.methods.intercom.getChannel("arangodb");
-            //now we are requesting a connection from the connection pool
-            //everything from here on is a promise to ease asynchronous data flow ;)
-            channel.request("connection").then(function (conn) {
-                //we request the session from the database
-                return conn.foxx(options.foxxName, "session/" + state.session.id).get({});
-            }).then(function (result) {
-                //the session object is stored under data in the response
-                var session = result.data;
-                //if the userid is not set, we are not authenticated
-                if (!session.uid) {
-                    return next(new Error("Session is not authenticated"));
-                }
-                //everything is fine, session is authenticated and we accept the
-                //connection
-                next();
-            }).catch(function (err) {
-                //if any error is thrown during the authentication process, we log the
-                //error and refuse authentication
-                server.log(["socket", "error", "authentication"], {
-                    error: err,
-                    message: "Error during socket authentication for conversation channel"
-                });
-                return next(err);
-            });
+            return callback(null, session);
         });
+    };
+
+    const postAuth = function postAuthenticate(socket, data) {
+    };
+
+    const ioAuth = require('socketio-auth')(io, {
+        authenticate: auth,
+        postAuthenticate: postAuth,
+        timeout: 1000
     });
+
+    io.sockets.on('authenticated', function(socket){
+        console.log('Wait.....');
+        socket.join('some room');
+    });
+
     next();
 };
 
