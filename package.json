@@ -18,10 +18,14 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
+    "angular2": "2.0.0-beta.0",
     "async": "^1.5.0",
     "bcryptjs": "^2.3.0",
     "boom": "3.x.x",
     "confidence": "1.x.x",
+    "ejs": "^2.3.4",
+    "es6-promise": "^3.0.2",
+    "es6-shim": "^0.33.3",
     "glue": "2.x.x",
     "good": "^6.4.0",
     "good-console": "^5.2.0",
@@ -32,26 +36,22 @@
     "hapi-mongo-models": "4.x.x",
     "hoek": "3.x.x",
     "inert": "3.x.x",
-    "ejs": "^2.3.4",
     "joi": "7.x.x",
     "lout": "7.x.x",
     "mongodb": "2.x.x",
+    "mongodb-extended-json": "^1.6.2",
     "node-uuid": "1.x.x",
     "object-assign": "4.x.x",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.0-beta.0",
     "slug": "0.9.x",
+    "socketio": "^1.0.0",
+    "socketio-auth": "0.0.5",
+    "systemjs": "0.19.6",
     "unicode": "^0.6.1",
     "vision": "4.x.x",
     "visionary": "4.x.x",
-
-    "angular2": "2.0.0-beta.0",
-    "systemjs": "0.19.6",
-    "es6-promise": "^3.0.2",
-    "es6-shim": "^0.33.3",
-    "reflect-metadata": "0.1.2",
-    "rxjs": "5.0.0-beta.0",
-    "zone.js": "0.5.10",
-
-    "socketio-auth": ""
+    "zone.js": "0.5.10"
   },
   "devDependencies": {
     "code": "2.x.x",
@@ -59,7 +59,6 @@
     "nodemon": "1.x.x",
     "promptly": "0.2.x",
     "proxyquire": "1.x.x",
-
     "concurrently": "^1.0.0",
     "typescript": "^1.7.3"
   }
