@@ -1,4 +1,4 @@
-<div  class="titelImage" style="background-image:url('img/banner/{{user.username}}.jpg')">
+<div  class="titelImage" style="background-image:url('img/banner/banner_{{user.username}}.jpg')">
     <div class="row">
         <div class="col-md-2 col-md-offset-1" >
             <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.avatar}}.png" alt="...">
@@ -11,7 +11,7 @@
     <div class="col-md-8 col-md-offset-3 profilname">
         <h2>
             {{user.givenName}} {{user.surename}}
-            <button *ngIf="isME" type="button"
+            <button *ngIf="!isMe" type="button"
                     class="btn btn-default btn-sm pull-right"
                     (click)="addAsFriend()">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

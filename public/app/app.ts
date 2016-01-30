@@ -4,6 +4,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/forkJoin';
 
+import {enableProdMode} from "angular2/core";
 import {Component, View, provide} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 
@@ -55,10 +56,10 @@ class MyDemoApp {
     logInOut: string = "Login";
 
     constructor(router: Router, location: Location) {
+        //enableProdMode();
+
         this.router = router;
         this.location = location;
-
-
 
         if (!localStorage.getItem('AuthKey')) {
             this.logInOut = "Login";
