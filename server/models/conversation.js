@@ -14,11 +14,8 @@ const Conversation = BaseModel.extend({
     addMessage: function(userId, messageId, callback) {
         const self = this;
         Async.auto({
-            ensureAuthord: (results) => {
-                //self.ensureAuthor(userId, results);
-                return true;
-            },
-            updateConveration: ['ensureAuthord', function (done, results) {
+            updateConveration: [function (done, results) {
+                console.log('ddddddd');
                 const pushmessages = {
                     id: messageId
                 };
@@ -104,32 +101,25 @@ Conversation.createWithAuthor = function (userId, callback) {
     });
 };
 
-Conversation.ensureAuthor = function (userId, callback) {
+Conversation.ensureAuthor = function (conversation, userId, callback) {
     const self = this;
     Async.auto({
-        user: function (done) {
-            /*const query = {
-                isActive: true
-            };
-            query.username = username.toLowerCase();*/
-            User.findById(userId,done);
-            //User.findOne(query, done);
-        },
-        authorsf: ['user', function (done, results) {
-            if (!results.user) {
-                return done(null, false);
+        authors: function (done, results) {
+            const g = mongo.ObjectId(userId)
+            console.log(conversation.authors.map(function(e) { return e.id; }));
+            if (conversation.authors.indexOf({id: mongo.ObjectId(userId)})!==(-1)) {
+                console.log('d');
+                return callback(null,conversation);
             }
-            if (this.authors.contains({id: results.user._id})) {
-                return this.authors
-            }
-            self.findByIdAndUpdate(this._id,{$push: {"authors": {id: results.user._id.toString()}}},{safe: true, upsert: true, new: true},done);
-        }]
+            console.log(JSON.stringify(conversation));
+            self.findByIdAndUpdate(conversation._id,{$push: {"authors": {id: mongo.ObjectId(userId)}}},{safe: true, upsert: true, new: true},done);
+        }
     }, (err, results) => {
         if (err) {
             return callback(err);
         }
         if (results.passwordMatch) {
-            return callback(null, results.authorsf);
+            return callback(null, results.authors);
         }
         callback();
     });

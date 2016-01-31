@@ -40,7 +40,7 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            reply (request.pre.conversation);
+            reply ({conversations: request.pre.conversation});
         }
     }]);
     server.route([{
@@ -113,10 +113,23 @@ internals.applyRoutes = function (server, next) {
                         reply(message);
                     });
                 }
-            }]
+            },{
+                assign: 'addAuthor',
+                method: function (request, reply) {
+                    const userid = request.auth.credentials.session.userId;
+                    Conversation.ensureAuthor(request.pre.conversation, userid, (err, conversation) => {
+                        if (err) {
+                            return reply(Boom.badRequest('Message not created'));
+                        }
+                        reply(conversation);
+                    });
+                }
+            }
+            ]
         },
         handler: function (request, reply) {
-            request.pre.conversation.addMessage(request.auth.credentials.session.userId,request.pre.message._id.toString(), (err, conversation) => {
+            console.log('dinge');
+            request.pre.addAuthor.addMessage(request.auth.credentials.session.userId,request.pre.message._id.toString(), (err, conversation) => {
                 if (err) {
                     return reply(err);
                 }
@@ -158,8 +171,17 @@ internals.applyRoutes = function (server, next) {
                 assign: 'author',
                 method: function (request, reply) {
                     console.log(request.pre.user);
+                    Conversation.findByIdAndUpdate(self._id, {$push: {"authors": {id: mongo.ObjectId(request.pre.user._id)}}}, {
+                        safe: true,
+                        upsert: true,
+                        new: true
+                    }, (err, user) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        reply(user);
+                    });
                     //request.pre.conversation.ensureAuthor(request.pre.user._id);
-                    reply(true);
                 }
             }]
         },
