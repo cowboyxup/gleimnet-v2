@@ -1,72 +1,56 @@
 import {Injectable} from 'angular2/core';
 import {Headers} from "angular2/http";
+import {Response} from "angular2/http";
 
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 import {error} from "util";
+import {Http} from "angular2/http";
 
-//noinspection TypeScriptCheckImport
-import * as io from 'node_modules/socket.io-client/socket.io.js';
 
 @Injectable()
 export class ChatService {
 
-    messages = [];
-    message = '';
+    constructor(public _http: Http) {
+    }
 
-    socket
+    headers(){
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var basicAuth =  localStorage.getItem('AuthKey');
+        headers.append('Authorization',basicAuth);
 
-    socketIsOpen:boolean = false;
-
-   constructor(){
-       var origin = location.origin;
-
-       var socket = io.connect(origin, {path :"/api/chat"});
-
-       var auth =  localStorage.getItem('AuthKey');
-       var username = localStorage.getItem('username')
-
-       let body = JSON.stringify({ auth});
-
-
-
-       socket.on('connect', function(){
-           socket.emit('authentication', body);
-           socket.on('authenticated', function() {
-               // use the socket as usual
-
-               this.socketIsOpen = true;
-
-              // socket.emit('join-conversation','56ac968fb047f7f003dd828f');
-
-               socket.on('message',function(content){
-                   this.getMessage(content);
-               })
-
-               socket.on('disconnect', function(){
-                   this.socketIsOpen = false;
-               });
-           });
-       });
-
-
-       this.socket = socket;
-   }
+        return headers;
+    }
 
     public sendMessage(content){
-        if(this.socketIsOpen){
-            this.socket.emit('message','56ac968fb047f7f003dd828f')
-        }
+
     }
 
     private getMessage(content:any):void {
         console.log(content);
     }
+
+
+    loadConversations():any {
+        var url = 'api/conversations';
+        var headers = this.headers();
+
+        return this._http.get(url, {headers})
+            .map((res:Response) => {
+                console.log(res);
+                res.json();
+            });
+    }
+}
+
+export class Conversations{
+    conversations:Conversation[];
 }
 
 export class Conversation{
     _id:string;
-    users:ConversationUser[];
+    authors:ConversationUser[];
     messages:Message[];
 }
 
@@ -77,5 +61,5 @@ export class Message{
 }
 
 export class ConversationUser{
-    username:string;
+    _id:string;
 }
