@@ -40,7 +40,7 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            reply (request.pre.conversation);
+            reply ({conversations: request.pre.conversation});
         }
     }]);
     server.route([{
@@ -92,14 +92,14 @@ internals.applyRoutes = function (server, next) {
             pre: [{
                 assign: 'conversation',
                 method: function(request, reply) {
-                    Conversation.findById(request.params.id, (err, timeline) => {
+                    Conversation.findById(request.params.id, (err, conversation) => {
                         if (err) {
                             return reply(err);
                         }
-                        if (!timeline) {
+                        if (!conversation) {
                             return reply(Boom.notFound('Document not found.'));
                         }
-                        reply(timeline);
+                        reply(conversation);
                     });
                 }
             },{
@@ -113,10 +113,23 @@ internals.applyRoutes = function (server, next) {
                         reply(message);
                     });
                 }
-            }]
+            },{
+                assign: 'addAuthor',
+                method: function (request, reply) {
+                    const userid = request.auth.credentials.session.userId;
+                    Conversation.ensureAuthor(request.pre.conversation, userid, (err, conversation) => {
+                        if (err) {
+                            return reply(Boom.badRequest('Message not created'));
+                        }
+                        reply(conversation);
+                    });
+                }
+            }
+            ]
         },
         handler: function (request, reply) {
-            request.pre.conversation.addMessage(request.pre.user._id.toString(),request.pre.message._id.toString(), (err, conversation) => {
+            console.log('dinge');
+            request.pre.addAuthor.addMessage(request.auth.credentials.session.userId,request.pre.message._id.toString(), (err, conversation) => {
                 if (err) {
                     return reply(err);
                 }
@@ -133,29 +146,53 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
                 payload: {
-                    userid: Joi.string().length(24).hex().required()
+                    username: Joi.string().token().lowercase().required()
                 }
             },
             pre: [{
+                assign: 'user',
+                method: function (request, reply) {
+                    User.findByUsername(request.payload.username, (err, user) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!user) {
+                            return reply(Boom.notFound('Document not found.'));
+                        }
+                        reply(user);
+                    });
+                }
+            },{
                 assign: 'conversation',
                 method: function(request, reply) {
-                    Conversation.create(reply);
+                    Conversation.createWithAuthor(request.auth.credentials.session.userId.toString(), reply);
                 }
             },{
                 assign: 'author',
                 method: function (request, reply) {
-                    request.pre.conversation.ensureAuthor(request.auth.credentials.session.userId);
-                    reply(null,true);
+                    console.log(request.pre.user);
+                    Conversation.findByIdAndUpdate(self._id, {$push: {"authors": {id: mongo.ObjectId(request.pre.user._id)}}}, {
+                        safe: true,
+                        upsert: true,
+                        new: true
+                    }, (err, user) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        reply(user);
+                    });
+                    //request.pre.conversation.ensureAuthor(request.pre.user._id);
                 }
             }]
         },
         handler: function (request, reply) {
-            request.pre.conversation.addMessage(request.pre.user._id.toString(),request.pre.message._id.toString(), (err, conversation) => {
+            reply (request.pre.conversation)
+            /*request.pre.conversation.addMessage(request.pre.user._id.toString(),request.pre.._id.toString(), (err, conversation) => {
                 if (err) {
                     return reply(err);
                 }
                 return reply(conversation);
-            });
+            });*/
         }
     }]);
     next();
