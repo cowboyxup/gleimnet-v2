@@ -127,103 +127,51 @@ Der Hauptgrund für die Entscheidung für Frame war das es eine funktionierende 
 \subsection{Angular 2}
 
 
-
-
-\lipsum[1] % Dummy text
-
 %------------------------------------------------
 
-\subsection{Subsection 2} % Sub-section
+\section{Probleme}
 
-\lipsum[2] % Dummy text
+\subsection{Callbacks}
+Callbacks sind die Hölle!
 
-%------------------------------------------------
+\subsection{MongoDB und Treiber}
+Der offizelle MongoDB Treiber unterstützt vile sinnvole Aktionen, wie z.B das ersetzen von einer Referenz auf ein Object durch das Object selbst. Leider unterstützt der Objectmapper Mongoose diese zum Teil nicht, sodass diese durch vermehrte Abfragen kombiniert mit map Verfahren und vielen verschachtelten Callbacks ersetzt werden mussten.
 
-\subsubsection{Subsubsection 1} % Sub-sub-section
+\subsection{Beta-Version von Angular 2}
+Die am Anfang benutzte Version von Angular2-beta0 hatte ein paar Fehler, die später gefixt wurden. Nur die Fehler zu finden, , wenn diese von fehlerhafter Software entstehen, ist nicht sehr einfach.
 
-\lipsum[3] % Dummy text
 
-\begin{figure}[H] % Example image
-\center{\includegraphics[width=0.5\linewidth]{placeholder}}
-\caption{Example image.}
-\label{fig:speciation}
-\end{figure}
+\section{Anwendung Gleimnet}
+\subsection{Abhängigkeiten}
+Auf dem System sollen mindestens NodeJS 5.5.0 und MongoDB 3.2.0 installert sein.
+\subsection{Installation}
+\begin{enumerate}
+\item Mongo DB starten
+\item npm install
+\item node setup.js
+\item npm start
+\end{enumerate}
 
-%------------------------------------------------
+Jetzt könnnen entweder neue User über \textbf{node create-user.js} oder über das Admin-Panel über \textbf{/admin} im Webbrowser aufgerufen werden.
 
-\subsubsection{Subsubsection 2} % Sub-sub-section
+\subsection{Webanwendung}
+\subsubsection{Administration}
+Die Administration wird über /admin aufgerufen. Dort meldet sich der Administrator mittel vorher erstellten Account an. Dies wird mittel Cookies realisiert.
 
-\lipsum[4] % Dummy text
+Im Admin-Panel können neue Gruppen aus einer Initialkonfiguration erstellen werden, die aktuelle Sitzung gespeichert werden oder vorherige Sitzungen geladen werden.
 
-%----------------------------------------------------------------------------------------
-%	MAJOR SECTION 1
-%----------------------------------------------------------------------------------------
+Diese Konfigurationen werden als ExtendedJSON(EJSON) gespeichert, damit die von MongoDB gehaltenen Typen wieder hergestellt werden können.
 
-\section{Content Section} % Major section
+\section{API}
+Die Dokumentation zur API ist im seperaten pdf zu finden oder bei laufenden Gleimnet unter /api-dokumentation/index.html zu finden.
 
-\lipsum[5] % Dummy text
 
-%------------------------------------------------
 
-\subsection{Subsection 1} % Sub-section
-
-\subsubsection{Subsubsection 1} % Sub-sub-section
-
-\lipsum[6] % Dummy text
-
-%------------------------------------------------
-
-\subsubsection{Subsubsection 2} % Sub-sub-section
-
-\lipsum[6] % Dummy text
-\begin{wrapfigure}{l}{0.4\textwidth} % Inline image example
-  \begin{center}
-    \includegraphics[width=0.38\textwidth]{fish}
-  \end{center}
-  \caption{Fish}
-\end{wrapfigure}
-\lipsum[7-8] % Dummy text
-
-%------------------------------------------------
-
-\subsubsection{Subsubsection 3} % Sub-sub-section
-
-\begin{description} % Numbered list example
-
-\item[First] \hfill \\
-\lipsum[9] % Dummy text
-
-\item[Second] \hfill \\
-\lipsum[10] % Dummy text
-
-\item[Third] \hfill \\
-\lipsum[11] % Dummy text
-
-\end{description} 
-
-%----------------------------------------------------------------------------------------
-%	MAJOR SECTION X - TEMPLATE - UNCOMMENT AND FILL IN
+%-----------------------------------------------
 %----------------------------------------------------------------------------------------
 
-%\section{Content Section}
+\section{Zusammenfassung}
 
-%\subsection{Subsection 1} % Sub-section
-
-% Content
-
-%------------------------------------------------
-
-%\subsection{Subsection 2} % Sub-section
-
-% Content
-
-%----------------------------------------------------------------------------------------
-%	CONCLUSION
-%----------------------------------------------------------------------------------------
-
-\section{Conclusion} % Major section
-
-\lipsum[12-13]
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
@@ -231,12 +179,7 @@ Der Hauptgrund für die Entscheidung für Frame war das es eine funktionierende 
 
 \begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
 
-\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-\newblock Assortative pairing and life history strategy - a cross-cultural
-  study.
-\newblock {\em Human Nature}, 20:317--330.
- 
+
 \end{thebibliography}
 
 %----------------------------------------------------------------------------------------
