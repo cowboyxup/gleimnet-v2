@@ -18,6 +18,9 @@
 
 \documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
 
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+
 \usepackage{geometry} % Required to change the page size to A4
 \geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
 
@@ -46,25 +49,25 @@
 
 \center % Center everything on the page
 
-\textsc{\LARGE University Name}\\[1.5cm] % Name of your university/college
-\textsc{\Large Major Heading}\\[0.5cm] % Major heading such as course name
-\textsc{\large Minor Heading}\\[0.5cm] % Minor heading such as course title
+\textsc{\LARGE Hochschule Harz\\Hochschule für angewandte Wissenschaften (FH)}\\[1.5cm] % Name of your university/college
+\textsc{\Large Webprogrammierung mit Node.js und Angular}\\[0.5cm] % Major heading such as course name
+%\textsc{\large Gleim.net}\\[0.5cm] % Minor heading such as course title
 
 \HRule \\[0.4cm]
-{ \huge \bfseries Title}\\[0.4cm] % Title of your document
+{ \huge \bfseries Gleim.net}\\[0.4cm] % Title of your document
 \HRule \\[1.5cm]
 
 \begin{minipage}{0.4\textwidth}
 \begin{flushleft} \large
-\emph{Author:}\\
-John \textsc{Smith} % Your name
+\emph{Authoren:}\\
+Luisa \textsc{Drews}\\Hagen \textsc{Hasenbalg}\\ Christian \textsc{Schrebe} % Your name
 \end{flushleft}
 \end{minipage}
 ~
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} \large
-\emph{Supervisor:} \\
-Dr. James \textsc{Smith} % Supervisor's Name
+\emph{Dozent:} \\
+Prof. Jürgen \textsc{Singer}, PH.D. % Supervisor's Name
 \end{flushright}
 \end{minipage}\\[4cm]
 
@@ -82,16 +85,34 @@ Dr. James \textsc{Smith} % Supervisor's Name
 
 \tableofcontents % Include a table of contents
 
-\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents
 
 %----------------------------------------------------------------------------------------
 %	INTRODUCTION
 %----------------------------------------------------------------------------------------
 
-\section{Introduction} % Major section
+\section{Beschreibung} % Major section
 
-Example citation \cite{Figueredo:2009dg}.
+Das GleimNet ist ein soziales Netzwerk, welches im Gleimhaus in Halberstadt eingesetzt werden soll, um im Rahmen von Workshops dazu genutzt werden soll, Schülern Medienkompetenz zu vermitteln. Dafür agieren die Schüler in der Rolle einer historischen Person zur Zeit von Johann Wilhelm Ludwig Gleim.
+Die erste Version von GleimNet basiert auf Diaspora, das sich aber in der Praxis als ungeeignet erwies.
 
+Im GleimNet sind folgende Funktionen umgesetzt:
+
+\subsection{Profile}
+
+Jeder Nutzer kann sich mit einem Nutzernamen und dazugehörigem  Passwort anmelden. Das Profil eines jeden Nutzers umfasst seinen Vor- und Nachnamen, sein Geburtsdatum, sein Profilbild, seine Beschreibung und seine Freundesliste. Der Nachname kann außerdem als Nutzername dienen. Auf der Profilseite des Nutzers befindet sich seine Timeline.
+
+Die Timeline enthält Textpostings, Bilder und Links, welche der Nutzer selbst, oder seine Freunde, erstellen können. Ebenso können die Beiträge von Nutzern kommentiert werden.
+
+\subsection{Freundschaften}
+
+Zwischen den Nutzern können Freundschaften geschlossen werden, in dem ein Nutzer einem anderen eine Freundschaftsanfrage stellt und derjenige, der sie erhält, diese beantwortet. Bestätigte Freunde sind in der Freundesliste zu finden.
+
+\subsection{Chat}
+Nutzer können mit einem einzelnen anderen Nutzer oder einer Gruppe von Nutzern Nachrichten austauschen. Diese Nachrichten können aus Text, Bildern und Links bestehen.
+
+\subsection{Ex- und Import}
+Den Mitarbeitern des Gleimhaus können den aktuellen Zustand des Netzwerks exportieren und speichern um diese Datei zu einem späteren Zeitpunkt wieder importieren können.
 %------------------------------------------------
 
 \subsection{Subsection 1} % Sub-section
