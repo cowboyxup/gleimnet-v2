@@ -4,6 +4,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/forkJoin';
 
+import {enableProdMode} from "angular2/core";
 import {Component, View, provide} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 
@@ -26,6 +27,7 @@ import {Login} from './login/login'
 import {LoggedInRouterOutlet} from "./LoggedInRouterOutlet";
 import {Profile} from "./home/profile";
 import {Friends} from "./friends/friends";
+import {NotFound} from "./pages/NotFound";
 
 declare var System:any;
 
@@ -38,12 +40,13 @@ declare var System:any;
 
 @RouteConfig([
     //new Route({path: '/page1', component: Page1, name: 'Page1'}),
-    //new Route({path: '/page2', component: Page2, name: 'Page2'}),
     new Route({path: '/', component: Home, name: 'Home'}),
     new Route({path: '/profile/:id', component: Profile, name: 'Profile'}),
     new Route({path: '/chat', component: Chat, name: 'Chat'}),
     new Route({path: '/friends', component: Friends, name: 'Friends'}),
-    new Route({path: '/login', component: Login, name: 'Login'})
+    new Route({path: '/login', component: Login, name: 'Login'}),
+    new Route({path: '/404', component: NotFound, name: 'NotFound'}),
+
 ])
 
 class MyDemoApp {
@@ -53,6 +56,8 @@ class MyDemoApp {
     logInOut: string = "Login";
 
     constructor(router: Router, location: Location) {
+        //enableProdMode();
+
         this.router = router;
         this.location = location;
 

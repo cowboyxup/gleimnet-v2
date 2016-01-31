@@ -48,12 +48,13 @@
    /*background-color: #fafafa;*/
 }
 
-.friendImage .caption {
+.friendImage .caption a{
     bottom:8px;
     left:8px;
     position: absolute;
     font-size: 80%;
     line-height: 90%;
+    color: #ffffff;
 }
 .friendImage {
     display: block;
@@ -66,9 +67,9 @@
     text-align: right;
 }
 
-.content{
-    margin-top: 20px;
-}
+/*.content{*/
+    /*margin-top: 20px;*/
+/*}*/
 
 .login{
     width: 40%;
@@ -76,4 +77,12 @@
 
 .posting-body{
     min-height: 70px;
+}
+
+.content{
+    padding-top: 20px;
+}
+
+.media.post.selected{
+    background-color: #eee;
 }

@@ -4,7 +4,6 @@ Gleim.net is a social network that is used in the museum Gleimhaus. It is used f
 
 It uses Node.js as a server and Angular 2 as frontend.
 
-
 # Technology
 
 ## Live demo

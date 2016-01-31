@@ -135,7 +135,7 @@ User.findByCredentials = function (username, password, callback) {
 
 
 User.findByUsername = function (username, callback) {
-    const query = { username: username.toLowerCase() };
+    const query = {username: username.toLowerCase() };
     this.findOne(query, callback);
 };
 

@@ -5,6 +5,7 @@ const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
 const Message = require('./message');
 const User = require('./user');
+const mongo = require('mongodb');
 
 const Conversation = BaseModel.extend({
     constructor: function (attrs) {
@@ -13,13 +14,10 @@ const Conversation = BaseModel.extend({
     addMessage: function(userId, messageId, callback) {
         const self = this;
         Async.auto({
-            ensureAuthord: (results) => {
-                self.ensureAuthor(userId, results);
-            },
-            updateConveration: ['ensureAuthord', function (done, results) {
+            updateConveration: [function (done, results) {
                 const pushmessages = {
                     id: messageId
-                }
+                };
                 Conversation.findByIdAndUpdate(self._id,{$push: {messages: {$each: [pushmessages],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }]
         }, (err, results) => {
@@ -33,13 +31,10 @@ const Conversation = BaseModel.extend({
         const self = this;
         Async.auto({
             authorsf: function (done, results) {
-                if (!results.user) {
-                    return done(null, false);
-                }
-                if (self.authors.contains({id: userId})) {
-                    return self.authors
-                }
-                self.findByIdAndUpdate(self._id, {$push: {"authors": {id: userId}}}, {
+               if (self.authors.indexOf({id: mongo.ObjectId(userId)})!==-1) {;
+                  return self.authors
+               }
+               self.findByIdAndUpdate(self._id, {$push: {"authors": {id: mongo.ObjectId(userId)}}}, {
                     safe: true,
                     upsert: true,
                     new: true
@@ -47,9 +42,9 @@ const Conversation = BaseModel.extend({
             }
         }, (err, results) => {
             if (err) {
-                return callback(err);
+                return err;
             }
-            callback(null, results.authorsf);
+            return results.authorsf;
         })
     }
 
@@ -86,34 +81,73 @@ Conversation.create = function (callback) {
     });
 };
 
-Conversation.ensureAuthor = function (userId, callback) {
+Conversation.createWithAuthor = function (userId, callback) {
+    const self = this;
+    const document = {
+        timeCreated: new Date(),
+        messages: [],
+        authors: [{
+            id: mongo.ObjectId(userId)
+        }]
+    };
+    self.insertOne(document, (err, docs) => {
+        if (err) {
+            return callback(err);
+        }
+        callback(null, docs[0]);
+    });
+};
+
+Conversation.ensureAuthor = function (conversation, userId, callback) {
     const self = this;
     Async.auto({
-        user: function (done) {
-            /*const query = {
-                isActive: true
-            };
-            query.username = username.toLowerCase();*/
-            User.findById(userId,done);
-            //User.findOne(query, done);
-        },
-        authorsf: ['user', function (done, results) {
-            if (!results.user) {
-                return done(null, false);
+        authors: function (done, results) {
+            const g = mongo.ObjectId(userId)
+            if (conversation.authors.indexOf({id: mongo.ObjectId(userId)})!==(-1)) {
+                return callback(null,conversation);
             }
-            if (this.authors.contains({id: results.user._id})) {
-                return this.authors
-            }
-            self.findByIdAndUpdate(this._id,{$push: {"authors": {id: results.user._id.toString()}}},{safe: true, upsert: true, new: true},done);
-        }]
+            self.findByIdAndUpdate(conversation._id,{$push: {"authors": {id: mongo.ObjectId(userId)}}},{safe: true, upsert: true, new: true},done);
+        }
     }, (err, results) => {
         if (err) {
             return callback(err);
         }
         if (results.passwordMatch) {
-            return callback(null, results.authorsf);
+            return callback(null, results.authors);
         }
         callback();
     });
 };
+
+Conversation.addAuthor = function (conversation, userId, callback) {
+    const self = this;
+    Async.auto({
+        authors: function (done, results) {
+            self.findByIdAndUpdate(conversation._id,{$push: {"authors": {id: mongo.ObjectId(userId)}}},{safe: true, upsert: true, new: true},done);
+        }
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        return callback(null, results.authors);
+    });
+};
+
+Conversation.findAllConversationsByUserId = function (userId, callback) {
+    const self = this;
+    Async.auto({
+        conversations: function (done) {
+            const query = {
+                authors: { $elemMatch:{id: mongo.ObjectId(userId)}}
+            };
+            self.find(query, done);
+        }
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        return callback(null, results.conversations);
+    });
+};
+
 module.exports = Conversation;

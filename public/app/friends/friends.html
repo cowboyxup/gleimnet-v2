@@ -4,73 +4,80 @@
     <h4>Freunde:</h4>
 
 
-    <div class="media post">
+    <div class="media post" *ngFor="#Friend of myfriends">
         <div class="media-left">
-            <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
+            <a href="#/profile/{{Friend.username}}">
+                <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">Bernd</h4>
-            <a href="/">Freundschaft beenden</a>
-        </div>
-    </div>
-    <div class="media post">
-        <div class="media-left">
-            <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
+            <a href="#/profile/{{Friend.username}}">
+                <h4 class="media-heading">{{Friend.surename}}</h4>
             </a>
-        </div>
-        <div class="media-body">
-            <h4 class="media-heading">Horst</h4>
-            <a href="/">Freundschaft beenden</a>
+            <a (click)="removeFriend(Friend)">Freundschaft beenden</a>
         </div>
     </div>
 
 </div>
 
 
-
 <div class="container col-md-9 timeline">
 
-    <h4>Freundschaftsanfragen:</h4>
+    <div >
+        <!--<div *ngIf="unconfirmedFriends != null">-->
 
-    <div class="media post">
-        <div class="media-left">
-            <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
-            </a>
+        <h4>Freundschaftsanfragen:</h4>
+
+        <div class="media post" *ngFor="#Friend of unconfirmedFriends">
+            <div class="media-left">
+                <a href="#/profile/{{Friend.username}}">
+                    <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{Friend.givenName}} {{Friend.surename}}</h4>
+                <p>{{Friend.description}}</p>
+                <a (click)="requestFriendship(Friend)">als Freund hinzufügen</a>
+            </div>
         </div>
-        <div class="media-body">
-            <h4 class="media-heading">Bernd</h4>
-            <button class="btn btn-default" type="submit">bestätigen</button>
-        </div>
+
+        <hr>
     </div>
 
-    <hr>
 
-    <h4>Freundschaftsvorschläge:</h4>
+    <h4>Freunde suchen:</h4>
 
-    <div class="media post">
-        <div class="media-left">
-            <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
-            </a>
+    <div class="row">
+        <div class="col-lg-6 timelineWriteSomeThing">
+            <div class="input-group">
+                <input #friendname
+                       (keyup.enter)="findNewFriend(friendname.value); friendname.value=''"
+                       type="text" class="form-control" placeholder="Name des Freundes">
+                        <span class="input-group-btn">
+                            <button (click)="findNewFriend(friendname.value); friendname.value=''"
+                                    class="btn btn-default" type="button">post
+                            </button>
+                        </span>
+            </div>
+            <!-- /input-group -->
         </div>
-        <div class="media-body">
-            <h4 class="media-heading">Bernd</h4>
-            <button class="btn btn-default" type="submit">hinzufügen</button>
-        </div>
+        <!-- /.col-lg-6 -->
     </div>
-    <div class="media post">
+    <!-- /.row -->
+
+
+    <div class="media post" *ngFor="#Friend of searchedFriends">
         <div class="media-left">
-            <a href="#">
-                <img class="media-object timelineImage" alt="" src="img/64x64.svg">
+            <a href="/profile/{{Friend.username}}">
+                <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">Horst</h4>
-            <button class="btn btn-default" type="submit">hinzufügen</button>
+            <a href="#/profile/{{Friend.username}}">
+                <h4 class="media-heading">{{Friend.givenName}} {{Friend.surename}}</h4>
+            </a>
+            <p>{{Friend.description}}</p>
+            <a (click)="confirmFriendship(Friend)">als Freund hinzufügen</a>
         </div>
     </div>
 

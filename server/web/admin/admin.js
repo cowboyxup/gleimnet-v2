@@ -6,11 +6,14 @@ const Async = require('async');
 
 const Fs = require('fs');
 const Path = require('path');
+const EJSON = require('mongodb-extended-json');
+const BSON = require('bson');
 
 const internals = {};
 
 internals.applyRoutes = function (server, next) {
     const Admin = server.plugins['hapi-mongo-models'].Admin;
+    const prefix = server.realm.modifiers.route.prefix;
 
     const cache = server.cache({
         segment: 'sessions',
@@ -21,10 +24,9 @@ internals.applyRoutes = function (server, next) {
     server.auth.strategy('admin', 'cookie', true, {
         password: 'superdfad',
         cookie: 'gleimnet-admin',
-        redirectTo: '/admin/login',
+        redirectTo: (prefix+'/login'),
         isSecure: false,
         validateFunc: function (request, session, callback) {
-            console.log(server.app.cache);
            cache.get(session.sid,(err, value, cached, log) => {
               if(err) {
                   return callback(err, false);
@@ -148,7 +150,7 @@ internals.applyRoutes = function (server, next) {
                     }
                     request.auth.session.set({sid: admin._id, account: admin.username});
                     //return reply.redirect(request.query.next); // perform redirect
-                    return reply.redirect('/admin');
+                    return reply.redirect(prefix);
                 });
             },
             auth: {
@@ -253,25 +255,37 @@ internals.applyRoutes = function (server, next) {
                 assign: 'clean',
                 method: function (request, reply) {
                     const User = server.plugins['hapi-mongo-models'].User;
-                    const Admin = server.plugins['hapi-mongo-models'].Admin;
+                    const Friend = server.plugins['hapi-mongo-models'].Friend;
+                    const Session = server.plugins['hapi-mongo-models'].Session;
+                    const AuthAttempt = server.plugins['hapi-mongo-models'].AuthAttempt;
+                    const Message = server.plugins['hapi-mongo-models'].Message;
+                    const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     Async.auto({
                         clean: (done) => {
                             Async.parallel([
-                                User.deleteMany.bind(User, {})
+                                User.deleteMany.bind(User, {}),
+                                Session.deleteMany.bind(Session, {}),
+                                AuthAttempt.deleteMany.bind(AuthAttempt, {}),
+                                Message.deleteMany.bind(Message, {}),
+                                Conversation.deleteMany.bind(Conversation, {}),
+                                Friend.deleteMany.bind(Friend, {})
                             ], done);
                         },
                         loadconfig: (done, data) => {
                             const fsOptions = { encoding: 'utf-8' };
-                            Fs.readFile(Path.join(__dirname,'..','..','..','data','config','test.json'),fsOptions, (err, data) => {
+                            Fs.readFile(Path.join(__dirname,'..','..','..','data','config',request.payload.selectconfig),fsOptions, (err, data) => {
                                 if (err) {
-                                    console.error('Failed to read config template.');
+                                    console.error('Failed to load data.');
                                     return done(err);
                                 }
                                 return done(null,data);
                             });
                         },
                         user: ['clean','loadconfig', (done, data) => {
-                            const loaddata = JSON.parse(data.loadconfig);
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['users'].length === 0) {
+                                return done;
+                            }
                             User.insertMany(loaddata['users'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
@@ -279,7 +293,48 @@ internals.applyRoutes = function (server, next) {
                                 }
                                 return results;
                             });
-                            //User.create('test', 'tester', done);
+                            return done;
+                        }],
+                        friend: ['clean','loadconfig', (done, data) => {
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['friends'].length === 0) {
+                                return done;
+                            }
+                            Friend.insertMany(loaddata['friends'],(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
+                            return done;
+                        }],
+                        message: ['clean','loadconfig', (done, data) => {
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['messages'].length === 0) {
+                                return done;
+                            }
+                            Message.insertMany(loaddata['messages'],(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
+                            return done;
+                        }],
+                        conversation: ['clean','loadconfig', (done, data) => {
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['conversations'].length === 0) {
+                                return done;
+                            }
+                            Conversation.insertMany(loaddata['conversations'],(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
                             return done;
                         }]
                     }, (err, data) => {
@@ -294,7 +349,7 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply.redirect('/admin'); // perform redirect
+            return reply.redirect(prefix); // perform redirect
         }
     },{
         method: 'POST',
@@ -311,6 +366,7 @@ internals.applyRoutes = function (server, next) {
                 assign: 'save',
                 method: function (request, reply) {
                     const User = server.plugins['hapi-mongo-models'].User;
+                    const Friend = server.plugins['hapi-mongo-models'].Friend;
                     const Message = server.plugins['hapi-mongo-models'].Message;
                     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     Async.auto({
@@ -338,12 +394,21 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        savegroup: ['loadUserdata','loadMessages','loadConversations', (done, data) => {
+                        loadFriends: (done) => {
+                            Friend.find({}, (err, data) => {
+                                if (err) {
+                                    return err;
+                                }
+                                return done(null, data);
+                            });
+                        },
+                        savegroup: ['loadUserdata','loadFriends','loadMessages','loadConversations', (done, data) => {
                             const alldata = {};
                             alldata.users = data.loadUserdata;
                             alldata.messages = data.loadMessages;
                             alldata.conversations = data.loadConversations;
-                            const savedata = JSON.stringify(alldata, null, '\t');
+                            alldata.friends = data.loadFriends;
+                            const savedata = EJSON.stringify(alldata,null, '\t');
                             const fsOptions = {encoding: 'utf-8'};
                             const date = new Date();
                             const filename = request.payload.institution+"_"+request.payload.groupname + "-" + date.toLocaleDateString('de-DE') + ".json";
@@ -364,7 +429,7 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply.redirect('/admin'); // perform redirect
+            return reply.redirect(prefix); // perform redirect
         }
     },{
         method: 'POST',
@@ -380,6 +445,7 @@ internals.applyRoutes = function (server, next) {
                 assign: 'clean',
                 method: function (request, reply) {
                     const User = server.plugins['hapi-mongo-models'].User;
+                    const Friend = server.plugins['hapi-mongo-models'].Friend;
                     const Session = server.plugins['hapi-mongo-models'].Session;
                     const AuthAttempt = server.plugins['hapi-mongo-models'].AuthAttempt;
                     const Message = server.plugins['hapi-mongo-models'].Message;
@@ -391,7 +457,8 @@ internals.applyRoutes = function (server, next) {
                                 Session.deleteMany.bind(Session, {}),
                                 AuthAttempt.deleteMany.bind(AuthAttempt, {}),
                                 Message.deleteMany.bind(Message, {}),
-                                Conversation.deleteMany.bind(Conversation, {})
+                                Conversation.deleteMany.bind(Conversation, {}),
+                                Friend.deleteMany.bind(Friend, {})
                             ], done);
                         },
                         loadconfig: (done, data) => {
@@ -405,7 +472,10 @@ internals.applyRoutes = function (server, next) {
                             });
                         },
                         user: ['clean','loadconfig', (done, data) => {
-                            const loaddata = JSON.parse(data.loadconfig);
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['users'].length === 0) {
+                                return done;
+                            }
                             User.insertMany(loaddata['users'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
@@ -415,22 +485,39 @@ internals.applyRoutes = function (server, next) {
                             });
                             return done;
                         }],
-                        message: ['clean','loadconfig', (done, data) => {
-                            const loaddata = JSON.parse(data.loadconfig);
-                            Message.insertMany(loaddata['messages'],(err, results) =>{
+                        friend: ['clean','loadconfig', (done, data) => {
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['friends'].length === 0) {
+                                return done;
+                            }
+                            Friend.insertMany(loaddata['friends'],(err, results) =>{
                                 if (err) {
-                                    console.error(err);
                                     return err;
                                 }
                                 return results;
-                            });;
+                            });
+                            return done;
+                        }],
+                        message: ['clean','loadconfig', (done, data) => {
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['messages'].length === 0) {
+                                return done;
+                            }
+                            Message.insertMany(loaddata['messages'],(err, results) =>{
+                                if (err) {
+                                    return err;
+                                }
+                                return results;
+                            });
                             return done;
                         }],
                         conversation: ['clean','loadconfig', (done, data) => {
-                            const loaddata = JSON.parse(data.loadconfig);
+                            const loaddata = EJSON.parse(data.loadconfig);
+                            if (loaddata['conversations'].length === 0) {
+                                return done;
+                            }
                             Conversation.insertMany(loaddata['conversations'],(err, results) =>{
                                 if (err) {
-                                    console.error(err);
                                     return err;
                                 }
                                 return results;
@@ -442,14 +529,14 @@ internals.applyRoutes = function (server, next) {
                             console.error('Failed to setup root user.'+err);
                             return (err);
                         }
-                        return(null, data);
+                        return(data);
                     });
                     reply(true);
                 }
             }]
         },
         handler: function (request, reply) {
-            return reply.redirect('/admin'); // perform redirect
+            return reply.redirect(prefix); // perform redirect
         }
     }
     ]);
