@@ -122,6 +122,7 @@ export class Chat {
                     (res) => {
                         console.log(res);
                         this.loadConversations();
+                        this.onSelect(this.actConversation);
                     }
                 )
         }
