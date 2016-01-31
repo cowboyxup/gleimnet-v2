@@ -22,7 +22,7 @@ export class Chat {
     username = localStorage.getItem('username')
     userDict = {};
 
-    conversations:Conversation[];
+    conversations = new Conversations();
 
     constructor(private _chatService:ChatService) {
         this.username = localStorage.getItem('username');
@@ -34,28 +34,43 @@ export class Chat {
         var basicAuth = localStorage.getItem('AuthKey');
         if (basicAuth) {
             this.loadConversations();
+          //  this.newConversation("goethe");
         }
+    }
+
+    newConversation(username:string){
+        if (this.username) {
+            if(username){
+                this._chatService.newConversation(username)
+                    .subscribe(){
+                    (res) => {
+                        console.log(res)
+                    }
+                }
+            }
+        }
+
     }
 
     loadConversations() {
         if (this.username) {
             this._chatService.loadConversations()
                 .subscribe(
-                    (res:Conversations) => {
+                    (res) => {
 
-                        this.conversations = res.conversations;
+                        //this.conversations.conversations = res.conversations;
 
-                        //res.forEach(conversation=> {
-                        //    console.log(conversation)
-                        //    this.conversations.push(conversation);
-                        //}
+                        res.conversations.forEach(conversation=> {
+                            console.log(conversation)
+                            this.conversations.conversations.push(conversation);
+                        }
 
 
-                        this.conversations.forEach(conversation => {
-                            conversation.authors.forEach(user => {
-                                this.userDict[user._id] = "";
-                            });
-                        })
+                        //this.conversations.forEach(conversation => {
+                        //    conversation.authors.forEach(user => {
+                        //        this.userDict[user._id] = "";
+                        //    });
+                        //})
 
                         for(var key in this.userDict) {
                             console.log(this.userDict[key]);

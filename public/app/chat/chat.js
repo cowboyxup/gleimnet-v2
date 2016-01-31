@@ -8,7 +8,7 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, chat_service_1;
+    var core_1, chat_service_1, chat_service_2;
     var Chat;
     return {
         setters:[
@@ -17,6 +17,7 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
             },
             function (chat_service_1_1) {
                 chat_service_1 = chat_service_1_1;
+                chat_service_2 = chat_service_1_1;
             }],
         execute: function() {
             Chat = (function () {
@@ -25,6 +26,7 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
                     this.auth = localStorage.getItem('AuthKey');
                     this.username = localStorage.getItem('username');
                     this.userDict = {};
+                    this.conversations = new chat_service_2.Conversations();
                     this.username = localStorage.getItem('username');
                 }
                 Chat.prototype.ngOnInit = function () {
@@ -33,21 +35,34 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
                         this.loadConversations();
                     }
                 };
+                Chat.prototype.newConversation = function (username) {
+                    if (this.username) {
+                        if (username) {
+                            this._chatService.newConversation(username)
+                                .subscribe();
+                            {
+                                (function (res) {
+                                    console.log(res);
+                                });
+                            }
+                        }
+                    }
+                };
                 Chat.prototype.loadConversations = function () {
                     var _this = this;
                     if (this.username) {
                         this._chatService.loadConversations()
                             .subscribe(function (res) {
-                            _this.conversations = res.conversations;
-                            //res.forEach(conversation=> {
-                            //    console.log(conversation)
-                            //    this.conversations.push(conversation);
-                            //}
-                            _this.conversations.forEach(function (conversation) {
-                                conversation.authors.forEach(function (user) {
-                                    _this.userDict[user._id] = "";
-                                });
+                            //this.conversations.conversations = res.conversations;
+                            res.conversations.forEach(function (conversation) {
+                                console.log(conversation);
+                                _this.conversations.conversations.push(conversation);
                             });
+                            //this.conversations.forEach(conversation => {
+                            //    conversation.authors.forEach(user => {
+                            //        this.userDict[user._id] = "";
+                            //    });
+                            //})
                             for (var key in _this.userDict) {
                                 console.log(_this.userDict[key]);
                             }

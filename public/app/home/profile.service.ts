@@ -57,7 +57,7 @@ export class ProfileService {
         var url = 'api/timeline/message/' + postId;
         let body = JSON.stringify({content });
 
-        return this._http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
+        return this._http.post(url, body, { headers: this.headers() })
             .map(response =>  {
             });
     }

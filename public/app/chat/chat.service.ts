@@ -27,19 +27,25 @@ export class ChatService {
 
     }
 
-    private getMessage(content:any):void {
-        console.log(content);
-    }
 
 
     loadConversations():any {
+
         var url = 'api/conversations';
         var headers = this.headers();
 
         return this._http.get(url, {headers})
-            .map((res:Response) => {
-                console.log(res);
-                res.json();
+            .map((res:Response) => res.json());
+    }
+
+    newConversation(username:string):any{
+
+        var url = 'api/conversations';
+        let body = JSON.stringify({username });
+
+        return this._http.post(url, body, { headers: this.headers() })
+            .map(responseData =>  {
+                return responseData.json();
             });
     }
 }
@@ -50,8 +56,9 @@ export class Conversations{
 
 export class Conversation{
     _id:string;
-    authors:ConversationUser[];
+    timeCreated:string;
     messages:Message[];
+    authors:ConversationUser[];
 }
 
 export class Message{
