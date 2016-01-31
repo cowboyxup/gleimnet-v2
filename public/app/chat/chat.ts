@@ -1,34 +1,36 @@
 import {Component} from 'angular2/core';
 
-import {RouteParams,RouteData} from 'angular2/router';
-import {ROUTER_DIRECTIVES} from 'angular2/router';
 import {ChatService} from "./chat.service";
 import {Conversation} from "./chat.service";
 import {Message} from "./chat.service";
 import {ConversationUser} from "./chat.service";
 import {User} from "../home/profile.service";
-import {Conversations} from "./chat.service";
+import {ConversationGroup} from "./chat.service";
+import {ProfileService} from "../home/profile.service";
 
 
 @Component({
     selector: 'Chat',
     templateUrl: './app/chat/chat.html',
-    providers: [ChatService]
+    providers: [ChatService, ProfileService]
 })
 
 export class Chat {
 
-    auth = localStorage.getItem('AuthKey');
-    username = localStorage.getItem('username')
+    //auth = localStorage.getItem('AuthKey');
+    username = localStorage.getItem('username');
+
+    myConversations:ConversationGroup = new ConversationGroup();
+
+    actConversation:Conversation;
+
     userDict = {};
+    messageDict ={};
 
-    conversations:Conversation[];
-
-    constructor(private _chatService:ChatService) {
+    constructor(private _chatService:ChatService,
+                private _profileService:ProfileService) {
         this.username = localStorage.getItem('username');
-
     }
-
 
     ngOnInit() {
         var basicAuth = localStorage.getItem('AuthKey');
@@ -37,32 +39,71 @@ export class Chat {
         }
     }
 
+    newConversation(username:string) {
+        if (this.username) {
+            if (username) {
+                this._chatService.newConversation(username)
+                    .subscribe(
+                        (res) => {
+                            console.log(res)
+                        }
+                    )
+            }
+        }
+    }
+
     loadConversations() {
         if (this.username) {
             this._chatService.loadConversations()
                 .subscribe(
-                    (res:Conversations) => {
+                    (res:ConversationGroup) => {
 
-                        this.conversations = res.conversations;
+                        this.myConversations = res;
+                        console.log(this.myConversations);
 
-                        //res.forEach(conversation=> {
-                        //    console.log(conversation)
-                        //    this.conversations.push(conversation);
-                        //}
-
-
-                        this.conversations.forEach(conversation => {
+                        this.myConversations.conversations.forEach(conversation => {
                             conversation.authors.forEach(user => {
-                                this.userDict[user._id] = "";
-                            });
+                                if(!this.userDict[user.id])
+                                    this.userDict[user.id] = new User();
+                            })
+
+                            conversation.messages.forEach(message =>{
+                                if(!this.messageDict[message.id])
+                                    this.messageDict[message.id] = new Message();
+                            })
                         })
 
-                        for(var key in this.userDict) {
-                            console.log(this.userDict[key]);
+                        for (var userKey in this.userDict) {
+                            if (this.userDict.hasOwnProperty(userKey)) {
+                                if(this.userDict[userKey]._id == null){
+                                    this._profileService.loadProfilInfosWithID(userKey)
+                                        .subscribe(
+                                            user => {
+                                                this.userDict[user._id] = user;
+                                            },
+                                            error => {
+                                                console.log(error.message);
+                                            }
+                                        );
+                                }
+                            }
                         }
 
-                        console.log(this.userDict);
-
+                        for (var messageKey in this.messageDict) {
+                            if(this.messageDict.hasOwnProperty(messageKey)){
+                                if(this.messageDict[messageKey]._id == null){
+                                    this._chatService.loadMessage(messageKey)
+                                        .subscribe(
+                                            message => {
+                                                this.messageDict[message._id] = message;
+                                            },
+                                            error => {
+                                                console.log(error.message);
+                                            }
+                                        );
+                                }
+                            }
+                        }
                     },
                     error => {
                         console.log(error.message);
@@ -71,131 +112,24 @@ export class Chat {
         }
     }
 
+    sendNewMessage(content:string, conversationId:string) {
+        console.log(content);
+        console.log(conversationId);
+        if (conversationId) {
 
+            this._chatService.sendNewMessage(content, conversationId)
+                .subscribe(
+                    (res) => {
+                        console.log(res);
+                        this.loadConversations();
+                    }
+                )
+        }
+    }
+
+    onSelect(conversation:Conversation) {
+        console.log("onSelect");
+        this.actConversation = conversation;
+    }
 }
 
-//var CONVERSATIONS: Conversation[] = [
-//    {
-//        "_id":"string",
-//        "users":[
-//            {
-//                "username":"Schiller"
-//            },
-//            {
-//                "username":"Goethe"
-//            }
-//        ],
-//        "messages":[
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            },
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            }
-//        ]
-//    },
-//    {
-//        "_id":"string",
-//        "users":[
-//            {
-//                "username":"Schiller"
-//            },
-//            {
-//                "username":"Goethe"
-//            }
-//        ],
-//        "messages":[
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            },
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            }
-//        ]
-//    },
-//    {
-//        "_id":"string",
-//        "users":[
-//            {
-//                "username":"Schiller"
-//            },
-//            {
-//                "username":"Goethe"
-//            }
-//        ],
-//        "messages":[
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            },
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            }
-//        ]
-//    }
-//];

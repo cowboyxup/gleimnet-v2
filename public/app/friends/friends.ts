@@ -88,7 +88,7 @@ export class Friends {
         }
     }
 
-    private loadSuggestedFriendship(username:string){
+    private loadSuggestedFriendship(){
 
     }
 

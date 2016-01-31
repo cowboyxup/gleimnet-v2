@@ -4,7 +4,6 @@ import {Response} from "angular2/http";
 
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
-import {error} from "util";
 import {Http} from "angular2/http";
 
 
@@ -23,43 +22,75 @@ export class ChatService {
         return headers;
     }
 
-    public sendMessage(content){
+    loadMessage(id:string){
+        var url = 'api/conversations/messages/' + id;
+        var headers = this.headers();
 
+        return this._http.get(url, {headers})
+            .map((responseData) => {
+                return responseData.json();
+            });
     }
 
-    private getMessage(content:any):void {
-        console.log(content);
-    }
+    loadConversations() {
 
-
-    loadConversations():any {
         var url = 'api/conversations';
         var headers = this.headers();
 
         return this._http.get(url, {headers})
-            .map((res:Response) => {
-                console.log(res);
-                res.json();
+            .map((responseData) => {
+                return responseData.json();
             });
     }
+
+    newConversation(username:string):any{
+
+        var url = 'api/conversations';
+        let body = JSON.stringify({username });
+
+        return this._http.post(url, body, { headers: this.headers() })
+            .map((responseData) =>  {
+                responseData.json()
+            });
+    }
+
+    sendNewMessage(content:string, conversationId:string):any{
+
+        var url = 'api/conversations/' + conversationId;
+        let body = JSON.stringify({content });
+
+        return this._http.post(url, body, { headers: this.headers() })
+            .map((responseData) => {
+                return responseData.json();
+            });
+    }
+
+
 }
 
-export class Conversations{
+export class ConversationGroup{
     conversations:Conversation[];
+    numberOfItems:string;
 }
 
 export class Conversation{
     _id:string;
+    timeCreated:string;
+    messages:ConversationMessage[];
     authors:ConversationUser[];
-    messages:Message[];
 }
 
 export class Message{
+    _id:string;
     author:ConversationUser;
     time:string;
     content:string;
 }
 
+export class ConversationMessage{
+    id:string;
+}
+
 export class ConversationUser{
-    _id:string;
+    id:string;
 }

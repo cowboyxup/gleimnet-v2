@@ -2,12 +2,10 @@ import {Injectable} from 'angular2/core';
 import {Headers} from "angular2/http";
 
 import {Http} from "angular2/http";
-import {Headers} from "angular2/http";
 import {Response} from "angular2/http";
 
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
-import {error} from "util";
 
 @Injectable()
 export class ProfileService {
@@ -28,6 +26,15 @@ export class ProfileService {
     loadProfilInfos(username:string){
 
         var url = 'api/users/username/' + username;
+        var headers = this.headers();
+
+        return this._http.get(url, {headers})
+            .map((res:Response) => res.json());
+    }
+
+    loadProfilInfosWithID(id:string){
+
+        var url = 'api/users/' + id;
         var headers = this.headers();
 
         return this._http.get(url, {headers})
@@ -57,7 +64,7 @@ export class ProfileService {
         var url = 'api/timeline/message/' + postId;
         let body = JSON.stringify({content });
 
-        return this._http.post('api/timeline/message/' + postId, body, { headers: this.headers() })
+        return this._http.post(url, body, { headers: this.headers() })
             .map(response =>  {
             });
     }
