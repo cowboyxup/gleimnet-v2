@@ -22,6 +22,16 @@ export class ChatService {
         return headers;
     }
 
+    loadMessage(id:string){
+        var url = 'api/conversations/messages/' + id;
+        var headers = this.headers();
+
+        return this._http.get(url, {headers})
+            .map((responseData) => {
+                return responseData.json();
+            });
+    }
+
     loadConversations() {
 
         var url = 'api/conversations';
@@ -66,14 +76,19 @@ export class ConversationGroup{
 export class Conversation{
     _id:string;
     timeCreated:string;
-    messages:Message[];
+    messages:ConversationMessage[];
     authors:ConversationUser[];
 }
 
 export class Message{
+    _id:string;
     author:ConversationUser;
     time:string;
     content:string;
+}
+
+export class ConversationMessage{
+    id:string;
 }
 
 export class ConversationUser{

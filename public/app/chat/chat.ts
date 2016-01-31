@@ -25,9 +25,10 @@ export class Chat {
     actConversation:Conversation;
 
     userDict = {};
+    messageDict ={};
 
     constructor(private _chatService:ChatService,
-                private _rofileService:ProfileService) {
+                private _profileService:ProfileService) {
         this.username = localStorage.getItem('username');
     }
 
@@ -65,15 +66,36 @@ export class Chat {
                                 if(!this.userDict[user.id])
                                     this.userDict[user.id] = new User();
                             })
+
+                            conversation.messages.forEach(message =>{
+                                if(!this.messageDict[message.id])
+                                    this.messageDict[message.id] = new Message();
+                            })
                         })
 
                         for (var userKey in this.userDict) {
                             if (this.userDict.hasOwnProperty(userKey)) {
                                 if(this.userDict[userKey]._id == null){
-                                    this._rofileService.loadProfilInfosWithID(userKey)
+                                    this._profileService.loadProfilInfosWithID(userKey)
                                         .subscribe(
                                             user => {
                                                 this.userDict[user._id] = user;
+                                            },
+                                            error => {
+                                                console.log(error.message);
+                                            }
+                                        );
+                                }
+                            }
+                        }
+
+                        for (var messageKey in this.messageDict) {
+                            if(this.messageDict.hasOwnProperty(messageKey)){
+                                if(this.messageDict[messageKey]._id == null){
+                                    this._chatService.loadMessage(messageKey)
+                                        .subscribe(
+                                            message => {
+                                                this.messageDict[message._id] = message;
                                             },
                                             error => {
                                                 console.log(error.message);

@@ -8,7 +8,7 @@ System.register(['angular2/core', "./chat.service", "../home/profile.service"], 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, chat_service_1, profile_service_1, chat_service_2, profile_service_2;
+    var core_1, chat_service_1, chat_service_2, profile_service_1, chat_service_3, profile_service_2;
     var Chat;
     return {
         setters:[
@@ -18,6 +18,7 @@ System.register(['angular2/core', "./chat.service", "../home/profile.service"], 
             function (chat_service_1_1) {
                 chat_service_1 = chat_service_1_1;
                 chat_service_2 = chat_service_1_1;
+                chat_service_3 = chat_service_1_1;
             },
             function (profile_service_1_1) {
                 profile_service_1 = profile_service_1_1;
@@ -25,13 +26,14 @@ System.register(['angular2/core', "./chat.service", "../home/profile.service"], 
             }],
         execute: function() {
             Chat = (function () {
-                function Chat(_chatService, _rofileService) {
+                function Chat(_chatService, _profileService) {
                     this._chatService = _chatService;
-                    this._rofileService = _rofileService;
+                    this._profileService = _profileService;
                     //auth = localStorage.getItem('AuthKey');
                     this.username = localStorage.getItem('username');
-                    this.myConversations = new chat_service_2.ConversationGroup();
+                    this.myConversations = new chat_service_3.ConversationGroup();
                     this.userDict = {};
+                    this.messageDict = {};
                     this.username = localStorage.getItem('username');
                 }
                 Chat.prototype.ngOnInit = function () {
@@ -62,13 +64,29 @@ System.register(['angular2/core', "./chat.service", "../home/profile.service"], 
                                     if (!_this.userDict[user.id])
                                         _this.userDict[user.id] = new profile_service_1.User();
                                 });
+                                conversation.messages.forEach(function (message) {
+                                    if (!_this.messageDict[message.id])
+                                        _this.messageDict[message.id] = new chat_service_2.Message();
+                                });
                             });
                             for (var userKey in _this.userDict) {
                                 if (_this.userDict.hasOwnProperty(userKey)) {
                                     if (_this.userDict[userKey]._id == null) {
-                                        _this._rofileService.loadProfilInfosWithID(userKey)
+                                        _this._profileService.loadProfilInfosWithID(userKey)
                                             .subscribe(function (user) {
                                             _this.userDict[user._id] = user;
+                                        }, function (error) {
+                                            console.log(error.message);
+                                        });
+                                    }
+                                }
+                            }
+                            for (var messageKey in _this.messageDict) {
+                                if (_this.messageDict.hasOwnProperty(messageKey)) {
+                                    if (_this.messageDict[messageKey]._id == null) {
+                                        _this._chatService.loadMessage(messageKey)
+                                            .subscribe(function (message) {
+                                            _this.messageDict[message._id] = message;
                                         }, function (error) {
                                             console.log(error.message);
                                         });

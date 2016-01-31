@@ -26,12 +26,12 @@
         <div class="media post" *ngFor="#message of actConversation.messages">
             <div class="media-left">
                 <a href="#">
-                    <img class="media-object timelineImage" alt="" src="img/64x64.svg">
+                    <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/.png">
                 </a>
             </div>
             <div class="media-body">
                 <h4 class="media-heading">Horst</h4>
-                {{message.content}}
+                {{messageDict[message.id]._id}}
             </div>
         </div>
 
