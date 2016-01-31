@@ -16,7 +16,6 @@ import {ChatService} from "../chat/chat.service";
     selector: 'Profile',
     templateUrl: './app/home/home.html',
     providers:[ProfileService,FriendsService,ChatService,ROUTER_DIRECTIVES]
-
 })
 
 export class Profile implements OnInit{
