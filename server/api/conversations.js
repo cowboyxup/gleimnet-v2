@@ -128,7 +128,6 @@ internals.applyRoutes = function (server, next) {
             ]
         },
         handler: function (request, reply) {
-            console.log('dinge');
             request.pre.addAuthor.addMessage(request.auth.credentials.session.userId,request.pre.message._id.toString(), (err, conversation) => {
                 if (err) {
                     return reply(err);
@@ -168,31 +167,21 @@ internals.applyRoutes = function (server, next) {
                     Conversation.createWithAuthor(request.auth.credentials.session.userId.toString(), reply);
                 }
             },{
-                assign: 'author',
+                assign: 'addAuthor',
                 method: function (request, reply) {
-                    console.log(request.pre.user);
-                    Conversation.findByIdAndUpdate(self._id, {$push: {"authors": {id: mongo.ObjectId(request.pre.user._id)}}}, {
-                        safe: true,
-                        upsert: true,
-                        new: true
-                    }, (err, user) => {
+                    const userid = request.pre.user._id;
+                    Conversation.addAuthor(request.pre.conversation, userid, (err, conversation) => {
                         if (err) {
-                            return reply(err);
+                            return reply(Boom.badRequest('Message not created'));
                         }
-                        reply(user);
+                        reply(conversation);
                     });
-                    //request.pre.conversation.ensureAuthor(request.pre.user._id);
                 }
-            }]
+            }
+            ]
         },
         handler: function (request, reply) {
-            reply (request.pre.conversation)
-            /*request.pre.conversation.addMessage(request.pre.user._id.toString(),request.pre.._id.toString(), (err, conversation) => {
-                if (err) {
-                    return reply(err);
-                }
-                return reply(conversation);
-            });*/
+            reply (request.pre.addAuthor)
         }
     }]);
     next();
