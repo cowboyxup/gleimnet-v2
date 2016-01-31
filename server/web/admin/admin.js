@@ -411,7 +411,7 @@ internals.applyRoutes = function (server, next) {
                             const savedata = EJSON.stringify(alldata,null, '\t');
                             const fsOptions = {encoding: 'utf-8'};
                             const date = new Date();
-                            const filename = request.payload.institution+"_"+request.payload.groupname + "-" + (date.toLocaleDateString('de-DE')).replace(!"[0-9]","-") + ".json";
+                            const filename = request.payload.institution+"_"+request.payload.groupname + "-" + (date.toLocaleDateString('de-DE')).replace("\/","-").replace("\/","-") + ".json";
                             Fs.writeFile(Path.join(__dirname, '..', '..', '..', 'data', 'saved', filename), savedata, fsOptions, (err) => {
                                 if (err) throw err;
                                 console.log('It\'s saved!');
