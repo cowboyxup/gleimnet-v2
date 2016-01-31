@@ -5,6 +5,7 @@ const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
 const Message = require('./message');
 const User = require('./user');
+const mongo = require('mongodb');
 
 const Conversation = BaseModel.extend({
     constructor: function (attrs) {
@@ -14,12 +15,13 @@ const Conversation = BaseModel.extend({
         const self = this;
         Async.auto({
             ensureAuthord: (results) => {
-                self.ensureAuthor(userId, results);
+                //self.ensureAuthor(userId, results);
+                return true;
             },
             updateConveration: ['ensureAuthord', function (done, results) {
                 const pushmessages = {
                     id: messageId
-                }
+                };
                 Conversation.findByIdAndUpdate(self._id,{$push: {messages: {$each: [pushmessages],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }]
         }, (err, results) => {
@@ -33,13 +35,12 @@ const Conversation = BaseModel.extend({
         const self = this;
         Async.auto({
             authorsf: function (done, results) {
-                if (!results.user) {
-                    return done(null, false);
-                }
-                if (self.authors.contains({id: userId})) {
-                    return self.authors
-                }
-                self.findByIdAndUpdate(self._id, {$push: {"authors": {id: userId}}}, {
+                console.log(userId);
+               if (self.authors.indexOf({id: mongo.ObjectId(userId)})!==-1) {
+                   console.log("dinge");
+                  return self.authors
+               }
+               self.findByIdAndUpdate(self._id, {$push: {"authors": {id: mongo.ObjectId(userId)}}}, {
                     safe: true,
                     upsert: true,
                     new: true
@@ -47,9 +48,9 @@ const Conversation = BaseModel.extend({
             }
         }, (err, results) => {
             if (err) {
-                return callback(err);
+                return err;
             }
-            callback(null, results.authorsf);
+            return results.authorsf;
         })
     }
 
@@ -77,6 +78,23 @@ Conversation.create = function (callback) {
         timeCreated: new Date(),
         messages: [],
         authors: []
+    };
+    self.insertOne(document, (err, docs) => {
+        if (err) {
+            return callback(err);
+        }
+        callback(null, docs[0]);
+    });
+};
+
+Conversation.createWithAuthor = function (userId, callback) {
+    const self = this;
+    const document = {
+        timeCreated: new Date(),
+        messages: [],
+        authors: [{
+            id: mongo.ObjectId(userId)
+        }]
     };
     self.insertOne(document, (err, docs) => {
         if (err) {
@@ -123,7 +141,7 @@ Conversation.findAllConversationsByUserId = function (userId, callback) {
         conversations: function (done) {
             console.log(userId);
             const query = {
-                authors: { $elemMatch:{id: userId}}
+                authors: { $elemMatch:{id: mongo.ObjectId(userId)}}
             };
             self.find(query, done);
         }
