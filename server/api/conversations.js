@@ -40,7 +40,11 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            reply ({conversations: request.pre.conversation});
+            const well ={
+                conversations: request.pre.conversation,
+                numberOfItems: request.pre.conversation.length
+            }
+            reply (well);
         }
     }]);
     server.route([{
