@@ -79,6 +79,37 @@ internals.applyRoutes = function (server, next) {
         }
     }]);
     server.route([{
+        method: 'GET',
+        path: '/conversations/messages/{id}',
+        config: {
+            auth: {
+                strategy: 'simple'
+            },
+            validate: {
+                params: {
+                    id: Joi.string().length(24).hex().required()
+                }
+            },
+            pre: [{
+                assign: 'message',
+                method: function(request, reply) {
+                    Message.findById(request.params.id, (err, message) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!message) {
+                            return reply(Boom.notFound('Document not found.'));
+                        }
+                        reply(message);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            reply (request.pre.message);
+        }
+    }]);
+    server.route([{
         method: 'POST',
         path: '/conversations/{id}',
         config: {
