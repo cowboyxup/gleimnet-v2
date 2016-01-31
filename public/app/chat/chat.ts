@@ -13,12 +13,12 @@ import {Conversations} from "./chat.service";
 @Component({
     selector: 'Chat',
     templateUrl: './app/chat/chat.html',
-    providers:[ChatService]
+    providers: [ChatService]
 })
 
 export class Chat {
 
-    auth =  localStorage.getItem('AuthKey');
+    auth = localStorage.getItem('AuthKey');
     username = localStorage.getItem('username')
     userDict = {};
 
@@ -31,35 +31,42 @@ export class Chat {
 
 
     ngOnInit() {
-        var basicAuth =  localStorage.getItem('AuthKey');
-        if(basicAuth){
+        var basicAuth = localStorage.getItem('AuthKey');
+        if (basicAuth) {
             this.loadConversations();
         }
     }
 
-    loadConversations(){
-        if(this.username){
+    loadConversations() {
+        if (this.username) {
             this._chatService.loadConversations()
                 .subscribe(
                     (res:Conversations) => {
 
-                        //console.log(res);
+                        this.conversations = res.conversations;
 
+                        //res.forEach(conversation=> {
+                        //    console.log(conversation)
+                        //    this.conversations.push(conversation);
+                        //}
 
-                        res.forEach(conversation=> {
-                            console.log(conversation)
-                            this.conversations.push(conversation);
-                        }
 
                         this.conversations.forEach(conversation => {
                             conversation.authors.forEach(user => {
-                                this.userDict[user._id] = new User();
-                            })
+                                this.userDict[user._id] = "";
+                            });
+                        })
+
+                        for(var key in this.userDict) {
+                            console.log(this.userDict[key]);
                         }
+
                         console.log(this.userDict);
 
                     },
-                    error => { console.log(error.message);}
+                    error => {
+                        console.log(error.message);
+                    }
                 );
         }
     }
