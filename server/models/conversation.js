@@ -15,7 +15,6 @@ const Conversation = BaseModel.extend({
         const self = this;
         Async.auto({
             updateConveration: [function (done, results) {
-                console.log('ddddddd');
                 const pushmessages = {
                     id: messageId
                 };
@@ -32,9 +31,7 @@ const Conversation = BaseModel.extend({
         const self = this;
         Async.auto({
             authorsf: function (done, results) {
-                console.log(userId);
-               if (self.authors.indexOf({id: mongo.ObjectId(userId)})!==-1) {
-                   console.log("dinge");
+               if (self.authors.indexOf({id: mongo.ObjectId(userId)})!==-1) {;
                   return self.authors
                }
                self.findByIdAndUpdate(self._id, {$push: {"authors": {id: mongo.ObjectId(userId)}}}, {
@@ -106,12 +103,9 @@ Conversation.ensureAuthor = function (conversation, userId, callback) {
     Async.auto({
         authors: function (done, results) {
             const g = mongo.ObjectId(userId)
-            console.log(conversation.authors.map(function(e) { return e.id; }));
             if (conversation.authors.indexOf({id: mongo.ObjectId(userId)})!==(-1)) {
-                console.log('d');
                 return callback(null,conversation);
             }
-            console.log(JSON.stringify(conversation));
             self.findByIdAndUpdate(conversation._id,{$push: {"authors": {id: mongo.ObjectId(userId)}}},{safe: true, upsert: true, new: true},done);
         }
     }, (err, results) => {
@@ -125,11 +119,24 @@ Conversation.ensureAuthor = function (conversation, userId, callback) {
     });
 };
 
+Conversation.addAuthor = function (conversation, userId, callback) {
+    const self = this;
+    Async.auto({
+        authors: function (done, results) {
+            self.findByIdAndUpdate(conversation._id,{$push: {"authors": {id: mongo.ObjectId(userId)}}},{safe: true, upsert: true, new: true},done);
+        }
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        return callback(null, results.authors);
+    });
+};
+
 Conversation.findAllConversationsByUserId = function (userId, callback) {
     const self = this;
     Async.auto({
         conversations: function (done) {
-            console.log(userId);
             const query = {
                 authors: { $elemMatch:{id: mongo.ObjectId(userId)}}
             };
@@ -139,8 +146,6 @@ Conversation.findAllConversationsByUserId = function (userId, callback) {
         if (err) {
             return callback(err);
         }
-        console.log(results);
-
         return callback(null, results.conversations);
     });
 };
