@@ -40,11 +40,13 @@ internals.applyRoutes = function (server, next) {
             if (err || !session) {
                 return callback(new Error('User unauthenticated'));
             }
+
             return callback(null, session);
         });
     };
 
     const postAuth = function postAuthenticate(socket, data) {
+        return data
     };
 
     const ioAuth = require('socketio-auth')(io, {
@@ -53,15 +55,17 @@ internals.applyRoutes = function (server, next) {
         timeout: 1000
     });
 
+    io.on('joinConversation', function(tweet){
+        io.bremit('tweet', "s");
+    });
 
-    io.on('authenticated', function(data){
+    io.on('authenticated', function(socket, data){
         console.log('Wait.....');
-        socket.on('all-conversations', function(data) {
-            Connection
+        io.on('allConversations', function(data) {
 
         });
 
-        socket.on('new-conversation', function (userId) {
+        io.on('new-conversation', function (userId) {
             Conversation.create((err, newConversation) => {
                 if(err) {
                     return new Error("Fehler");
@@ -72,10 +76,14 @@ internals.applyRoutes = function (server, next) {
                 });
                 return newConversation;
             });
-        })
-        socket.on('join-conversation', function (conversation) {
+        });
+        io.on('joinConversation', function(socket, data) {
+            socket.broadcast.emit('new message', {
+                username: "kk"
+            });
+            socket.emit('message', {message: 'dinge'});
             socket.join(conversation);
-            socket.emit('message', 'for your eyes only');
+
 
             socket.on('new-message'), function(message) {
                 Message.create(message.userid, message.content, (err, mes)=> {
@@ -85,7 +93,6 @@ internals.applyRoutes = function (server, next) {
                         return message;
                     })
                 });
-
                 return mes;
             }
         })
