@@ -113,22 +113,11 @@ internals.applyRoutes = function (server, next) {
                         reply(message);
                     });
                 }
-            },{
-                assign: 'addAuthor',
-                method: function (request, reply) {
-                    const userid = request.auth.credentials.session.userId;
-                    Conversation.ensureAuthor(request.pre.conversation, userid, (err, conversation) => {
-                        if (err) {
-                            return reply(Boom.badRequest('Message not created'));
-                        }
-                        reply(conversation);
-                    });
-                }
             }
             ]
         },
         handler: function (request, reply) {
-            request.pre.addAuthor.addMessage(request.auth.credentials.session.userId,request.pre.message._id.toString(), (err, conversation) => {
+            request.pre.conversation.addMessage(request.auth.credentials.session.userId,request.pre.message._id.toString(), (err, conversation) => {
                 if (err) {
                     return reply(err);
                 }
