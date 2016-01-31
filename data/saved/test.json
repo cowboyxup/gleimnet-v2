@@ -1,0 +1,173 @@
+{
+	"users": [
+		{
+			"_id": {
+				"$oid": "56ac968fb047f7f003dd8290"
+			},
+			"isActive": true,
+			"username": "schiller",
+			"password": "$2a$10$PHUj5MTlbScGSX0jfVh9i.8XrtWLy.WjoB9xkmhNJSeAi2qAzthYu",
+			"timeCreated": {
+				"$date": "2016-01-30T10:55:11.517Z"
+			},
+			"givenName": "Johann Christoph Friedrich",
+			"surename": "von Schiller",
+			"nickname": "Friedrich Schiller",
+			"birthdate": {
+				"$date": "1759-10-10T04:00:00.000Z"
+			},
+			"description": "Johann Christoph Friedrich von Schiller, 1802 geadelt, war ein deutscher Dichter, Philosoph und Historiker. Er gilt als einer der bedeutendsten deutschsprachigen Dramatiker, Lyriker und Essayisten.",
+			"avatar": "schiller",
+			"titlePicture": "schiller",
+			"timeline": {
+				"$oid": "56ac968fb047f7f003dd828f"
+			}
+		},
+		{
+			"_id": {
+				"$oid": "56ac970c34dd98f81f39cd96"
+			},
+			"isActive": true,
+			"username": "goethe",
+			"password": "$2a$10$EQVvkzcQCph.8zei2vlYT.GDWF5fepg5j0ZIvfYPQwO2GglqGbqHC",
+			"timeCreated": {
+				"$date": "2016-01-30T10:57:16.217Z"
+			},
+			"givenName": "Johann Wolfgang",
+			"surename": "von Goethe",
+			"nickname": "Goethe",
+			"birthdate": {
+				"$date": "1749-08-28T04:00:00.000Z"
+			},
+			"description": "Johann Wolfgang von Goethe gilt als einer der bedeutendsten Repräsentanten deutschsprachiger Dichtung.",
+			"avatar": "goethe",
+			"titlePicture": "goethe",
+			"timeline": {
+				"$oid": "56ac970b34dd98f81f39cd95"
+			}
+		},
+		{
+			"_id": {
+				"$oid": "56ad3f3dd791f3dc1884098d"
+			},
+			"isActive": true,
+			"username": "kant",
+			"password": "$2a$10$FQF4kaiocYrH9e.Z4cO9/uBOgTZTTCd1MnFv6HiG2AaaehkP1j9.m",
+			"timeCreated": {
+				"$date": "2016-01-30T22:54:53.337Z"
+			},
+			"givenName": "Immanuel",
+			"surename": "Kant",
+			"nickname": "Kant",
+			"birthdate": {
+				"$date": "1724-04-22T04:00:00.000Z"
+			},
+			"description": "Immanuel Kant war ein deutscher Philosoph der Aufklärung. Kant zählt zu den bedeutendsten Vertretern der abendländischen Philosophie.",
+			"avatar": "kant",
+			"titlePicture": "kant",
+			"timeline": {
+				"$oid": "56ad3f3dd791f3dc1884098c"
+			}
+		},
+		{
+			"_id": {
+				"$oid": "56ad3fccb843d25c1dac4242"
+			},
+			"isActive": true,
+			"username": "reinhold",
+			"password": "$2a$10$Fczoi5ATJrUZqcRZ6YOEN.q9CTxfMr18hypuLnmeGsy/r3SvmLh.e",
+			"timeCreated": {
+				"$date": "2016-01-30T22:57:16.716Z"
+			},
+			"givenName": "Carl Leonhard",
+			"surename": "Reinhold",
+			"nickname": "Carl Reinhold",
+			"birthdate": {
+				"$date": "1757-10-26T04:00:00.000Z"
+			},
+			"description": "Carl Leonhard Reinhold war Philosoph und als Schriftsteller der wichtigste aus Österreich stammende Vertreter der deutschen Aufklärung.",
+			"avatar": "reinhold",
+			"titlePicture": "reinhold",
+			"timeline": {
+				"$oid": "56ad3fccb843d25c1dac4241"
+			}
+		},
+		{
+			"_id": {
+				"$oid": "56ad4071c8564c9c11725840"
+			},
+			"isActive": true,
+			"username": "gleim",
+			"password": "$2a$10$t0x2JBJZGRaYlC2EPbwUpO8O/gmguPwxh/LRalnnzo.VG7a4gfxTe",
+			"timeCreated": {
+				"$date": "2016-01-30T23:00:01.627Z"
+			},
+			"givenName": "Johann Wilhelm Ludwig",
+			"surename": "Gleim",
+			"nickname": "Johann Gleim",
+			"birthdate": {
+				"$date": "1719-04-02T04:00:00.000Z"
+			},
+			"description": "Johann Wilhelm Ludwig Gleim wurde als Sohn eines Steuereinnehmers 1719 in Ermsleben bei Aschersleben geboren. Nach dem Studium der Rechtswissenschaft  in Halle lebte er in Berlin und Potsdam und kam 1747 als – modern gesagt – Verwaltungsleiter des Domstiftes nach Halberstadt, wo er bis zu seinem Tod 1803 lebte. Waren es in seiner Jugend seine dichterischen Werke, die ihn bekannt machten, so wurde es im Alter mehr und mehr seine Förder- und Sammlungstätigkeit. Gleim war im letzten Drittel des 18. Jahrhunderts der größte bürgerliche Mäzen für junge Dichter im nord- und mitteldeutschen Raum. Er nutzte seine vielen hundert Freund- und Bekanntschaften, um etwas für die deutsche Literatur zu tun. \"Vater Gleim\" – wie er genannt wurde – war eine Instanz im literarischen Leben.",
+			"avatar": "gleim",
+			"titlePicture": "gleim",
+			"timeline": {
+				"$oid": "56ad4071c8564c9c1172583f"
+			}
+		}
+	],
+	"messages": [],
+	"conversations": [
+		{
+			"_id": {
+				"$oid": "56ac968fb047f7f003dd828f"
+			},
+			"timeCreated": {
+				"$date": "2016-01-30T10:55:11.266Z"
+			},
+			"messages": [],
+			"authors": []
+		},
+		{
+			"_id": {
+				"$oid": "56ac970b34dd98f81f39cd95"
+			},
+			"timeCreated": {
+				"$date": "2016-01-30T10:57:15.966Z"
+			},
+			"messages": [],
+			"authors": []
+		},
+		{
+			"_id": {
+				"$oid": "56ad3f3dd791f3dc1884098c"
+			},
+			"timeCreated": {
+				"$date": "2016-01-30T22:54:53.086Z"
+			},
+			"messages": [],
+			"authors": []
+		},
+		{
+			"_id": {
+				"$oid": "56ad3fccb843d25c1dac4241"
+			},
+			"timeCreated": {
+				"$date": "2016-01-30T22:57:16.464Z"
+			},
+			"messages": [],
+			"authors": []
+		},
+		{
+			"_id": {
+				"$oid": "56ad4071c8564c9c1172583f"
+			},
+			"timeCreated": {
+				"$date": "2016-01-30T23:00:01.376Z"
+			},
+			"messages": [],
+			"authors": []
+		}
+	],
+	"friends": []
+}
