@@ -107,6 +107,7 @@ System.register(['angular2/core', "./chat.service", "../home/profile.service"], 
                             .subscribe(function (res) {
                             console.log(res);
                             _this.loadConversations();
+                            _this.onSelect(_this.actConversation);
                         });
                     }
                 };

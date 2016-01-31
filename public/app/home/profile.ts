@@ -10,11 +10,12 @@ import {Subject } from 'rxjs/Subject';
 
 import {ProfileService,User,ProfileFriend,Messages, Timeline} from "./profile.service";
 import {FriendsService} from "../friends/friendsService";
+import {ChatService} from "../chat/chat.service";
 
 @Component({
     selector: 'Profile',
     templateUrl: './app/home/home.html',
-    providers:[ProfileService,FriendsService]
+    providers:[ProfileService,FriendsService,ChatService,ROUTER_DIRECTIVES]
 
 })
 
@@ -30,9 +31,11 @@ export class Profile implements OnInit{
     addFriendButton=true;
 
 
-    constructor(private _routeParams:RouteParams,
+    constructor(
+                private _routeParams:RouteParams,
                 private _profileService: ProfileService,
-                private _friendsService:FriendsService) {
+                private _friendsService:FriendsService,
+                private _chatService:ChatService) {
         this.username = this._routeParams.get('id');
 
         if(this.username == localStorage.getItem('username')){
@@ -105,6 +108,19 @@ export class Profile implements OnInit{
                 .subscribe(
                     response => {
                         this.addFriendButton = false;
+                    },
+                    error => { console.log(error.message);}
+                )
+        }
+    }
+
+    sendMessage(){
+        if(this.username) {
+            this._chatService.newConversation(this.username)
+                .subscribe(
+                    response => {
+                        console.log(response);
+                        this.router.parent.navigateByUrl('/chat');
                     },
                     error => { console.log(error.message);}
                 )

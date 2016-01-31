@@ -287,6 +287,32 @@
                 }
             }
         },
+        "/conversations/messages/{id}": {
+            "get": {
+                "summary": "Message Object",
+                "description": "Message Object\n",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Message id.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Conversation"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Einzelne Message",
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    }
+                }
+            }
+        },
         "/timeline": {
             "get": {
                 "summary": "Timeline",

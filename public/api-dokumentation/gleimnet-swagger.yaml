@@ -1,0 +1,713 @@
+swagger: '2.0'
+info:
+  title: Gleimnet API
+  description: API Dokumentation für das Sozial Netzwerk vom Gleimhaus Halberstadt
+  version: 1.0.0
+host: 'localhost:8000'
+schemes:
+  - http
+basePath: /api
+produces:
+  - application/json
+paths:
+  /:
+    get:
+      summary: Starting Point
+      description: |
+        Starting Point
+      responses:
+        '200':
+          description: Welcome to the plot device.
+          schema:
+            $ref: '#/definitions/StatusMessage'
+  /login:
+    post:
+      summary: Login
+      description: "Der User kann sich hier authentifizien. Gibt ein Objekt mit dem http Basic Auth Token zurück. \n"
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Auth'
+          required: true
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Login Object
+          schema:
+            $ref: '#/definitions/AuthToken'
+  /logout:
+    delete:
+      summary: Logout
+      description: |
+        Logout
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Logout Nachricht
+          schema:
+            $ref: '#/definitions/StatusMessage'
+  /users:
+    get:
+      summary: Product Types
+      description: |
+        The Products endpoint returns information about the *Uber* products
+        offered at a given location. The response includes the display name
+        and other details about each product, and lists the products in the
+        proper display order.
+      parameters:
+        - name: latitude
+          in: query
+          description: Latitude component of location.
+          required: true
+          type: number
+          format: double
+        - name: longitude
+          in: query
+          description: Longitude component of location.
+          required: true
+          type: number
+          format: double
+      tags:
+        - Products
+      responses:
+        '200':
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/{id}:
+    get:
+      summary: User
+      description: |
+        User Object
+      parameters:
+        - name: id
+          in: path
+          description: User id.
+          required: true
+          type: string
+      tags:
+        - User
+      responses:
+        '200':
+          description: Das User Objekt
+          schema:
+            $ref: '#/definitions/User'
+  /users/username/{username}:
+    get:
+      summary: User
+      description: |
+        User Object
+      parameters:
+        - name: username
+          in: path
+          description: Username.
+          required: true
+          type: string
+      tags:
+        - User
+      responses:
+        '200':
+          description: Das User Objekt
+          schema:
+            $ref: '#/definitions/UserWithFriends'
+  /users/my:
+    get:
+      summary: User
+      description: |
+        Very short own User Object
+      tags:
+        - User
+      responses:
+        '200':
+          description: Das User Objekt
+          schema:
+            $ref: '#/definitions/VeryShortUser'
+  /conversations:
+    get:
+      summary: User
+      description: |
+        Very short own User Object
+      tags:
+        - Conversation
+      responses:
+        '200':
+          description: Das User Objekt
+          schema:
+            $ref: '#/definitions/Conversations'
+    post:
+      summary: Conversation
+      description: |
+        Conversation Object
+      parameters:
+        - name: username
+          in: body
+          description: Username
+          required: true
+          schema:
+            $ref: '#/definitions/Username'
+      tags:
+        - Conversation
+      responses:
+        '200':
+          description: Die gesammte Conversation mit der neuen Nachricht
+          schema:
+            $ref: '#/definitions/Conversation'
+  /conversations/{id}:
+    get:
+      summary: Conversation
+      description: |
+        Conversation Object
+      parameters:
+        - name: id
+          in: path
+          description: Conversation id.
+          required: true
+          type: string
+      tags:
+        - Conversation
+      responses:
+        '200':
+          description: Einzelne Conversation
+          schema:
+            $ref: '#/definitions/Conversation'
+    post:
+      summary: Conversation
+      description: |
+        Conversation Object
+      parameters:
+        - name: id
+          in: path
+          description: Conversation id.
+          required: true
+          type: string
+        - name: content
+          in: body
+          description: message content
+          required: true
+          schema:
+            $ref: '#/definitions/Content'
+      tags:
+        - Conversation
+      responses:
+        '200':
+          description: Die gesammte Conversation mit der neuen Nachricht
+          schema:
+            $ref: '#/definitions/Conversation'
+  /conversations/messages/{id}:
+    get:
+      summary: Message Object
+      description: |
+        Message Object
+      parameters:
+        - name: id
+          in: path
+          description: Message id.
+          required: true
+          type: string
+      tags:
+        - Conversation
+      responses:
+        '200':
+          description: Einzelne Message
+          schema:
+            $ref: '#/definitions/Message'
+  /timeline:
+    get:
+      summary: Timeline
+      description: |
+        Gibt die die eigene Timeline
+      tags:
+        - Timeline
+      responses:
+        '200':
+          description: Die eigene Timeline
+          schema:
+            $ref: '#/definitions/Timeline'
+    post:
+      summary: Conversation
+      description: |
+        Neuer Post an der Timeline
+      parameters:
+        - name: content
+          in: body
+          description: Inhalt des neuen Posts
+          required: true
+          schema:
+            $ref: '#/definitions/Content'
+      tags:
+        - Timeline
+      responses:
+        '200':
+          description: Die gesammte Conversation mit der neuen Nachricht
+          schema:
+            $ref: '#/definitions/Timeline'
+  /timeline/{username}:
+    get:
+      summary: Timeline
+      description: |
+        Gibt die die eigene Timeline
+      parameters:
+        - name: username
+          in: path
+          description: Username.
+          required: true
+          type: string
+      tags:
+        - Timeline
+      responses:
+        '200':
+          description: Die eigene Timeline
+          schema:
+            $ref: '#/definitions/Timeline'
+    post:
+      summary: Post posten
+      description: |
+        Neuer Post an der Timeline
+      parameters:
+        - name: username
+          in: path
+          description: Username.
+          required: true
+          type: string
+        - name: content
+          in: body
+          description: Inhalt des neuen Posts
+          required: true
+          schema:
+            $ref: '#/definitions/Content'
+      tags:
+        - Timeline
+      responses:
+        '200':
+          description: Die gesammte Conversation mit der neuen Nachricht
+          schema:
+            $ref: '#/definitions/Timeline'
+  /timeline/message/{messageId}:
+    post:
+      summary: Kommentar posten
+      description: |
+        Neuer Kommentar an der Timeline
+      parameters:
+        - name: messageId
+          in: path
+          description: Message id
+          required: true
+          type: string
+        - name: content
+          in: body
+          description: Inhalt des neuen Posts
+          required: true
+          schema:
+            $ref: '#/definitions/Content'
+      tags:
+        - Timeline
+      responses:
+        '200':
+          description: Der Post mit dem neuen Nachricht
+          schema:
+            $ref: '#/definitions/Post'
+  /friends:
+    get:
+      summary: User
+      description: |
+        Very short own User Object
+      tags:
+        - Friends
+      responses:
+        '200':
+          description: Das User Objekt
+          schema:
+            $ref: '#/definitions/VeryShortUser'
+    post:
+      summary: Freundschaftsanfrage
+      description: |
+        Stelle eine neue Freundschaftsanfrage
+      parameters:
+        - name: username
+          in: body
+          description: Username
+          required: true
+          schema:
+            $ref: '#/definitions/Username'
+      tags:
+        - Friends
+      responses:
+        '200':
+          description: Die gesammte Conversation mit der neuen Nachricht
+          schema:
+            $ref: '#/definitions/Friendship'
+  /friends/my:
+    get:
+      summary: Freundschaften
+      description: |
+        Meine bestätigten Freundschaften
+      tags:
+        - Friends
+      responses:
+        '200':
+          description: Das Object mit den Freundschaften
+          schema:
+            $ref: '#/definitions/Friendships'
+  /friends/my/unconfirmed:
+    get:
+      summary: Freundschaften
+      description: |
+        Meine bestätigten Freundschaften
+      tags:
+        - Friends
+      responses:
+        '200':
+          description: Das Object mit den Freundschaften
+          schema:
+            $ref: '#/definitions/Friendships'
+  /friends/username/{username}:
+    get:
+      summary: User
+      description: |
+        Alle Freunde des Users
+      parameters:
+        - name: username
+          in: path
+          description: Username.
+          required: true
+          type: string
+      tags:
+        - Friends
+      responses:
+        '200':
+          description: Das Object mit den Freundschaften
+          schema:
+            $ref: '#/definitions/Friendships'
+  /friends/{id}:
+    delete:
+      summary: Freundschaft beenden
+      description: |
+        Die Freundschaftsanfrage oder die Freundschaft beenden
+      parameters:
+        - name: id
+          in: path
+          description: Friendship id.
+          required: true
+          type: string
+      tags:
+        - Friends
+      responses:
+        '200':
+          description: Success Nachricht
+          schema:
+            $ref: '#/definitions/StatusMessage'
+    post:
+      summary: Freundschaftsanfrge bestätigen
+      description: |
+        Die Freundschaftsanfrage bestätigen
+      parameters:
+        - name: id
+          in: path
+          description: Friendship id.
+          required: true
+          type: string
+        - name: activate
+          in: body
+          description: Aktivate boolean
+          required: true
+          schema:
+            $ref: '#/definitions/Content'
+      tags:
+        - Friends
+      responses:
+        '200':
+          description: Freundschaft
+          schema:
+            $ref: '#/definitions/Friendship'
+definitions:
+  ObjectId:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique identifier representing a Mongo Dokument
+  User:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique identifier representing a specific User
+      isActive:
+        type: boolean
+        description: ''
+      username:
+        type: string
+        description: ''
+      password:
+        type: string
+        description: ''
+      givenName:
+        type: string
+        description: ''
+      surname:
+        type: string
+        description: ''
+      nickname:
+        type: string
+        description: ''
+      birthdate:
+        type: string
+        description: ''
+      description:
+        type: string
+        description: ''
+      avatar:
+        type: string
+        description: ''
+      titlePicture:
+        type: string
+        description: ''
+      timeline:
+        type: string
+        description: ''
+  UserWithFriends:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique identifier representing a specific User
+      username:
+        type: string
+        description: ''
+      givenName:
+        type: string
+        description: ''
+      surname:
+        type: string
+        description: ''
+      nickname:
+        type: string
+        description: ''
+      birthdate:
+        type: string
+        description: ''
+      description:
+        type: string
+        description: ''
+      avatar:
+        type: string
+        description: ''
+      titlePicture:
+        type: string
+        description: ''
+      timeline:
+        type: string
+        description: ''
+      friends:
+        type: array
+        items:
+          type: object
+          properties:
+            _id:
+              type: string
+            username:
+              type: string
+  shortUser:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique identifier representing a specific User
+      isActive:
+        type: boolean
+        description: ''
+      username:
+        type: string
+        description: ''
+      givenName:
+        type: string
+        description: ''
+      surname:
+        type: string
+        description: ''
+      nickname:
+        type: string
+        description: ''
+  VeryShortUser:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique identifier representing a specific User
+      username:
+        type: string
+        description: ''
+  Timeline:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: ''
+      timeCreated:
+        type: string
+        description: ''
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Post'
+  Post:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: ''
+      author:
+        type: string
+        description: ''
+      timeCreated:
+        type: string
+        description: ''
+      content:
+        type: string
+        description: ''
+      comments:
+        type: array
+        items:
+          $ref: '#/definitions/Comment'
+  Comment:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: ''
+      author:
+        type: string
+        description: ''
+      timeCreated:
+        type: string
+        description: ''
+      content:
+        type: string
+        description: ''
+  Message:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: ''
+      author:
+        type: string
+        description: ''
+      timeCreated:
+        type: string
+        description: ''
+      content:
+        type: string
+        description: ''
+  Conversation:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: ''
+      timeCreated:
+        type: string
+        description: ''
+      authors:
+        type: array
+        items:
+          $ref: '#/definitions/ObjectId'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+  Conversations:
+    type: object
+    properties:
+      conversations:
+        type: array
+        items:
+          $ref: '#/definitions/Conversation'
+      numberofItems:
+        type: number
+  Friendships:
+    type: object
+    properties:
+      friendships:
+        type: array
+        items:
+          $ref: '#/definitions/Friendship'
+  Friendship:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: ''
+      isActive:
+        type: boolean
+        description: Status der Freundschaftsanfrage
+      friends:
+        type: array
+        items:
+          $ref: '#/definitions/ObjectId'
+  Auth:
+    type: object
+    properties:
+      username:
+        type: string
+        description: d
+      password:
+        type: string
+        description: ''
+  AuthToken:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          _id:
+            type: string
+          username:
+            type: string
+      session:
+        type: object
+        properties:
+          userId:
+            type: string
+          key:
+            type: string
+          time:
+            type: string
+          _id:
+            type: string
+      authHeader:
+        type: string
+  StatusMessage:
+    type: object
+    properties:
+      message:
+        type: string
+  Content:
+    type: object
+    properties:
+      content:
+        type: string
+  Username:
+    type: object
+    properties:
+      username:
+        type: string
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

@@ -15,7 +15,13 @@
                     class="btn btn-default btn-sm pull-right"
                     (click)="addAsFriend()">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                als Freund hinzufügen
+
+            </button>
+
+            <button *ngIf="!isMe" type="button"
+                    class="btn btn-default btn-sm pull-right"
+                    (click)="sendMessage()">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
             </button>
         </h2>
     </div>
@@ -38,7 +44,7 @@
     <div class="col-md-4 friendImage" *ngFor="#Friend of friends">
         <img style="width: 100%" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
         <div class="caption">
-            <a class="" href="#" role="button">{{Friend.givenName}}</a>
+            <a class="" href="#/profile/{{Friend.username}}" role="button">{{Friend.givenName}}</a>
         </div>
     </div>
 </div>

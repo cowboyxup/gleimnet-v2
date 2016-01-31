@@ -112,106 +112,66 @@ Zwischen den Nutzern können Freundschaften geschlossen werden, in dem ein Nutze
 Nutzer können mit einem einzelnen anderen Nutzer oder einer Gruppe von Nutzern Nachrichten austauschen. Diese Nachrichten können aus Text, Bildern und Links bestehen.
 
 \subsection{Ex- und Import}
-Den Mitarbeitern des Gleimhaus können den aktuellen Zustand des Netzwerks exportieren und speichern um diese Datei zu einem späteren Zeitpunkt wieder importieren können.
+Die Mitarbeitern des Gleimhaus können den aktuellen Zustand des Netzwerks exportieren und speichern um diese Datei zu einem späteren Zeitpunkt wieder importieren können.
 %------------------------------------------------
 
-\subsection{Subsection 1} % Sub-section
+\section{Technologiewahl}
+\subsection{Node.js}
+\subsection{MongoDB}
+\subsection{Hapi.js}
+Hapi.js ist wie Express ein Webserver-Framework auf Basis von Node.js. Die Stärken von diesem Framework ist, es, dass esdie Programmierung sehr modular erfolgt. Logische zusammenpassende Routen werden als ein Modul in Hapi.js registriert. So ist es zum Beispiel möglich durch ein Autentifizierungsmodul die An- und Abmeldung ein und auszuschalten.
+\subsection{Frame}
+Frame(https://github.com/jedireza/frame) stellt für die Entwicklung einer API eine Gute Struktur bereit. Zudem benutzt es als Basis das Webserver Framework Hapi.js. für die Modellerung der Datenbankmodels wird die bei MongoDB meist verwendet Toolset Mongoose verwendet. In diesem Fall dass Implementierung in hapi.js.
 
-\lipsum[1] % Dummy text
+Der Hauptgrund für die Entscheidung für Frame war das es eine funktionierende Kombination von verschiedenen node-Modulen bietet.
+\subsection{Angular 2}
 
-%------------------------------------------------
-
-\subsection{Subsection 2} % Sub-section
-
-\lipsum[2] % Dummy text
-
-%------------------------------------------------
-
-\subsubsection{Subsubsection 1} % Sub-sub-section
-
-\lipsum[3] % Dummy text
-
-\begin{figure}[H] % Example image
-\center{\includegraphics[width=0.5\linewidth]{placeholder}}
-\caption{Example image.}
-\label{fig:speciation}
-\end{figure}
 
 %------------------------------------------------
 
-\subsubsection{Subsubsection 2} % Sub-sub-section
+\section{Probleme}
 
-\lipsum[4] % Dummy text
+\subsection{Callbacks}
+Callbacks sind die Hölle!
 
-%----------------------------------------------------------------------------------------
-%	MAJOR SECTION 1
-%----------------------------------------------------------------------------------------
+\subsection{MongoDB und Treiber}
+Der offizelle MongoDB Treiber unterstützt vile sinnvole Aktionen, wie z.B das ersetzen von einer Referenz auf ein Object durch das Object selbst. Leider unterstützt der Objectmapper Mongoose diese zum Teil nicht, sodass diese durch vermehrte Abfragen kombiniert mit map Verfahren und vielen verschachtelten Callbacks ersetzt werden mussten.
 
-\section{Content Section} % Major section
+\subsection{Beta-Version von Angular 2}
+Die am Anfang benutzte Version von Angular2-beta0 hatte ein paar Fehler, die später gefixt wurden. Nur die Fehler zu finden, , wenn diese von fehlerhafter Software entstehen, ist nicht sehr einfach.
 
-\lipsum[5] % Dummy text
 
-%------------------------------------------------
+\section{Anwendung Gleimnet}
+\subsection{Abhängigkeiten}
+Auf dem System sollen mindestens NodeJS 5.5.0 und MongoDB 3.2.0 installert sein.
+\subsection{Installation}
+\begin{enumerate}
+\item Mongo DB starten
+\item npm install
+\item node setup.js
+\item npm start
+\end{enumerate}
 
-\subsection{Subsection 1} % Sub-section
+Jetzt könnnen entweder neue User über \textbf{node create-user.js} oder über das Admin-Panel über \textbf{/admin} im Webbrowser aufgerufen werden.
 
-\subsubsection{Subsubsection 1} % Sub-sub-section
+\subsection{Webanwendung}
+\subsubsection{Administration}
+Die Administration wird über /admin aufgerufen. Dort meldet sich der Administrator mittel vorher erstellten Account an. Dies wird mittel Cookies realisiert.
 
-\lipsum[6] % Dummy text
+Im Admin-Panel können neue Gruppen aus einer Initialkonfiguration erstellen werden, die aktuelle Sitzung gespeichert werden oder vorherige Sitzungen geladen werden.
 
-%------------------------------------------------
+Diese Konfigurationen werden als ExtendedJSON(EJSON) gespeichert, damit die von MongoDB gehaltenen Typen wieder hergestellt werden können.
 
-\subsubsection{Subsubsection 2} % Sub-sub-section
+\section{API}
+Die Dokumentation zur API ist im seperaten pdf zu finden oder bei laufenden Gleimnet unter /api-dokumentation/index.html zu finden.
 
-\lipsum[6] % Dummy text
-\begin{wrapfigure}{l}{0.4\textwidth} % Inline image example
-  \begin{center}
-    \includegraphics[width=0.38\textwidth]{fish}
-  \end{center}
-  \caption{Fish}
-\end{wrapfigure}
-\lipsum[7-8] % Dummy text
 
-%------------------------------------------------
 
-\subsubsection{Subsubsection 3} % Sub-sub-section
-
-\begin{description} % Numbered list example
-
-\item[First] \hfill \\
-\lipsum[9] % Dummy text
-
-\item[Second] \hfill \\
-\lipsum[10] % Dummy text
-
-\item[Third] \hfill \\
-\lipsum[11] % Dummy text
-
-\end{description} 
-
-%----------------------------------------------------------------------------------------
-%	MAJOR SECTION X - TEMPLATE - UNCOMMENT AND FILL IN
+%-----------------------------------------------
 %----------------------------------------------------------------------------------------
 
-%\section{Content Section}
+\section{Zusammenfassung}
 
-%\subsection{Subsection 1} % Sub-section
-
-% Content
-
-%------------------------------------------------
-
-%\subsection{Subsection 2} % Sub-section
-
-% Content
-
-%----------------------------------------------------------------------------------------
-%	CONCLUSION
-%----------------------------------------------------------------------------------------
-
-\section{Conclusion} % Major section
-
-\lipsum[12-13]
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
@@ -219,12 +179,7 @@ Den Mitarbeitern des Gleimhaus können den aktuellen Zustand des Netzwerks expor
 
 \begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
 
-\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-\newblock Assortative pairing and life history strategy - a cross-cultural
-  study.
-\newblock {\em Human Nature}, 20:317--330.
- 
+
 \end{thebibliography}
 
 %----------------------------------------------------------------------------------------

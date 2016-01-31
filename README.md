@@ -23,7 +23,7 @@ sh mongo.sh
 ###2. Install all required Node Modules
 
 ```bash
-node install
+npm install
 ```
 
 ###3. setup the admin-user
@@ -52,6 +52,11 @@ or
 node create-user.js
 ```
 
+###7. Create new Users with this Script
+
+Visit http://127.0.0.1:8000
+
+... and have fun.
 
 ## License
 
