@@ -4,7 +4,6 @@ import {Response} from "angular2/http";
 
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
-import {error} from "util";
 import {Http} from "angular2/http";
 
 
@@ -23,19 +22,15 @@ export class ChatService {
         return headers;
     }
 
-    public sendMessage(content){
-
-    }
-
-
-
-    loadConversations():any {
+    loadConversations() {
 
         var url = 'api/conversations';
         var headers = this.headers();
 
         return this._http.get(url, {headers})
-            .map((res:Response) => res.json());
+            .map((responseData) => {
+                return responseData.json();
+            });
     }
 
     newConversation(username:string):any{
@@ -44,14 +39,28 @@ export class ChatService {
         let body = JSON.stringify({username });
 
         return this._http.post(url, body, { headers: this.headers() })
-            .map(responseData =>  {
+            .map((responseData) =>  {
+                responseData.json()
+            });
+    }
+
+    sendNewMessage(content:string, conversationId:string):any{
+
+        var url = 'api/conversations/' + conversationId;
+        let body = JSON.stringify({content });
+
+        return this._http.post(url, body, { headers: this.headers() })
+            .map((responseData) => {
                 return responseData.json();
             });
     }
+
+
 }
 
-export class Conversations{
+export class ConversationGroup{
     conversations:Conversation[];
+    numberOfItems:string;
 }
 
 export class Conversation{
@@ -68,5 +77,5 @@ export class Message{
 }
 
 export class ConversationUser{
-    _id:string;
+    id:string;
 }

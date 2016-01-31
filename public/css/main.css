@@ -79,3 +79,10 @@
     min-height: 70px;
 }
 
+.content{
+    padding-top: 20px;
+}
+
+.media.post.selected{
+    background-color: #eee;
+}

@@ -1,4 +1,4 @@
-System.register(['angular2/core', "./chat.service"], function(exports_1) {
+System.register(['angular2/core', "./chat.service", "../home/profile.service"], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, chat_service_1, chat_service_2;
+    var core_1, chat_service_1, profile_service_1, chat_service_2, profile_service_2;
     var Chat;
     return {
         setters:[
@@ -18,15 +18,20 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
             function (chat_service_1_1) {
                 chat_service_1 = chat_service_1_1;
                 chat_service_2 = chat_service_1_1;
+            },
+            function (profile_service_1_1) {
+                profile_service_1 = profile_service_1_1;
+                profile_service_2 = profile_service_1_1;
             }],
         execute: function() {
             Chat = (function () {
-                function Chat(_chatService) {
+                function Chat(_chatService, _rofileService) {
                     this._chatService = _chatService;
-                    this.auth = localStorage.getItem('AuthKey');
+                    this._rofileService = _rofileService;
+                    //auth = localStorage.getItem('AuthKey');
                     this.username = localStorage.getItem('username');
+                    this.myConversations = new chat_service_2.ConversationGroup();
                     this.userDict = {};
-                    this.conversations = new chat_service_2.Conversations();
                     this.username = localStorage.getItem('username');
                 }
                 Chat.prototype.ngOnInit = function () {
@@ -39,12 +44,9 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
                     if (this.username) {
                         if (username) {
                             this._chatService.newConversation(username)
-                                .subscribe();
-                            {
-                                (function (res) {
-                                    console.log(res);
-                                });
-                            }
+                                .subscribe(function (res) {
+                                console.log(res);
+                            });
                         }
                     }
                 };
@@ -53,32 +55,54 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
                     if (this.username) {
                         this._chatService.loadConversations()
                             .subscribe(function (res) {
-                            //this.conversations.conversations = res.conversations;
-                            res.conversations.forEach(function (conversation) {
-                                console.log(conversation);
-                                _this.conversations.conversations.push(conversation);
+                            _this.myConversations = res;
+                            console.log(_this.myConversations);
+                            _this.myConversations.conversations.forEach(function (conversation) {
+                                conversation.authors.forEach(function (user) {
+                                    if (!_this.userDict[user.id])
+                                        _this.userDict[user.id] = new profile_service_1.User();
+                                });
                             });
-                            //this.conversations.forEach(conversation => {
-                            //    conversation.authors.forEach(user => {
-                            //        this.userDict[user._id] = "";
-                            //    });
-                            //})
-                            for (var key in _this.userDict) {
-                                console.log(_this.userDict[key]);
+                            for (var userKey in _this.userDict) {
+                                if (_this.userDict.hasOwnProperty(userKey)) {
+                                    if (_this.userDict[userKey]._id == null) {
+                                        _this._rofileService.loadProfilInfosWithID(userKey)
+                                            .subscribe(function (user) {
+                                            _this.userDict[user._id] = user;
+                                        }, function (error) {
+                                            console.log(error.message);
+                                        });
+                                    }
+                                }
                             }
-                            console.log(_this.userDict);
                         }, function (error) {
                             console.log(error.message);
                         });
                     }
                 };
+                Chat.prototype.sendNewMessage = function (content, conversationId) {
+                    var _this = this;
+                    console.log(content);
+                    console.log(conversationId);
+                    if (conversationId) {
+                        this._chatService.sendNewMessage(content, conversationId)
+                            .subscribe(function (res) {
+                            console.log(res);
+                            _this.loadConversations();
+                        });
+                    }
+                };
+                Chat.prototype.onSelect = function (conversation) {
+                    console.log("onSelect");
+                    this.actConversation = conversation;
+                };
                 Chat = __decorate([
                     core_1.Component({
                         selector: 'Chat',
                         templateUrl: './app/chat/chat.html',
-                        providers: [chat_service_1.ChatService]
+                        providers: [chat_service_1.ChatService, profile_service_2.ProfileService]
                     }), 
-                    __metadata('design:paramtypes', [chat_service_1.ChatService])
+                    __metadata('design:paramtypes', [chat_service_1.ChatService, profile_service_2.ProfileService])
                 ], Chat);
                 return Chat;
             })();
@@ -86,129 +110,4 @@ System.register(['angular2/core', "./chat.service"], function(exports_1) {
         }
     }
 });
-//var CONVERSATIONS: Conversation[] = [
-//    {
-//        "_id":"string",
-//        "users":[
-//            {
-//                "username":"Schiller"
-//            },
-//            {
-//                "username":"Goethe"
-//            }
-//        ],
-//        "messages":[
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            },
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            }
-//        ]
-//    },
-//    {
-//        "_id":"string",
-//        "users":[
-//            {
-//                "username":"Schiller"
-//            },
-//            {
-//                "username":"Goethe"
-//            }
-//        ],
-//        "messages":[
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            },
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            }
-//        ]
-//    },
-//    {
-//        "_id":"string",
-//        "users":[
-//            {
-//                "username":"Schiller"
-//            },
-//            {
-//                "username":"Goethe"
-//            }
-//        ],
-//        "messages":[
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            },
-//            {
-//                "author":{
-//                    "username":"Schiller"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo"
-//            },
-//            {
-//                "author":{
-//                    "username":"Goethe"
-//                },
-//                "time":"jetzt",
-//                "content":"Hallo du"
-//            }
-//        ]
-//    }
-//];
 //# sourceMappingURL=chat.js.map

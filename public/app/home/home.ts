@@ -3,7 +3,7 @@ import {OnInit} from "angular2/core";
 
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
-
+import {error} from "util";
 import {ProfileService,User,ProfileFriend,Messages, Timeline} from "./profile.service";
 
 import {autKey} from "../common/consts";
