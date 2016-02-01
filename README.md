@@ -58,8 +58,3 @@ Visit http://127.0.0.1:8000
 
 ... and have fun.
 
-
-
-## Don't forget
-
-What you build with Frame is more important than Frame.
