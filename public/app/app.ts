@@ -82,6 +82,8 @@ class MyDemoApp {
         if (localStorage.getItem('AuthKey')) {
             localStorage.removeItem('AuthKey');
             localStorage.removeItem('username');
+            localStorage.removeItem("id");
+
             this.logInOut = "Login"
         }else {
             this.logInOut = "Logout"
@@ -101,6 +103,7 @@ class ComponentHelper{
 bootstrap(MyDemoApp,
     [ROUTER_PROVIDERS,
         HTTP_PROVIDERS,
+
         provide(
             LocationStrategy,
             {useClass: HashLocationStrategy}

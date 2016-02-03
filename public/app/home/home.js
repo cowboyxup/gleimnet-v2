@@ -24,6 +24,7 @@ System.register(['angular2/core', "./profile.service"], function(exports_1) {
                     this._profileService = _profileService;
                     this.user = new profile_service_1.User();
                     this.isMe = true;
+                    this.addFriendButton = false;
                     this.username = localStorage.getItem('username');
                 }
                 Home.prototype.ngOnInit = function () {

@@ -45,8 +45,9 @@ export class Login {
 
         this.http.post('api/login', body, { headers: contentHeaders })
             .map(response =>  {
-                var authHeaderString = response.json().authHeader;
-                console.log(authHeaderString);
+                //var authHeaderString = response.json().authHeader;
+                //console.log(authHeaderString);
+                localStorage.setItem("id", response.json().user._id);
                 localStorage.setItem(autKey, response.json().authHeader);
                 localStorage.setItem(usernameKey, response.json().user.username)
                 this.router.parent.navigateByUrl('/');

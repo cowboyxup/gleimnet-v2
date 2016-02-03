@@ -28,16 +28,18 @@
 
         <h4>Freundschaftsanfragen:</h4>
 
-        <div class="media post" *ngFor="#Friend of unconfirmedFriends">
+        <div class="media post" *ngFor="#Friendship of unconfirmedFriends">
             <div class="media-left">
-                <a href="#/profile/{{Friend.username}}">
-                    <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
+                <a href="#/profile/{Friendship.user.username}}">
+                    <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friendship.user.avatar}}.png">
                 </a>
             </div>
             <div class="media-body">
-                <h4 class="media-heading">{{Friend.givenName}} {{Friend.surename}}</h4>
-                <p>{{Friend.description}}</p>
-                <a (click)="requestFriendship(Friend)">als Freund hinzufügen</a>
+                <h4 class="media-heading">{{Friendship.user.givenName}} {{Friendship.user.surename}}</h4>
+                <p>
+                    {{Friendship.user.description}}
+                </p>
+                <a (click)="confirmFriendship(Friendship._id)">als Freund hinzufügen</a>
             </div>
         </div>
 

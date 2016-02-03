@@ -6,6 +6,7 @@ import {FriendsService} from "./friendsService";
 import {ProfileService} from "../home/profile.service";
 import {User} from "../home/profile.service";
 import {SearchResult} from "./friendsService";
+import {Friendship} from "./friendsService";
 
 
 @Component({
@@ -18,9 +19,12 @@ export class Friends {
 
     auth:string;
     private username;
+    private userid:string;
+
+    myUser:User;
 
     myfriends:Friend[];
-    unconfirmedFriends:Friend[];
+    unconfirmedFriends:Friendship[] = [];
     searchedFriends:User[];
 
     constructor(private _routeParams:RouteParams,
@@ -28,6 +32,7 @@ export class Friends {
                 private _profileService: ProfileService) {
         this.auth = localStorage.getItem('AuthKey');
         this.username = localStorage.getItem('username');
+        this.userid = localStorage.getItem('id');
     }
 
     ngOnInit() {
@@ -35,6 +40,20 @@ export class Friends {
             this.loadMyFriends();
             this.loadUnconfirmedFriends();
         }
+    }
+
+    loadProfilInfos(userid:string){
+
+            this._profileService.loadProfilInfosWithID(userid)
+                .subscribe(
+                    (res:User) => {
+                        //this.user = res;
+                        //this.user.dateString = this._profileService.getDateString(this.user.birthdate);
+                        //this.friends = this.user.friends;
+                    },
+                    error => {console.log(error.message);}
+                )
+
     }
 
     private loadMyFriends():void {
@@ -51,10 +70,33 @@ export class Friends {
 
     private loadUnconfirmedFriends():void {
         if(this.auth){
+
+            this.unconfirmedFriends = [];
+
             this._friendsService.loadUnconfirmedFriends()
                 .subscribe(
-                    res => {
-                        console.log(res);
+                    (res: Friendship[]) => {
+
+                        res.forEach(friendship =>{
+                            friendship.friends.forEach(friend =>{
+                               if(friend.id != this.userid){
+                                   friendship.userid = friend.id;
+
+                                   this._profileService.loadProfilInfosWithID(friend.id)
+                                       .subscribe(
+                                           (res:User) => {
+                                               friendship.user = res;
+                                               this.unconfirmedFriends.push(friendship);
+                                           },
+                                           error => {console.log(error.message);}
+                                       )
+
+                               }
+                            })
+                        });
+                        console.log(this.unconfirmedFriends);
+
+
                     },
                     error => {console.log(error.message);}
                 );
