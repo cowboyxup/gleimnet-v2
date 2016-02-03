@@ -1,7 +1,7 @@
 {
-  "name": "frame",
-  "version": "6.0.0",
-  "description": "A user system API for Node.js",
+  "name": "Gleim.net",
+  "version": "2.0.0",
+  "description": "A social network that is used in the museum Gleimhaus",
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
@@ -12,8 +12,11 @@
     "test": "lab -c -L",
     "test-cover": "lab -c -r html -o ./test/artifacts/coverage.html && open ./test/artifacts/coverage.html"
   },
-  "author": "Reza Akhavan <jedireza@gmail.com> (http://reza.akhavan.me/)",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cowboyxup/gleimnet-v2"
+  },
+  "author": "Christian Schrebe, Hagen Hasenbalg",
   "engines": {
     "node": ">=4.0.0"
   },

@@ -23,6 +23,7 @@ export class Home implements OnInit{
     username;
 
     isMe = true;
+    addFriendButton = false;
 
     constructor(private _profileService: ProfileService) {
         this.username = localStorage.getItem('username');
