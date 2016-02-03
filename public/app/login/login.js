@@ -52,8 +52,9 @@ System.register(['angular2/core', "angular2/http", "angular2/router", '../common
                     var body = JSON.stringify({ username: username, password: password });
                     this.http.post('api/login', body, { headers: headers_1.contentHeaders })
                         .map(function (response) {
-                        var authHeaderString = response.json().authHeader;
-                        console.log(authHeaderString);
+                        //var authHeaderString = response.json().authHeader;
+                        //console.log(authHeaderString);
+                        localStorage.setItem("id", response.json().user._id);
                         localStorage.setItem(consts_1.autKey, response.json().authHeader);
                         localStorage.setItem(consts_2.usernameKey, response.json().user.username);
                         _this.router.parent.navigateByUrl('/');

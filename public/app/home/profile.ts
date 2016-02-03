@@ -11,11 +11,13 @@ import {Subject } from 'rxjs/Subject';
 import {ProfileService,User,ProfileFriend,Messages, Timeline} from "./profile.service";
 import {FriendsService} from "../friends/friendsService";
 import {ChatService} from "../chat/chat.service";
+import {RouterLink} from "angular2/router";
+import {Inject} from "angular2/core";
 
 @Component({
     selector: 'Profile',
     templateUrl: './app/home/home.html',
-    providers:[ProfileService,FriendsService,ChatService,ROUTER_DIRECTIVES]
+    providers:[ProfileService,FriendsService,ChatService]
 })
 
 export class Profile implements OnInit{
@@ -29,13 +31,17 @@ export class Profile implements OnInit{
     isMe = false;
     addFriendButton=true;
 
+    router:Router
 
     constructor(
-                private _routeParams:RouteParams,
+        //private _router: Router,
                 private _profileService: ProfileService,
+                private _routeParams:RouteParams,
                 private _friendsService:FriendsService,
                 private _chatService:ChatService) {
+
         this.username = this._routeParams.get('id');
+
 
         if(this.username == localStorage.getItem('username')){
             this.isMe = true;
@@ -106,6 +112,7 @@ export class Profile implements OnInit{
             this._friendsService.requestFriendship(this.username)
                 .subscribe(
                     response => {
+
                         this.addFriendButton = false;
                     },
                     error => { console.log(error.message);}
@@ -119,7 +126,7 @@ export class Profile implements OnInit{
                 .subscribe(
                     response => {
                         console.log(response);
-                        this.router.parent.navigateByUrl('/chat');
+                        this._router.navigateByUrl('/chat');
                     },
                     error => { console.log(error.message);}
                 )

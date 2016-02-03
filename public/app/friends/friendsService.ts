@@ -44,14 +44,13 @@ export class FriendsService {
 
         return this._http.get(url, {headers})
             .map(
-                (res:Response) => {
-                    console.log(res);
-                    res.json();
-                }
+                (res:Response) => res.json(),
+                error => {error}
             );
     }
 
     confirmFriendship(friendshipId:String):any {
+        console.log(friendshipId);
         var url = '/api/friends/' + friendshipId;
         var headers = this.headers();
         let activate = true;
@@ -75,6 +74,20 @@ export class FriendsService {
                     error
                 });
     }
+}
+
+
+
+export class Friendship{
+    _id:string
+    isActive:string
+    friends:Friend[];
+    userid:string;
+    user:User;
+}
+
+export class Friend{
+    id:string;
 }
 
 export class SearchResult{
