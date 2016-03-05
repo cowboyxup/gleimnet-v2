@@ -5,7 +5,7 @@ const Async = require('async');
 const Bcrypt = require('bcryptjs');
 const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
-const Conversation = require('./conversation');
+const Timeline = require('./timeline');
 
 const User = BaseModel.extend({
     constructor: function (attrs) {
@@ -17,10 +17,11 @@ User._collection = 'users';
 
 User.schema = Joi.object().keys({
     _id: Joi.object(),
+    timeCreated: Joi.date().required(),
     isActive: Joi.boolean().default(true),
     username: Joi.string().token().lowercase().required(),
     password: Joi.string().required(),
-    timeCreated: Joi.date().required(),
+
     givenName: Joi.string().required(),
     surname: Joi.string().required(),
     nickname: Joi.string().required(),
@@ -28,7 +29,13 @@ User.schema = Joi.object().keys({
     description: Joi.string(),
     avatar: Joi.string().required(),
     titlePicture: Joi.string().required(),
+    tags: Joi.string().required(),
+    birthplace: Joi.string().required(),
+    influenceplace: Joi.string().required(),
     timeline: Joi.object().keys({
+        id: Joi.string().length(24).hex().required()
+    }),
+    friends: Joi.object().keys({
         id: Joi.string().length(24).hex().required()
     })
 });
@@ -71,11 +78,11 @@ User.generateBirthdate = function(birthdate, callback) {
     });
 };
 
-User.create = function (username, password, givenName,surename,nickname, birthdate, description, avatar, titlePicture, callback) {
+User.create = function (username, password, givenName, surename, nickname, birthdate, description, avatar, titlePicture, callback) {
     const self = this;
     Async.auto({
         createTimeline: (results) => {
-            Conversation.create(results);
+            Timeline.create(results);
         },
         passwordHash: this.generatePasswordHash.bind(this, password),
         birth: this.generateBirthdate.bind(this, birthdate),

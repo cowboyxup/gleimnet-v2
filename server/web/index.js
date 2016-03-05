@@ -1,39 +1,21 @@
 'use strict';
 
 exports.register = function (server, options, next) {
-    // static route
-
-
-    server.route([{
-        method: 'GET',
-        path: '/node_modules/{param*}',
-        config: {
-            auth: false,
-            handler: {
-                directory: {
-                    path: 'node_modules'
-                }
-            }
-        }
-    },{
+    server.route({
         method: 'GET',
         path: '/{param*}',
         config: {
             auth: false,
             handler: {
                 directory: {
-                    path: 'public'
+                    path: 'server/web'
                 }
             }
         }
-    }]);
-
+    });
     next();
-
-
 };
 
 exports.register.attributes = {
-    name: 'home',
-    dependencies: 'visionary'
+    name: 'home'
 };
