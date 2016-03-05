@@ -39,7 +39,7 @@ Admin.generatePasswordHash = function (password, callback) {
         if (err) {
             return callback(err);
         }
-        callback(null, {
+        return callback(null, {
             password: password,
             hash: results.hash
         });
@@ -64,7 +64,7 @@ Admin.create = function (username, password, callback) {
             return callback(err);
         }
         results.newAdmin[0].password = results.passwordHash.password;
-        callback(null, results.newAdmin[0]);
+        return callback(null, results.newAdmin[0]);
     });
 };
 
@@ -92,10 +92,9 @@ Admin.findByCredentials = function (username, password, callback) {
         if (results.passwordMatch) {
             return callback(null, results.user);
         }
-        callback();
+        return callback();
     });
 };
-
 
 Admin.findByAdminname = function (username, callback) {
     const query = { username: username.toLowerCase() };

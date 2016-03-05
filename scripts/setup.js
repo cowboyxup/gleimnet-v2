@@ -9,8 +9,8 @@ const Mongodb = require('mongodb');
 const Handlebars = require('handlebars');
 
 
-const configTemplatePath = Path.resolve(__dirname, 'config.example');
-const configPath = Path.resolve(__dirname, 'config.js');
+const configTemplatePath = Path.resolve(__dirname,'../', 'config.example');
+const configPath = Path.resolve(__dirname, '../', 'config.js');
 
 
 if (process.env.NODE_ENV === 'test') {
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'test') {
     const context = {
         projectName: 'Gleimnet',
         mongodbUrl: 'mongodb://localhost:27017/gleimnet',
-        rootPassword: 'root',
+        rootPassword: 'root'
     };
     Fs.writeFileSync(configPath, configTemplateTest(context));
     console.log('Setup complete.');
@@ -63,14 +63,14 @@ Async.auto({
     }],
     setupRootUser: ['createConfig', (done, results) => {
         const BaseModel = require('hapi-mongo-models').BaseModel;
-        const Admin = require('./server/models/admin');
+        const Admin = require('../server/models/admin');
         Async.auto({
             connect: (done) => {
                 BaseModel.connect({ url: results.mongodbUrl }, done);
             },
             clean: ['connect', (done) => {
                 Async.parallel([
-                    Admin.deleteMany.bind(Admin, {}),
+                    Admin.deleteMany.bind(Admin, {})
                 ], done);
             }],
             user: ['clean', (done, dbResults) => {
@@ -81,7 +81,7 @@ Async.auto({
                 console.error('Failed to setup root user.');
                 return done(err);
             }
-            done(null, true);
+            return done(null, true);
         });
     }]
 }, (err, results) => {

@@ -9,12 +9,12 @@ const Post = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
     },
-    addComment: function(userId, postId, callback) {
+    addComment: function(userId, commentId, callback) {
         const self = this;
         Async.auto({
             updatePost: function (results) {
                 const pushcomment = {
-                    id: postId
+                    _id: postId
                 }
                 Post.findByIdAndUpdate(self._id,{$push: {comments: {$each: [pushcomment],$position: 0}}},{safe: true, upsert: true, new: true},results);
             }
@@ -22,9 +22,9 @@ const Post = BaseModel.extend({
             if (err) {
                 return callback(err);
             }
-            callback(null, results.updatePost);
+            return callback(null, results.updatePost);
         });
-    },
+    }
 });
 
 Post._collection = 'posts';
@@ -58,7 +58,7 @@ Post.create = function (userId, content, callback) {
         if (err) {
             return callback(err);
         }
-        callback(null, results.newPost[0]);
+        return callback(null, results.newPost[0]);
     });
 };
 

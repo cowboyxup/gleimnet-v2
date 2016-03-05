@@ -29,15 +29,23 @@ User.schema = Joi.object().keys({
     description: Joi.string(),
     avatar: Joi.string().required(),
     titlePicture: Joi.string().required(),
-    tags: Joi.string().required(),
+    tags: Joi.array().max(5).items(
+        Joi.string().required()
+    ).required(),
     birthplace: Joi.string().required(),
     influenceplace: Joi.string().required(),
     timeline: Joi.object().keys({
         id: Joi.string().length(24).hex().required()
     }),
-    friends: Joi.object().keys({
-        id: Joi.string().length(24).hex().required()
-    })
+    friends: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex()
+    })).required(),
+    unconfirmedFriends: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex()
+    })).required(),
+    sentFriends: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex()
+    })).required()
 });
 
 User.indexes = [
@@ -56,7 +64,7 @@ User.generatePasswordHash = function (password, callback) {
         if (err) {
             return callback(err);
         }
-        callback(null, {
+        return callback(null, {
             password: password,
             hash: results.hash
         });
@@ -74,11 +82,11 @@ User.generateBirthdate = function(birthdate, callback) {
         if (err) {
             return callback(err);
         }
-        callback(null, results.date);
+        return callback(null, results.date);
     });
 };
 
-User.create = function (username, password, givenName, surename, nickname, birthdate, description, avatar, titlePicture, callback) {
+User.create = function (username, password, givenName, surename, nickname, birthdate, description, avatar, titlePicture, tags, birthplace, influenceplace, callback) {
     const self = this;
     Async.auto({
         createTimeline: (results) => {
@@ -88,18 +96,24 @@ User.create = function (username, password, givenName, surename, nickname, birth
         birth: this.generateBirthdate.bind(this, birthdate),
         newUser: ['passwordHash','birth','createTimeline', function (done, results) {
             const document = {
+                timeCreated: new Date(),
                 isActive: true,
                 username: username.toLowerCase(),
                 password: results.passwordHash.hash,
-                timeCreated: new Date(),
                 givenName: givenName,
-                surename: surename,
+                surname: surename,
                 nickname: nickname,
                 birthdate: results.birth,
                 description: description,
                 avatar: avatar,
                 titlePicture: titlePicture,
-                timeline: results.createTimeline._id
+                tags: tags,
+                birthplace: birthplace,
+                influenceplace: influenceplace,
+                timeline: results.createTimeline._id,
+                friends: [],
+                unconfirmedFriends:[],
+                sentFriends:[]
             };
             self.insertOne(document, done);
         }]
@@ -108,7 +122,7 @@ User.create = function (username, password, givenName, surename, nickname, birth
             return callback(err);
         }
         results.newUser[0].password = results.passwordHash.password;
-        callback(null, results.newUser[0]);
+        return callback(null, results.newUser[0]);
     });
 };
 
@@ -136,7 +150,7 @@ User.findByCredentials = function (username, password, callback) {
         if (results.passwordMatch) {
             return callback(null, results.user);
         }
-        callback();
+        return callback();
     });
 };
 
