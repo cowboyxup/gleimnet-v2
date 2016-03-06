@@ -1,6 +1,8 @@
 'use strict';
 
-exports.register = function (server, options, next) {
+const internals = {};
+
+internals.applyRoutes = function (server, next) {
     server.route({
         method: 'GET',
         path: '/{param*}',
@@ -8,11 +10,15 @@ exports.register = function (server, options, next) {
             auth: false,
             handler: {
                 directory: {
-                    path: 'server/web'
+                    path: ['./','../favicons']
                 }
             }
         }
     });
+    next();
+};
+exports.register = function (server, options, next) {
+    server.dependency(['inert'], internals.applyRoutes );
     next();
 };
 
