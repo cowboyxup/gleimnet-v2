@@ -7,10 +7,13 @@ const Async = require('async');
 const Promptly = require('promptly');
 const Mongodb = require('mongodb');
 const Handlebars = require('handlebars');
+const Crypto = require('crypto');
 
 
 const configTemplatePath = Path.resolve(__dirname,'../config', 'config.example');
 const configPath = Path.resolve(__dirname, '../config', 'config.js');
+const secretTemplatePath = Path.resolve(__dirname,'../config', 'secret.example');
+const secretPath = Path.resolve(__dirname, '../config', 'secret.js');
 
 
 if (process.env.NODE_ENV === 'test') {
@@ -50,6 +53,14 @@ Async.auto({
     rootPassword: ['mongodbUrl', (done, results) => {
         Promptly.password('Root user password:', { default: null }, done);
     }],
+    secret: [ (done, results) => {
+        Crypto.randomBytes(64, (err, buf) => {
+            if (err) {
+                return(err);
+            }
+            return done(null,buf.toString('hex'));
+        });
+    }],
     createConfig: ['testMongo', (done, results) => {
         const fsOptions = { encoding: 'utf-8' };
         Fs.readFile(configTemplatePath, fsOptions, (err, src) => {
@@ -82,6 +93,17 @@ Async.auto({
                 return done(err);
             }
             return done(null, true);
+        });
+    }],
+    createSecret: ['setupRootUser', (done, results) => {
+        const fsOptions = { encoding: 'utf-8' };
+        Fs.readFile(secretTemplatePath, fsOptions, (err, src) => {
+            if (err) {
+                console.error('Failed to read secret template.');
+                return done(err);
+            }
+            const configTemplate = Handlebars.compile(src);
+            Fs.writeFile(secretPath, configTemplate(results), done);
         });
     }]
 }, (err, results) => {

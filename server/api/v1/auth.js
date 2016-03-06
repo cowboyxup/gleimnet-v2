@@ -18,7 +18,6 @@ internals.apply = function (server, next) {
 
     // validate function for auth
     var validate = function (decoded, request, callback) {
-        console.log("Val: "+ JSON.stringify(decoded));
         cache.get(decoded._id,(err, value, cached, log) => {
             if(err) {
                 return callback(null, false);
@@ -74,7 +73,6 @@ internals.apply = function (server, next) {
             pre: [{
                 assign: 'user',
                 method: function (request, reply) {
-                    console.log("dd");
                     const username = request.payload.username;
                     const password = request.payload.password;
                     User.findByCredentials(username, password, (err, user) => {
@@ -87,7 +85,6 @@ internals.apply = function (server, next) {
             }, {
                 assign: 'token',
                 method: function (request, reply) {
-                    console.log(request.pre.user);
                     sign(request.pre.user._id.toString(), (err, token) => {
                         if (err) {
                             return reply(err);
