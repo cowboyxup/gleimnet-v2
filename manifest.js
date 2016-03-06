@@ -61,7 +61,11 @@ const manifest = {
                 options: {
                     mongodb: Config.get('/hapiMongoModels/mongodb'),
                     models: {
+                        Admin: './server/models/admin',
                         User: './server/models/user',
+                        Timeline: './server/models/timeline',
+                        Post: './server/models/post',
+                        Comment: './server/models/comment',
                     },
                     autoIndex: Config.get('/hapiMongoModels/autoIndex')
                 }

@@ -98,6 +98,26 @@ internals.apply = function (server, next) {
             return reply(request.pre.token)
         }
     });
+    server.route({
+        method: 'DELETE',
+        path: '/logout',
+        config: {
+            auth: {
+                mode: 'try',
+                strategy: 'jwt'
+            }
+        },
+        handler: function (request, reply) {
+            const id = request.auth.credentials._id;
+            cache.drop(id, (err) => {
+                if (err) {
+                    return reply(err);
+                }
+                reply({ message: 'Success.' });
+            });
+        }
+    });
+
     next();
 };
 
