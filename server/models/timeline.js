@@ -9,6 +9,22 @@ const mongo = require('mongodb');
 const Timeline = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
+    },
+    addPost: function(postId, callback) {
+        const self = this;
+        Async.auto({
+            updatePost: function (done) {
+                const pushPost = {
+                    _id: postId
+                };
+                Timeline.findByIdAndUpdate(self._id,{$push: {messages: {$each: [pushPost],$position: 0}}},{safe: true, upsert: true, new: true},done);
+            }
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, results.updatePost);
+        });
     }
 });
 
@@ -36,6 +52,63 @@ Timeline.create = function (callback) {
             return callback(err);
         }
         return callback(null, docs[0]);
+    });
+};
+
+Timeline.findByIdAndPaged = function (id, limit, page, callback) {
+    const find = { _id: this._idClass(id) };
+    const filter = { _id: this._idClass(id) };
+
+    const self = this;
+    const output = {
+        _id: undefined,
+        timeCreated:undefined,
+        messages: undefined,
+        pages: {
+            current: page,
+            prev: 0,
+            hasPrev: false,
+            next: 0,
+            hasNext: false,
+            total: 0
+        },
+        items: {
+            limit: limit,
+            begin: ((page * limit) - limit) + 1,
+            end: page * limit,
+            total: 0
+        }
+    };
+
+    Async.auto({
+        findById: function (done) {
+            self.findById(id,done);
+        }
+    }, (err, results) => {
+
+        if (err) {
+            return callback(err);
+        }
+        output._id = results.findById._id;
+        output.timeCreated = results.findById.timeCreated;
+
+        output.messages = results.findById.messages.slice((output.items.begin-1),output.items.end);
+        output.items.total = results.findById.messages.length;
+
+        // paging calculations
+        output.pages.total = Math.ceil(output.items.total / limit);
+        output.pages.next = output.pages.current + 1;
+        output.pages.hasNext = output.pages.next <= output.pages.total;
+        output.pages.prev = output.pages.current - 1;
+        output.pages.hasPrev = output.pages.prev !== 0;
+        if (output.items.begin > output.items.total) {
+            output.items.begin = output.items.total;
+        }
+        if (output.items.end > output.items.total) {
+            output.items.end = output.items.total;
+        }
+
+        callback(null, output);
     });
 };
 

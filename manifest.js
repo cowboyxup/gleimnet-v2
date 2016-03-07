@@ -112,6 +112,19 @@ const manifest = {
         },
         {
             plugin: {
+                register: './server/api/v1/timeline',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/api/v1'
+                }
+            }
+        },
+        {
+            plugin: {
                 register: './server/web/index.js',
                 options: {
                 }
