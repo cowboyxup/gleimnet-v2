@@ -65,8 +65,7 @@ internals.applyRoutes = function (server, next) {
                 assign: 'profile',
                 method: function(request, reply) {
                     if(request.auth.credentials._id === request.params._id) {
-                        console.log(JSON.stringify(request.payload));
-                        User.findByIdAndUpdate(request.auth.credentials._id, {$set: request.payload}, {returnOriginal: false}, (err, profil) => {
+                        User.findProfileByIdAndUpdate(request.auth.credentials._id, request.payload, (err, profil) => {
                             if (err) {
                                 return reply(err);
                             }
@@ -75,15 +74,6 @@ internals.applyRoutes = function (server, next) {
                             }
                             return reply(profil);
                         });
-                        /*User.findProfileById(request.auth.credentials._id, (err, profil) => {
-                            if (err) {
-                                return reply(err);
-                            }
-                            if (!profil) {
-                                return reply(Boom.notFound('Profil not found.'));
-                            }
-                            return reply(profil);
-                        });*/
                     }
                     else {
                         return reply(Boom.forbidden('It is not your profile. You are only allowed to modify your own profile'));

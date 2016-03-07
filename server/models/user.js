@@ -156,20 +156,51 @@ User.findByCredentials = function (username, password, callback) {
 
 
 User.findByUsername = function (username, callback) {
+    const self = this;
     const query = {username: username.toLowerCase() };
-    this.findOne(query, callback);
+    self.findOne(query, callback);
 };
 User.findProfileById = function (id, callback) {
+    const self = this;
     const query = { _id: this._idClass(id) };
-    this.findOne(query, (err, user) => {
+
+    self.findOne(query, (err, user) => {
         if(err) {
             return callback(err);
         }
         if(!user) {
             return callback(null,null);
         }
-        console.log('err: '+JSON.stringify(err));
-        console.log('user: '+JSON.stringify(user));
+        const profile = {
+            _id: user._id,
+            timeCreated: user.timeCreated,
+            username: user.username,
+            givenName: user.givenName,
+            surname: user.surename,
+            nickname: user.nickname,
+            birthdate: user.birthdate,
+            description: user.description,
+            avatar: user.avatar,
+            titlePicture: user.titlePicture,
+            tags: user.tags,
+            birthplace: user.birthplace,
+            influenceplace: user.influenceplace,
+            timeline: user.timeline,
+            friends: user.friends
+        };
+        return callback(null, profile)
+    });
+};
+
+User.findProfileByIdAndUpdate = function (id, updates, callback) {
+    const self = this;
+    self.findByIdAndUpdate(id, {$set: updates}, {returnOriginal: false}, (err, user) => {
+        if(err) {
+            return callback(err);
+        }
+        if(!user) {
+            return callback(null,null);
+        }
         const profile = {
             _id: user._id,
             timeCreated: user.timeCreated,
