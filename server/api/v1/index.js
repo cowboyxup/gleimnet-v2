@@ -13,7 +13,7 @@ internals.applyRoutes = function (server, next) {
             }
         },
         handler: function (request, reply) {
-            reply({ message: 'Welcome to the plot device.' });
+            return reply({ message: 'Welcome to the plot device.' });
         }
     });
     next();

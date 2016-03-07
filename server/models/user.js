@@ -159,12 +159,17 @@ User.findByUsername = function (username, callback) {
     const query = {username: username.toLowerCase() };
     this.findOne(query, callback);
 };
-User.getProfileById = function (id, callback) {
-    const query = {_id: id };
+User.findProfileById = function (id, callback) {
+    const query = { _id: this._idClass(id) };
     this.findOne(query, (err, user) => {
         if(err) {
             return callback(err);
         }
+        if(!user) {
+            return callback(null,null);
+        }
+        console.log('err: '+JSON.stringify(err));
+        console.log('user: '+JSON.stringify(user));
         const profile = {
             _id: user._id,
             timeCreated: user.timeCreated,

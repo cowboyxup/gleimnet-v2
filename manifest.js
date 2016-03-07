@@ -99,6 +99,19 @@ const manifest = {
         },
         {
             plugin: {
+                register: './server/api/v1/profile',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/api/v1'
+                }
+            }
+        },
+        {
+            plugin: {
                 register: './server/web/index.js',
                 options: {
                 }

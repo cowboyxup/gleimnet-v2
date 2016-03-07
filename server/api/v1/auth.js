@@ -113,7 +113,7 @@ internals.apply = function (server, next) {
                 if (err) {
                     return reply(err);
                 }
-                reply({ message: 'Success.' });
+                return reply({ message: 'Success.' });
             });
         }
     });
