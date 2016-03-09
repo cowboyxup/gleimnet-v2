@@ -15,7 +15,7 @@ const Post = BaseModel.extend({
             updatePost: function (results) {
                 const pushcomment = {
                     _id: postId
-                }
+                };
                 Post.findByIdAndUpdate(self._id,{$push: {comments: {$each: [pushcomment],$position: 0}}},{safe: true, upsert: true, new: true},results);
             }
         }, (err, results) => {
@@ -59,6 +59,44 @@ Post.create = function (userId, content, callback) {
             return callback(err);
         }
         return callback(null, results.newPost[0]);
+    });
+};
+
+Post.findAndPopulateComments = function (query, callback) {
+    const self = this;
+
+    Async.auto({
+        findById: function (results) {
+            self.find(query,results);
+        },
+        /*pagedPosts: ['findById',(done, results) => {
+            console.log(JSON.stringify(results.findById));
+            var allComments = [];
+            for (let i = 0; i < results.findById.length; ++i) {
+                for (let j = 0; i < results.findById.length; ++j) {
+                    result.push(fn(values[i]));
+                }
+                result.push(fn(values[i]));
+            }
+            return result;
+            const pPosts = results.findById.map(function (item){
+                console.log('itemganz:'+JSON.stringify(item));
+                console.log('item:'+JSON.stringify(item.comments.map(function (item) {return self._idClass(item._id) })));
+                return item.comments.map(function (item) {return self._idClass(item._id) });
+            });
+            console.log(JSON.stringify('dinge: '+pPosts));
+            const query2 = {
+                '_id': {
+                    $in: pPosts
+                }
+            };
+            Post.find(query2, done);
+        }]*/
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        callback(null, results.findById);
     });
 };
 

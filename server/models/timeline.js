@@ -17,7 +17,7 @@ const Timeline = BaseModel.extend({
                 const pushPost = {
                     _id: postId
                 };
-                Timeline.findByIdAndUpdate(self._id,{$push: {messages: {$each: [pushPost],$position: 0}}},{safe: true, upsert: true, new: true},done);
+                Timeline.findByIdAndUpdate(self._id,{$push: {posts: {$each: [pushPost],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }
         }, (err, results) => {
             if (err) {
@@ -45,7 +45,7 @@ Timeline.create = function (callback) {
     const self = this;
     const document = {
         timeCreated: new Date(),
-        messages: []
+        posts: []
     };
     self.insertOne(document, (err, docs) => {
         if (err) {
@@ -63,7 +63,7 @@ Timeline.findByIdAndPaged = function (id, limit, page, callback) {
     const output = {
         _id: undefined,
         timeCreated:undefined,
-        messages: undefined,
+        posts: undefined,
         pages: {
             current: page,
             prev: 0,
@@ -81,9 +81,18 @@ Timeline.findByIdAndPaged = function (id, limit, page, callback) {
     };
 
     Async.auto({
-        findById: function (done) {
-            self.findById(id,done);
-        }
+        findById: function (results) {
+            self.findById(id,results);
+        },
+        pagedPosts: ['findById',(done, results) => {
+            const pPosts = results.findById.posts.slice((output.items.begin-1),output.items.end).map(function (item){return self._idClass(item._id) });
+            const query = {
+                '_id': {
+                    $in: pPosts
+                }
+            };
+            Post.findAndPopulateComments(query,done);
+        }]
     }, (err, results) => {
 
         if (err) {
@@ -92,8 +101,8 @@ Timeline.findByIdAndPaged = function (id, limit, page, callback) {
         output._id = results.findById._id;
         output.timeCreated = results.findById.timeCreated;
 
-        output.messages = results.findById.messages.slice((output.items.begin-1),output.items.end);
-        output.items.total = results.findById.messages.length;
+        output.posts = results.pagedPosts;
+        output.items.total = results.findById.posts.length;
 
         // paging calculations
         output.pages.total = Math.ceil(output.items.total / limit);
