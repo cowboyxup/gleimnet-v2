@@ -9,14 +9,14 @@ const Post = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
     },
-    addComment: function(userId, commentId, callback) {
+    addComment: function(commentId, callback) {
         const self = this;
         Async.auto({
-            updatePost: function (results) {
+            updatePost: function (done) {
                 const pushcomment = {
-                    _id: postId
+                    _id: commentId
                 };
-                Post.findByIdAndUpdate(self._id,{$push: {comments: {$each: [pushcomment],$position: 0}}},{safe: true, upsert: true, new: true},results);
+                Post.findByIdAndUpdate(self._id,{$push: {comments: {$each: [pushcomment],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }
         }, (err, results) => {
             if (err) {
@@ -69,34 +69,34 @@ Post.findAndPopulateComments = function (query, callback) {
         findById: function (results) {
             self.find(query,results);
         },
-        /*pagedPosts: ['findById',(done, results) => {
-            console.log(JSON.stringify(results.findById));
-            var allComments = [];
+        comments: ['findById',(done, results) => {
+            // special map function
+            let allComments = [];
             for (let i = 0; i < results.findById.length; ++i) {
-                for (let j = 0; i < results.findById.length; ++j) {
-                    result.push(fn(values[i]));
+                for (let j = 0; j < results.findById[i].comments.length; ++j) {
+                    allComments.push(self._idClass(results.findById[i].comments[j]._id));
                 }
-                result.push(fn(values[i]));
             }
-            return result;
-            const pPosts = results.findById.map(function (item){
-                console.log('itemganz:'+JSON.stringify(item));
-                console.log('item:'+JSON.stringify(item.comments.map(function (item) {return self._idClass(item._id) })));
-                return item.comments.map(function (item) {return self._idClass(item._id) });
-            });
-            console.log(JSON.stringify('dinge: '+pPosts));
-            const query2 = {
+            const queryComments = {
                 '_id': {
-                    $in: pPosts
+                    $in: allComments
                 }
             };
-            Post.find(query2, done);
-        }]*/
+            Post.find(queryComments, done);
+        }]
     }, (err, results) => {
         if (err) {
             return callback(err);
         }
-        callback(null, results.findById);
+        let tempPost = results.findById;
+        for (let i = 0; i < tempPost.length; ++i) {
+            for (let j = 0; j < tempPost[i].comments.length; ++j) {
+                let comment = results.comments.shift();
+                comment.comments = undefined;
+                tempPost[i].comments[j] = comment;
+            }
+        }
+        callback(null, tempPost);
     });
 };
 

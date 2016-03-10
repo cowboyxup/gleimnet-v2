@@ -65,7 +65,6 @@ const manifest = {
                         User: './server/models/user',
                         Timeline: './server/models/timeline',
                         Post: './server/models/post',
-                        Comment: './server/models/comment',
                     },
                     autoIndex: Config.get('/hapiMongoModels/autoIndex')
                 }
@@ -113,6 +112,19 @@ const manifest = {
         {
             plugin: {
                 register: './server/api/v1/timeline',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/api/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/api/v1/post',
                 options: {
                 }
             },

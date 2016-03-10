@@ -13,7 +13,7 @@ const Timeline = BaseModel.extend({
     addPost: function(postId, callback) {
         const self = this;
         Async.auto({
-            updatePost: function (done) {
+            updateTimeline: function (done) {
                 const pushPost = {
                     _id: postId
                 };
@@ -23,7 +23,7 @@ const Timeline = BaseModel.extend({
             if (err) {
                 return callback(err);
             }
-            return callback(null, results.updatePost);
+            return callback(null, results.updateTimeline);
         });
     }
 });
