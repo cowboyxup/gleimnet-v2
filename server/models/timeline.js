@@ -15,7 +15,7 @@ const Timeline = BaseModel.extend({
         Async.auto({
             updateTimeline: function (done) {
                 const pushPost = {
-                    _id: postId
+                    _id: BaseModel._idClass(postId)
                 };
                 Timeline.findByIdAndUpdate(self._id,{$push: {posts: {$each: [pushPost],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }

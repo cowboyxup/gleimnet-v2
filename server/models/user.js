@@ -16,7 +16,7 @@ const User = BaseModel.extend({
         Async.auto({
             updateUser: function (done) {
                 const sentFriend = {
-                    _id: userId
+                    _id: BaseModel._idClass(userId)
                 };
                 User.findByIdAndUpdate(self._id,{$push: {sentFriends: {$each: [sentFriend],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }
@@ -32,7 +32,7 @@ const User = BaseModel.extend({
         Async.auto({
             updateUser: function (done) {
                 const unconfirmedFriend = {
-                    _id: userId
+                    _id: BaseModel._idClass(userId)
                 };
                 User.findByIdAndUpdate(self._id,{$push: {unconfirmedFriends: {$each: [unconfirmedFriend],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }
@@ -48,9 +48,25 @@ const User = BaseModel.extend({
         Async.auto({
             updateUser: function (done) {
                 const friend = {
-                    _id: userId
+                    _id: BaseModel._idClass(userId)
                 };
-                User.findByIdAndUpdate(self._id,{$push: {friends: {$each: [friend],$position: 0}}},{safe: true, upsert: true, new: true},done);
+                User.findByIdAndUpdate(self._id,{$push: {friends: {$each: [friend],$position: 0},},$pull: {unconfirmedFriends: friend, sentFriends: friend},},{safe: true, upsert: true, new: true, multi: true},done);
+            }
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, results.updateUser);
+        });
+    },
+    removeFriend: function(userId, callback) {
+        const self = this;
+        Async.auto({
+            updateUser: function (done) {
+                const friend = {
+                    _id: BaseModel._idClass(userId)
+                };
+                User.findByIdAndUpdate(self._id,{$pull: {unconfirmedFriends: friend, sentFriends: friend, friends: friend},},{safe: true, upsert: true, new: true, multi: true},done);
             }
         }, (err, results) => {
             if (err) {
