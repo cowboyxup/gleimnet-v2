@@ -187,21 +187,21 @@ internals.applyRoutes = function (server, next) {
                     }
                     return true;
                 });
-                return reply('User is now your friend.');
+                return reply({ message: 'User is now your friend.'});
             }
-            request.pre.ownProfile.addSentFriend(request.params._id,(err, profile) => {
-                if (err) {
-                    return reply(err);
-                }
-                return true;
-            });
             request.pre.givenProfile.addUnconfirmedFriend(request.auth.credentials._id,(err, profile) => {
                 if (err) {
                     return reply(err);
                 }
                 return true;
             });
-            return reply(request.pre.ownProfile);
+            request.pre.ownProfile.addSentFriend(request.params._id,(err, profile) => {
+                if (err) {
+                    return reply(err);
+                }
+                return true;
+            });
+            return reply({ message: 'Success.' });
         }
     }]);
 
@@ -261,7 +261,7 @@ internals.applyRoutes = function (server, next) {
                 }
                 return true;
             });
-            return reply(request.pre.ownProfile);
+            return reply({ message: 'Success.' });
         }
     });
 
