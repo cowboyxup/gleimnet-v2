@@ -14,6 +14,7 @@ internals.applyRoutes = function (server, next) {
         method: 'GET',
         path: '/timeline/{_id}',
         config: {
+            tags: ['api'],
             auth: {
                 strategy: 'jwt'
             },
@@ -55,6 +56,7 @@ internals.applyRoutes = function (server, next) {
         method: 'POST',
         path: '/timeline/{_id}',
         config: {
+            tags: ['api'],
             auth: {
                 strategy: 'jwt'
             },

@@ -13,6 +13,7 @@ internals.applyRoutes = function (server, next) {
         method: 'GET',
         path: '/profile/{_id}',
         config: {
+            tags: ['api'],
             auth: {
                 strategy: 'jwt'
             },
@@ -44,6 +45,7 @@ internals.applyRoutes = function (server, next) {
         method: 'POST',
         path: '/profile/{_id}',
         config: {
+            tags: ['api'],
             auth: {
                 strategy: 'jwt'
             },

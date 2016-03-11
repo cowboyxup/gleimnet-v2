@@ -50,6 +50,20 @@ const manifest = {
         },
         {
             plugin: {
+                register: 'vision',
+                options: {
+                }
+            }
+        },
+        {
+            plugin: {
+                register: 'hapi-swagger',
+                options: {
+                }
+            }
+        },
+        {
+            plugin: {
                 register: 'hapi-auth-jwt2',
                 options: {
                 }
@@ -125,6 +139,19 @@ const manifest = {
         {
             plugin: {
                 register: './server/api/v1/post',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/api/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/api/v1/friends',
                 options: {
                 }
             },

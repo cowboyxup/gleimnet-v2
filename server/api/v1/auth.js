@@ -60,6 +60,7 @@ internals.apply = function (server, next) {
         method: 'POST',
         path: '/auth',
         config: {
+            tags: ['api'],
             auth: {
                 mode: 'try',
                 strategy: 'jwt'
@@ -102,6 +103,7 @@ internals.apply = function (server, next) {
         method: 'DELETE',
         path: '/logout',
         config: {
+            tags: ['api'],
             auth: {
                 mode: 'try',
                 strategy: 'jwt'

@@ -13,6 +13,7 @@ internals.applyRoutes = function (server, next) {
         method: 'POST',
         path: '/post/{_id}',
         config: {
+            tags: ['api'],
             auth: {
                 strategy: 'jwt'
             },

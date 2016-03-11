@@ -10,6 +10,54 @@ const Timeline = require('./timeline');
 const User = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
+    },
+    addSentFriend: function(userId, callback) {
+        const self = this;
+        Async.auto({
+            updateUser: function (done) {
+                const sentFriend = {
+                    _id: userId
+                };
+                User.findByIdAndUpdate(self._id,{$push: {sentFriends: {$each: [sentFriend],$position: 0}}},{safe: true, upsert: true, new: true},done);
+            }
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, results.updateUser);
+        });
+    },
+    addUnconfirmedFriend: function(userId, callback) {
+        const self = this;
+        Async.auto({
+            updateUser: function (done) {
+                const unconfirmedFriend = {
+                    _id: userId
+                };
+                User.findByIdAndUpdate(self._id,{$push: {unconfirmedFriends: {$each: [unconfirmedFriend],$position: 0}}},{safe: true, upsert: true, new: true},done);
+            }
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, results.updateUser);
+        });
+    },
+    addFriend: function(userId, callback) {
+        const self = this;
+        Async.auto({
+            updateUser: function (done) {
+                const friend = {
+                    _id: userId
+                };
+                User.findByIdAndUpdate(self._id,{$push: {friends: {$each: [friend],$position: 0}}},{safe: true, upsert: true, new: true},done);
+            }
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, results.updateUser);
+        });
     }
 });
 
@@ -221,5 +269,85 @@ User.findProfileByIdAndUpdate = function (id, updates, callback) {
         return callback(null, profile)
     });
 };
+User.pagedFind = function (filter, fields, sort, limit, page, callback) {
+
+    const self = this;
+    const output = {
+        data: undefined,
+        pages: {
+            current: page,
+            prev: 0,
+            hasPrev: false,
+            next: 0,
+            hasNext: false,
+            total: 0
+        },
+        items: {
+            limit: limit,
+            begin: ((page * limit) - limit) + 1,
+            end: page * limit,
+            total: 0
+        }
+    };
+
+    fields = this.fieldsAdapter(fields);
+    sort = this.sortAdapter(sort);
+
+    Async.auto({
+        count: function (done) {
+
+            self.count(filter, done);
+        },
+        find: function (done) {
+
+            const options = {
+                limit: limit,
+                skip: (page - 1) * limit,
+                sort: sort
+            };
+
+            self.find(filter, fields, options, done);
+        }
+    }, (err, results) => {
+
+        if (err) {
+            return callback(err);
+        }
+        let items = results.find;
+        for (let i = 0; i < items.length; ++i) {
+            if(items[i].password) {
+                items[i].password = undefined;
+            }
+            if(items[i].unconfirmedFriends) {
+                items[i].unconfirmedFriends = undefined;
+            }
+            if(items[i].sentFriends) {
+                items[i].sentFriends = undefined;
+            }
+            if(items[i].isActive) {
+                items[i].isActive = undefined;
+            }
+        }
+
+        output.data = items;
+        output.items.total = results.count;
+
+        // paging calculations
+        output.pages.total = Math.ceil(output.items.total / limit);
+        output.pages.next = output.pages.current + 1;
+        output.pages.hasNext = output.pages.next <= output.pages.total;
+        output.pages.prev = output.pages.current - 1;
+        output.pages.hasPrev = output.pages.prev !== 0;
+        if (output.items.begin > output.items.total) {
+            output.items.begin = output.items.total;
+        }
+        if (output.items.end > output.items.total) {
+            output.items.end = output.items.total;
+        }
+
+        callback(null, output);
+    });
+};
+
 
 module.exports = User;

@@ -15,7 +15,7 @@
   "author": "",
   "license": "",
   "engines": {
-    "node": ">=5.7.0"
+    "node": ">=5.8.0"
   },
   "dependencies": {
     "async": "^1.5.2",
@@ -26,14 +26,16 @@
     "good": "^6.6.0",
     "good-console": "^5.3.1",
     "handlebars": "^4.0.5",
-    "hapi": "^13.0.0",
+    "hapi": "^13.2.1",
     "hapi-auth-jwt2": "^5.4.1",
     "hapi-mongo-models": "^4.2.0",
+    "hapi-swagger": "^4.2.1",
     "inert": "^3.2.0",
     "joi": "^8.0.4",
     "jsonwebtoken": "^5.7.0",
     "mongodb": "^2.1.7",
-    "mongodb-extended-json": "^1.6.3"
+    "mongodb-extended-json": "^1.6.3",
+    "vision": "^4.0.1"
   },
   "devDependencies": {
     "concurrently": "^2.0.0",

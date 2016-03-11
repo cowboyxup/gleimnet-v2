@@ -8,6 +8,7 @@ internals.applyRoutes = function (server, next) {
         method: 'GET',
         path: '/',
         config: {
+            tags: ['api'],
             auth: {
                 strategy: 'jwt'
             }
