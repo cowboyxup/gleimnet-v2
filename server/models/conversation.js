@@ -3,67 +3,103 @@ const Joi = require('joi');
 const Async = require('async');
 const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
-const Post = require('./post');
-const mongo = require('mongodb');
+const Message = require('./message');
+const User = require('./user');
 
-const Timeline = BaseModel.extend({
+const Conversation = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
     },
-    addPost: function(postId, callback) {
+    addMessage: function(userId, message, callback) {
         const self = this;
         Async.auto({
-            updateTimeline: function (done) {
-                const pushPost = {
-                    _id: BaseModel._idClass(postId)
+            updateConveration: [function (done, results) {
+                const pushmessages = {
+                    _id: message._id
+                };
+                const pushauthor = {
+                    _id: BaseModel._idClass(userId)
                 };
                 const query = {
+                    $set: {
+                        timeUpdated: message.timeCreated
+                    },
                     $push: {
-                        posts: {
-                            $each: [pushPost],
+                        messages: {
+                            $each: [pushmessages],
                             $position: 0
+                        }
+                    },
+                    $addToSet: {
+                        authors: {
+                            $each: [pushauthor]
                         }
                     }
                 };
-                Timeline.findByIdAndUpdate(self._id,query,{safe: true, upsert: true, new: true},done);
-            }
+                Conversation.findByIdAndUpdate(self._id,query,{safe: true, upsert: true, new: true, multi: true},done);
+            }]
         }, (err, results) => {
             if (err) {
                 return callback(err);
             }
-            return callback(null, results.updateTimeline);
+            callback(null, results.updateConveration);
         });
     }
 });
 
-Timeline._collection = 'timelines';
+Conversation._collection = 'conversations';
 
-Timeline.schema = Joi.object().keys({
+Conversation.schema = Joi.object().keys({
     _id: Joi.object(),
     timeCreated: Joi.date().required(),
-    posts: Joi.array().items(Joi.object().keys({
-        id: Joi.string().length(24).hex()
+    timeUpdated: Joi.date().required(),
+    authors: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex().required()
+    })).required(),
+    messages: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex()
     })).required()
 });
 
-Timeline.indexes = [
+Conversation.indexes = [
+    { key: { timeUpdated: 1 } }
 ];
 
-Timeline.create = function (callback) {
+Conversation.create = function (userIds, callback) {
     const self = this;
+    const authors = userIds.map(function (item){return {_id: self._idClass(item)} });
     const document = {
         timeCreated: new Date(),
-        posts: []
+        timeUpdated: new Date(),
+        messages: [],
+        authors: authors
     };
     self.insertOne(document, (err, docs) => {
         if (err) {
             return callback(err);
         }
-        return callback(null, docs[0]);
+        callback(null, docs[0]);
     });
 };
 
-Timeline.findByIdAndPaged = function (id, limit, page, callback) {
+Conversation.findAllConversationsByUserId = function (userId, callback) {
+    const self = this;
+    Async.auto({
+        conversations: function (done) {
+            const query = {
+                authors: { $elemMatch:{id: mongo.ObjectId(userId)}}
+            };
+            self.find(query, done);
+        }
+    }, (err, results) => {
+        if (err) {
+            return callback(err);
+        }
+        return callback(null, results.conversations);
+    });
+};
+
+Conversation.findAllConversationsByUserIdAndPaged = function (userId, limit, page, callback) {
     const find = { _id: this._idClass(id) };
     const filter = { _id: this._idClass(id) };
 
@@ -90,7 +126,10 @@ Timeline.findByIdAndPaged = function (id, limit, page, callback) {
 
     Async.auto({
         findById: function (results) {
-            self.findById(id,results);
+            const query = {
+                authors: { $elemMatch:{_id: this._idClass(userId)}}
+            };
+            self.find(query, results);
         },
         pagedPosts: ['findById',(done, results) => {
             const pPosts = results.findById.posts.slice((output.items.begin-1),output.items.end).map(function (item){return self._idClass(item._id) });
@@ -129,4 +168,4 @@ Timeline.findByIdAndPaged = function (id, limit, page, callback) {
     });
 };
 
-module.exports = Timeline;
+module.exports = Conversation;
