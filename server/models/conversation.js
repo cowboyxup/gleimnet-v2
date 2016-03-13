@@ -99,15 +99,16 @@ Conversation.findAllConversationsByUserId = function (userId, callback) {
     });
 };
 
-Conversation.findAllConversationsByUserIdAndPaged = function (userId, limit, page, callback) {
+Conversation.findByIdAndPaged = function (id, limit, page, callback) {
     const find = { _id: this._idClass(id) };
     const filter = { _id: this._idClass(id) };
 
     const self = this;
     const output = {
         _id: undefined,
-        timeCreated:undefined,
-        posts: undefined,
+        timeCreated: undefined,
+        timeUpdated: undefined,
+        messages: undefined,
         pages: {
             current: page,
             prev: 0,
@@ -126,19 +127,20 @@ Conversation.findAllConversationsByUserIdAndPaged = function (userId, limit, pag
 
     Async.auto({
         findById: function (results) {
-            const query = {
-                authors: { $elemMatch:{_id: this._idClass(userId)}}
-            };
-            self.find(query, results);
+            self.findById(id,results);
         },
-        pagedPosts: ['findById',(done, results) => {
-            const pPosts = results.findById.posts.slice((output.items.begin-1),output.items.end).map(function (item){return self._idClass(item._id) });
+        pagedMessages: ['findById',(done, results) => {
+            const pMessages = results.findById.messages.slice((output.items.begin-1),output.items.end).map(function (item){return self._idClass(item._id) });
             const query = {
                 '_id': {
-                    $in: pPosts
+                    $in: pMessages
                 }
             };
-            Post.findAndPopulateComments(query,done);
+            const sort = self.sortAdapter('-timeCreated');
+            const options = {
+                sort: sort
+            };
+            Message.find(query, options,done);
         }]
     }, (err, results) => {
 
@@ -147,9 +149,11 @@ Conversation.findAllConversationsByUserIdAndPaged = function (userId, limit, pag
         }
         output._id = results.findById._id;
         output.timeCreated = results.findById.timeCreated;
+        output.timeUpdated = results.findById.timeUpdated;
+        output.authors = results.findById.authors;
 
-        output.posts = results.pagedPosts;
-        output.items.total = results.findById.posts.length;
+        output.messages = results.pagedMessages;
+        output.items.total = results.findById.messages.length;
 
         // paging calculations
         output.pages.total = Math.ceil(output.items.total / limit);
@@ -167,5 +171,4 @@ Conversation.findAllConversationsByUserIdAndPaged = function (userId, limit, pag
         callback(null, output);
     });
 };
-
 module.exports = Conversation;

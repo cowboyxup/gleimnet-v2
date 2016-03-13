@@ -56,9 +56,9 @@ internals.applyRoutes = function (server, next) {
             return reply(request.pre.conversations);
         }
     }]);
-    /*server.route([{
+    server.route([{
         method: 'GET',
-        path: '/conversations/{id}',
+        path: '/conversations/{_id}',
         config: {
             tags: ['api'],
             auth: {
@@ -66,13 +66,19 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
                 params: {
-                    id: Joi.string().length(24).hex().required()
+                    _id: Joi.string().length(24).hex().required()
+                },
+                query: {
+                    limit: Joi.number().default(20),
+                    page: Joi.number().default(1)
                 }
             },
             pre: [{
                 assign: 'conversation',
                 method: function(request, reply) {
-                    Conversation.findById(request.params.id, (err, timeline) => {
+                    const limit = request.query.limit;
+                    const page = request.query.page;
+                    Conversation.findByIdAndPaged(request.params._id, limit, page, (err, timeline) => {
                         if (err) {
                             return reply(err);
                         }
@@ -88,38 +94,6 @@ internals.applyRoutes = function (server, next) {
             reply (request.pre.conversation);
         }
     }]);
-    server.route([{
-        method: 'GET',
-        path: '/conversations/messages/{id}',
-        config: {
-            tags: ['api'],
-            auth: {
-                strategy: 'jwt'
-            },
-            validate: {
-                params: {
-                    id: Joi.string().length(24).hex().required()
-                }
-            },
-            pre: [{
-                assign: 'message',
-                method: function(request, reply) {
-                    Message.findById(request.params.id, (err, message) => {
-                        if (err) {
-                            return reply(err);
-                        }
-                        if (!message) {
-                            return reply(Boom.notFound('Document not found.'));
-                        }
-                        reply(message);
-                    });
-                }
-            }]
-        },
-        handler: function (request, reply) {
-            reply (request.pre.message);
-        }
-    }]);*/
     server.route([{
         method: 'POST',
         path: '/conversations/{_id}',
@@ -206,13 +180,13 @@ internals.applyRoutes = function (server, next) {
                     authors.push({_id: Conversation._idClass(request.payload._id)});
                     authors.push({_id: Conversation._idClass(request.auth.credentials._id)});
                     const query = {
-                        authors: { $in: authors}
+                        authors: { $all: authors}
                     };
                     Conversation.find(query, (err, conversation) => {
                         if (err) {
                             return reply(err);
                         }
-                        if (!conversation) {
+                        if (conversation.length === 0) {
                             return reply(true);
                         }
                         return reply(Boom.conflict('Conversation exist'));
