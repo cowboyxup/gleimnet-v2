@@ -22,6 +22,7 @@
     "bcryptjs": "^2.3.0",
     "boom": "^3.1.2",
     "confidence": "^1.4.2",
+    "fs-jetpack": "^0.7.2",
     "glue": "^3.2.0",
     "good": "^6.6.0",
     "good-console": "^5.3.1",

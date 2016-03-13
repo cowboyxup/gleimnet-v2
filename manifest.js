@@ -88,6 +88,58 @@ const manifest = {
         },
         {
             plugin: {
+                register: './server/admin/v1/auth',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/index',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/setups',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/saved',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
                 register: './server/api/v1/auth',
                 options: {
                 }
