@@ -14,7 +14,7 @@ const Post = BaseModel.extend({
         Async.auto({
             updatePost: function (done) {
                 const pushcomment = {
-                    _id: commentId
+                    _id: BaseModel._idClass(commentId)
                 };
                 Post.findByIdAndUpdate(self._id,{$push: {comments: {$each: [pushcomment],$position: 0}}},{safe: true, upsert: true, new: true},done);
             }
@@ -47,7 +47,7 @@ Post.create = function (userId, content, callback) {
     Async.auto({
         newPost: function (done, results) {
             const document = {
-                author: userId,
+                author: self._idClass(userId),
                 timeCreated: new Date(),
                 content: content,
                 comments: []

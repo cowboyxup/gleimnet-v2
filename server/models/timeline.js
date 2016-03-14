@@ -15,9 +15,17 @@ const Timeline = BaseModel.extend({
         Async.auto({
             updateTimeline: function (done) {
                 const pushPost = {
-                    _id: postId
+                    _id: BaseModel._idClass(postId)
                 };
-                Timeline.findByIdAndUpdate(self._id,{$push: {posts: {$each: [pushPost],$position: 0}}},{safe: true, upsert: true, new: true},done);
+                const query = {
+                    $push: {
+                        posts: {
+                            $each: [pushPost],
+                            $position: 0
+                        }
+                    }
+                };
+                Timeline.findByIdAndUpdate(self._id,query,{safe: true, upsert: true, new: true},done);
             }
         }, (err, results) => {
             if (err) {

@@ -87,6 +87,7 @@ internals.applyRoutes = function (server, next) {
             return reply(request.pre.profile);
         }
     }]);
+
     next();
 };
 exports.register = function (server, options, next) {

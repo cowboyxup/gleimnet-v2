@@ -165,33 +165,105 @@ internals.applyRoutes = function (server, next) {
         },
         handler: function (request, reply) {
             const findFriends = function(item) {
-                return item._id === request.params._id;
+                return item._id.toString() === request.params._id;
             };
             if (request.pre.ownProfile.friends.find(findFriends)) {
-                return reply('User is already your friend.').statusCode(304);
+                return reply('User is already your friend.').code(304);
             }
             if (request.pre.ownProfile.sentFriends.find(findFriends)) {
                 return reply('You have already sent a friendship response').code(304);
             }
 
             if (request.pre.ownProfile.unconfirmedFriends.find(findFriends)) {
-                return reply('User is now your friend.');
+                request.pre.ownProfile.addFriend(request.params._id,(err, profile) => {
+                    if (err) {
+                        return reply(err);
+                    }
+                    return true;
+                });
+                request.pre.givenProfile.addFriend(request.auth.credentials._id,(err, profile) => {
+                    if (err) {
+                        return reply(err);
+                    }
+                    return true;
+                });
+                return reply({ message: 'User is now your friend.'});
             }
-            request.pre.ownProfile.addSentFriend(request.params._id,(err, profile) => {
-                if (err) {
-                    return reply(err);
-                }
-                return true;
-            });
             request.pre.givenProfile.addUnconfirmedFriend(request.auth.credentials._id,(err, profile) => {
                 if (err) {
                     return reply(err);
                 }
                 return true;
             });
-            return reply(request.pre.ownProfile);
+            request.pre.ownProfile.addSentFriend(request.params._id,(err, profile) => {
+                if (err) {
+                    return reply(err);
+                }
+                return true;
+            });
+            return reply({ message: 'Success.' });
         }
     }]);
+
+    server.route({
+        method: 'DELETE',
+        path: '/friends/{_id}',
+        config: {
+            tags: ['api'],
+            auth: {
+                mode: 'try',
+                strategy: 'jwt'
+            },
+            validate: {
+                params: {
+                    _id: Joi.string().length(24).hex().required()
+                }
+            },
+            pre: [{
+                assign: 'ownProfile',
+                method: function(request, reply) {
+                    User.findById(request.auth.credentials._id, (err, profil) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!profil) {
+                            return reply(Boom.notFound('Profile not found.'));
+                        }
+                        return reply(profil);
+                    });
+                }
+            },
+            {
+                assign: 'givenProfile',
+                method: function(request, reply) {
+                    User.findById(request.params._id, (err, profil) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!profil) {
+                            return reply(Boom.notFound('Profile not found.'));
+                        }
+                        return reply(profil);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            request.pre.ownProfile.removeFriend(request.params._id,(err, profile) => {
+                if (err) {
+                    return reply(err);
+                }
+                return true;
+            });
+            request.pre.givenProfile.removeFriend(request.auth.credentials._id,(err, profile) => {
+                if (err) {
+                    return reply(err);
+                }
+                return true;
+            });
+            return reply({ message: 'Success.' });
+        }
+    });
 
     next();
 };

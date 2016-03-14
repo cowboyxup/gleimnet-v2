@@ -79,8 +79,62 @@ const manifest = {
                         User: './server/models/user',
                         Timeline: './server/models/timeline',
                         Post: './server/models/post',
+                        Conversation: './server/models/conversation',
+                        Message: './server/models/message'
                     },
                     autoIndex: Config.get('/hapiMongoModels/autoIndex')
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/auth',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/index',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/setups',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/saved',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
                 }
             }
         },
@@ -152,6 +206,19 @@ const manifest = {
         {
             plugin: {
                 register: './server/api/v1/friends',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/api/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/api/v1/conversations',
                 options: {
                 }
             },
