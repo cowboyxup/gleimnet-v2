@@ -22,13 +22,15 @@ import {ROUTER_DIRECTIVES,
 import {HTTP_PROVIDERS, Http} from 'angular2/http';
 import {AuthHttp} from 'angular2-jwt/angular2-jwt';
 
-import {Chat} from './chat/chat';
-import {Login} from './login/login.component'
+import {Chat} from './componets/chat/chat.component';
+import {Login} from './componets/login/login.component'
 import {AccessRouterOutlet} from "./LoggedInRouterOutlet";
-import {Friends} from "./friends/friends";
-import {Stream} from "./stream/stream.component";
-import {Profile} from "./profile/profile";
+import {Friends} from "./componets/friends/friends";
+import {Stream} from "./componets/stream/stream.component";
+import {Profile} from "./componets/profile/profile";
 import {AuthConfig} from "angular2-jwt/angular2-jwt";
+import {ProtectedPage} from "./componets/pages/protected-page";
+import {AuthService} from "./services/auth.service";
 
 declare var System:any;
 
@@ -50,6 +52,7 @@ declare var System:any;
                 <a class="mdl-navigation__link" [routerLink]="['/Chat']" >Nachrichten</a>
                 <a class="mdl-navigation__link" [routerLink]="['/Friends']">Freunde</a>
                 <a class="mdl-navigation__link" (click)="onSelect()">{{logInOut}}</a>
+                <a class="mdl-navigation__link" [routerLink]="['/ProtectedPage']">ProtectedPage</a>
             </nav>
         </div>
     </header>
@@ -97,7 +100,12 @@ declare var System:any;
     {
         path: '/login',
         component: Login,
-        name: 'Login'}
+        name: 'Login'},
+    {
+        path: '/public',
+        name: 'ProtectedPage',
+        component: ProtectedPage
+    }
 ])
 
 export class MyApp {
@@ -144,6 +152,7 @@ bootstrap(MyApp,
     [
         ROUTER_PROVIDERS,
         HTTP_PROVIDERS,
+        AuthService,
         provide(
             LocationStrategy,
             {useClass: HashLocationStrategy}
