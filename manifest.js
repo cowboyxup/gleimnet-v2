@@ -80,7 +80,8 @@ const manifest = {
                         Timeline: './server/models/timeline',
                         Post: './server/models/post',
                         Conversation: './server/models/conversation',
-                        Message: './server/models/message'
+                        Message: './server/models/message',
+                        Meeting: './server/models/meeting'
                     },
                     autoIndex: Config.get('/hapiMongoModels/autoIndex')
                 }
