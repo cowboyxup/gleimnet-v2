@@ -27,7 +27,7 @@ internals.applyRoutes = function (server, next) {
         method: 'POST',
         path: '/save',
         config: {
-            tags: ['admin'],
+            tags: ['api'],
             auth: {
                 strategy: 'admin'
             },
@@ -45,6 +45,7 @@ internals.applyRoutes = function (server, next) {
                     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     const Timeline = server.plugins['hapi-mongo-models'].Timeline;
                     const Post = server.plugins['hapi-mongo-models'].Post;
+                    const Meeting = server.plugins['hapi-mongo-models'].Meeting;
                     Async.auto({
                         loadUsers: (done) => {
                             User.find({}, (err, data) => {
@@ -86,7 +87,15 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', (done, data) => {
+                        loadMeetings: (done) => {
+                            Meeting.find({}, (err, data) => {
+                                if (err) {
+                                    return err;
+                                }
+                                return done(null, data);
+                            });
+                        },
+                        save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', 'loadMeetings', (done, data) => {
                             const document = {
                                 users: data.loadUsers,
                                 messages: data.loadMessages,
@@ -119,7 +128,7 @@ internals.applyRoutes = function (server, next) {
         method: 'POST',
         path: '/load',
         config: {
-            tags: ['admin'],
+            tags: ['api'],
             auth: {
                 strategy: 'admin'
             },
@@ -136,6 +145,7 @@ internals.applyRoutes = function (server, next) {
                     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     const Timeline = server.plugins['hapi-mongo-models'].Timeline;
                     const Post = server.plugins['hapi-mongo-models'].Post;
+                    const Meeting = server.plugins['hapi-mongo-models'].Meeting;
                     Async.auto({
                         clean: (done) => {
                             Async.parallel([
@@ -148,14 +158,12 @@ internals.applyRoutes = function (server, next) {
                         },
                         loadFile: (done, data) => {
                             const fileData = jetpack.dir('./data').read(request.payload.filepath);
-                            console.log(JSON.stringify(fileData));
                             if (!fileData) {
-                                return('not loaded');
+                                return done(new Error('not loaded'));
                             }
                             return done(null, EJSON.parse(fileData));
                         },
                         user: ['clean','loadFile', (done, data) => {
-                            console.log(JSON.stringify(data.loadFile));
                             if (data.loadFile['users'].length === 0) {
                                 return done;
                             }
@@ -206,15 +214,27 @@ internals.applyRoutes = function (server, next) {
                                 return results;
                             });
                             return done;
+                        }],
+                        meeting: ['clean','loadFile', (done, data) => {
+                            if (data.loadFile['meetings'].length === 0) {
+                                return done;
+                            }
+                            Meeting.insertMany(data.loadFile['meetings'],(err, results) =>{
+                                if (err) {
+                                    console.error(err);
+                                    return err;
+                                }
+                                return results;
+                            });
+                            return done;
                         }]
                     }, (err, data) => {
                         if (err) {
-                            console.error('Failed to setup root user.'+err);
-                            return (err);
+                            console.error('Failed to load data.'+err);
+                            return reply(Boom.badRequest('not loaded'));
                         }
-                        return(null, data);
+                        return reply(data);
                     });
-                    reply(true);
                 }
             }]
         },

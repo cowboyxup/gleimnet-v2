@@ -10,7 +10,7 @@ internals.applyRoutes = function (server, next) {
         method: 'GET',
         path: '/setups',
         config: {
-            tags: ['admin'],
+            tags: ['api'],
             auth: {
                 strategy: 'admin'
             },

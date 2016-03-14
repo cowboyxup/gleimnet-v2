@@ -34,9 +34,9 @@ Post.schema = Joi.object().keys({
     author: Joi.string().length(24).hex().required(),
     timeCreated: Joi.date().required(),
     content: Joi.string().required(),
-    comments: Joi.object().keys({
-        id: Joi.string().length(24).hex().required()
-    })
+    comments: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex().required()
+    }))
 });
 
 Post.indexes = [

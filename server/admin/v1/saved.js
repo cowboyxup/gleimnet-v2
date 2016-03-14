@@ -14,7 +14,7 @@ internals.applyRoutes = function (server, next) {
         method: 'GET',
         path: '/saved',
         config: {
-            tags: ['admin'],
+            tags: ['api'],
             auth: {
                 strategy: 'admin'
             },
