@@ -8,7 +8,7 @@
     "tsc:w": "tsc -w",
     "lite": "lite-server",
     "setup": "setup.js",
-    "start": "concurrent \"nodemon -e js,md ./server.js\" ",
+    "start": "nodemon -e js,md ./server.js  --ignore server/web/public",
     "test": "lab -c -L",
     "test-cover": "lab -c -r html -o ./test/artifacts/coverage.html && open ./test/artifacts/coverage.html"
   },

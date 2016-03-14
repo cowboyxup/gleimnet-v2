@@ -1,0 +1,262 @@
+
+.titelImage {
+   height: 250px;
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+}
+
+.profilimage{
+    margin-left: 30px;
+    width: 160px;
+    height: 160px;
+}
+
+/*.profilname{*/
+   /*margin-top: -3em;*/
+   /*margin-bottom: 1em;*/
+/*}*/
+
+/*.timelineImage{*/
+   /*width: 64px;*/
+   /*height: 64px;*/
+/*}*/
+
+
+/*.timeline{*/
+   /*border-style: solid;*/
+   /*border-color: lightgrey;*/
+   /*border-width: 0px 0px 0px 1px;*/
+/*}*/
+
+/*.timelineWriteSomeThing{*/
+    /*margin-top: 10px;*/
+    /*margin-bottom:30px;*/
+/*}*/
+
+/*.timelineWriteSomeThing button {*/
+    /*float: right;*/
+/*}*/
+/*.post{*/
+   /*padding-bottom: 25px;*/
+   /*!*background-color: #fafafa;*!*/
+/*}*/
+
+/*.friendImage .caption a{*/
+    /*bottom:8px;*/
+    /*left:8px;*/
+    /*position: absolute;*/
+    /*font-size: 80%;*/
+    /*line-height: 90%;*/
+    /*color: #ffffff;*/
+/*}*/
+/*.friendImage {*/
+    /*display: block;*/
+    /*padding: 4px;*/
+    /*margin-bottom: 4px;*/
+    /*background-color: #ffffff;*/
+/*}*/
+
+/*.ChatName-right{*/
+    /*text-align: right;*/
+/*}*/
+
+/*!*.content{*!*/
+    /*!*margin-top: 20px;*!*/
+/*!*}*!*/
+
+/*.login{*/
+    /*width: 40%;*/
+/*}*/
+
+/*.posting-body{*/
+    /*min-height: 70px;*/
+/*}*/
+
+/*.container.content{*/
+    /*padding-top: 20px;*/
+/*}*/
+
+/*.media.post.selected{*/
+    /*background-color: #eee;*/
+/*}*/
+
+
+/*==========================================================================
+ *custom styles
+ *========================================================================== */
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(../fonts/MaterialIcons-Regular.woff2) format('woff2');
+}
+
+body{
+    background-repeat: no-repeat;
+    background-image: url("../img/bgimage.jpg");
+    background-size: cover;
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+
+
+.centeredLogin {
+    position: absolute;
+    top:40;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+}
+
+.posting{
+    margin-bottom: 16px;
+}
+
+.posting .posting_contet {
+    width: 100%;
+    padding: 6px 16px 6px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+}
+
+.posting .posting_header {
+    width: 100%;
+    padding: 16px 16px 0px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+}
+
+
+.posting .posting_contet:not(:last-child) {
+    box-sizing: border-box;
+    min-height: 50px;
+}
+
+.posting .comments {
+    background-color: #EEE;
+}
+
+.posting .comments {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 32px;
+    box-sizing: border-box;
+}
+.stream_form > form,
+.posting .comments > form {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 16px;
+}
+.stream_form > form .mdl-textfield,
+.posting .comments > form .mdl-textfield {
+    flex-grow: 1;
+    margin-right: 16px;
+    color: rgb(97, 97, 97);
+}
+.stream_form > form .mdl-textfield input,
+.stream_form > form .mdl-textfield textarea,
+.posting .comments > form .mdl-textfield input,
+.posting .comments > form .mdl-textfield textarea {
+    resize: none;
+}
+
+.stream_form > form button,
+.posting .comments > form button {
+    margin-top: 20px;
+    background-color: rgba(0, 0, 0, 0.24);
+    color: white;
+}
+
+.stream_form > form{
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+.stream_form{
+    min-height: auto;
+}
+
+.posting .comments .comment {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.comment__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.round_avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin-right: 16px;
+}
+
+.comment__header > .round_avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 16px;
+}
+
+
+
+.comment__header > .comment__author {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.posting .comments .comment > .comment__text {
+    line-height: 1.5em;
+}
+
+.posting .comments .comment > .comment__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 0.8em;
+    margin-top: 16px;
+}
+
+
+/*Profile*/
+
+.profile_info{
+    width: 100%;
+}
+
+.profile_name_box{
+    width: 100%;
+    min-height: 50px;
+}
