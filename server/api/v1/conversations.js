@@ -192,15 +192,6 @@ internals.applyRoutes = function (server, next) {
                         return reply(Boom.conflict('Conversation exist'));
                     });
                 }
-            },
-            {
-                assign: 'conversation',
-                method: function(request, reply) {
-                    let authors = [];
-                    authors.push(request.payload._id);
-                    authors.push(request.auth.credentials._id);
-                    Conversation.create(authors, reply);
-                }
             }]
         },
         handler: function (request, reply) {
