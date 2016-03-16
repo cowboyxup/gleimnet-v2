@@ -8,6 +8,27 @@ const User = require('./user');
 const Meeting = BaseModel.extend({
     constructor: function (attrs) {
         ObjectAssign(this, attrs);
+    },
+    confirm: function(userId, callback) {
+        const self = this;
+        Async.auto({
+            updateMeeting: [function (done, results) {
+                const pushauthor = {
+                    _id: BaseModel._idClass(userId)
+                };
+                const query = {
+                    $pull: {
+                        unconfirmedParticipants: pushauthor
+                    }
+                };
+                Meeting.findByIdAndUpdate(self._id,query,{safe: true, upsert: true, new: true, multi: true},done);
+            }]
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.updateMeeting);
+        });
     }
 });
 
@@ -30,35 +51,25 @@ Meeting.indexes = [
     { key: { time: 1 } }
 ];
 
-Meeting.generateTime = function(time, callback) {
-    Async.auto({
-        date: function (results) {
-            const dateArray = birthdate.trim().split("-");
-            const dateObj = new Date(dateArray[2], (dateArray[1]-1), dateArray[0],6,0,0);
-            results(null, dateObj);
-        }
-    }, (err, results) => {
-        if (err) {
-            return callback(err);
-        }
-        return callback(null, results.date);
-    });
-};
-
 Meeting.create = function (userid, userIds, location, time, callback) {
     const self = this;
     Async.auto({
-        timeobject: this.generateBirthdate.bind(this, time),
-        newMeeting: ['timeobject' , function (done, results) {
-            const participants = userIds.map(function (item){return {_id: self._idClass(item)} });
+        newMeeting: [function (done, results) {
+            const participants = userIds.map(function (item){return {_id: self._idClass(item._id)} });
+            function filterOwn(obj) {
+                if (obj._id.toString() === userid) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            const unconfirmedParticipants = participants.filter(filterOwn)
             const document = {
                 timeCreated: new Date(),
-                time: results.timeobject,
+                time: new Date(time),
                 location: location,
-                participants: [
-                    {_id: self._idClass(userid)}
-                ],
-                unconfirmedParticipants: participants
+                participants: participants,
+                unconfirmedParticipants: unconfirmedParticipants
             };
             self.insertOne(document, done);
         }]
@@ -75,7 +86,7 @@ Meeting.findAllMeetingsByUserId = function (userId, callback) {
     Async.auto({
         conversations: function (done) {
             const query = {
-                participants: { $elemMatch:{id: mongo.ObjectId(userId)}}
+                participants: { $elemMatch:{_id: mongo.ObjectId(userId)}}
             };
             self.find(query, done);
         }

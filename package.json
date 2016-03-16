@@ -36,6 +36,7 @@
     "jsonwebtoken": "^5.7.0",
     "mongodb": "^2.1.7",
     "mongodb-extended-json": "^1.6.3",
+    "susie": "^2.0.0",
     "vision": "^4.0.1"
   },
   "devDependencies": {
