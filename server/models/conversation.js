@@ -15,7 +15,7 @@ const Conversation = BaseModel.extend({
         Async.auto({
             updateConveration: [function (done, results) {
                 const pushmessages = {
-                    _id: message._id
+                    _id: BaseModel._idClass(message._id)
                 };
                 const pushauthor = {
                     _id: BaseModel._idClass(userId)
