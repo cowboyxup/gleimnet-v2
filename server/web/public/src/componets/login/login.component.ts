@@ -14,6 +14,11 @@ import {RouterLink} from "angular2/router";
 
 @Component({
     selector: 'login',
+    directives: [
+        RouterLink,
+        CORE_DIRECTIVES,
+        FORM_DIRECTIVES
+    ],
     template: `
         <div class="mdl-cell mdl-cell--4-col centeredLogin">
             <div class="demo-card-square mdl-card mdl-shadow--2dp">
@@ -21,7 +26,8 @@ import {RouterLink} from "angular2/router";
                     <h3>Login</h3>
                     <!--<h2>{{message}}</h2>-->
                 </div>
-                <div class="mdl-card__supporting-text">
+
+                <div *ngIf="!authenticated" class="mdl-card__supporting-text">
 
                     <form>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -39,32 +45,37 @@ import {RouterLink} from "angular2/router";
                         </div>
 
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-                            (click)="login(username.value, password.value );">
+                            (click)="login(username.value, password.value );" type="button">
                             Anmelden
                         </button>
                     </form>
                 </div>
+
+
+
             </div>
         </div>
-        `,
-    providers: [AuthService],
-    directives: [RouterLink, CORE_DIRECTIVES, FORM_DIRECTIVES]
+        `
 })
 
 export class Login {
 
-    result:Object;
-    error:Object;
-    public message:string = "";
 
-    constructor(private _router:Router,
-                private _http:Http,
-                private _authService:AuthService ) {}
+    constructor(private _authService:AuthService, private _router:Router) {
 
-    login(username, password) {
-        this.message = "";
+    }
 
-        this._authService.doLogin(username,password);
+    ngOnInit(): void {
+        this._authService.authenticated$
+            .subscribe((isAuthenticated: boolean) => {
+                   if(isAuthenticated){
+                       setTimeout( () => this._router.navigate(['Stream']) , 1);
+                   }
+                }
+            )
+    }
 
+    login(username:string, password:string) {
+        this._authService.doLogin(username, password) ;
     }
 }

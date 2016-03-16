@@ -16,17 +16,20 @@ export class ProtectedDirective implements OnDestroy {
             this.router.navigate(['Login']);
         }
 
-        this.sub = this.authService.subscribe((val) => {
-            if (!val.authenticated) {
-                this.location.replaceState('/');
-                this.router.navigate(['Login']);
-            }
-        });
+        this.authService.authenticated$
+            .subscribe((isAuthenticated: boolean) => {
+                    if (!isAuthenticated) {
+                        //this.location.replaceState('/');
+                        this.router.navigate(['Login']);
+                    }else{
+
+
+                    }
+                }
+            )
     }
 
     ngOnDestroy() {
-        if (this.sub != null) {
-            this.sub.unsubscribe();
-        }
+
     }
 }

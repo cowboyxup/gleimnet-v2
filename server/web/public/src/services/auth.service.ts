@@ -1,56 +1,90 @@
-import {Injectable, EventEmitter} from "angular2/core";
+import {Injectable, bind} from 'angular2/core';
 import {Http, Headers} from 'angular2/http'
 import {Router} from "angular2/router";
 import {Response} from "angular2/http";
-import {contentHeaders} from "../common/headers";
+
+import {Subject} from "rxjs/Subject";
+import {BehaviorSubject} from "rxjs/Rx";
+import {Observable} from "rxjs/Observable";
+import {Observer} from "rxjs/Observer";
+
+import {AuthHttp, JwtHelper} from 'angular2-jwt';
+
+import {headers} from "./common";
+
 
 @Injectable()
 export class AuthService {
 
-    authenticated=true;
-    private locationWatcher = new EventEmitter();  // @TODO: switch to RxJS Subject instead of EventEmitter
-    private authURL:string = 'api/v1/auth';
+    private _authenticated:boolean = false;
+    public authenticated$: Observable<boolean>;
+    private _authenticatedObserver: Observer<boolean>;
 
-    constructor(private _router:Router, private _http:Http) {}
+    jwtHelper: JwtHelper = new JwtHelper();
 
+    private _token:string;
+    private _decodedToken:any;
+    private _tokenExpirationDate:Date;
+    private _isTokenExpired:boolean;
+    private _userId:string;
 
+    constructor(private _http:Http, private _router:Router) {
+        this.authenticated$ = new Observable(observer =>
+            this._authenticatedObserver = observer).share();
 
-    public doLogin(username, password){
+    }
 
-        console.log("login");
-        let body = JSON.stringify({username, password});
+    public doLogin(username:string, password:string) {
+        console.log("doLogin: username: " + username + " password: " + password)
 
-        this._http.post('api/v1/auth', body, {headers: contentHeaders})
+        var url = 'api/v1/auth';
+        let body = JSON.stringify({username, password });
+
+        this._http.post(url, body, { headers: headers() })
             .map(
-                (res:Response) =>{
-                    return res.json()
-                }
-            )
-            .subscribe(res =>{
-                    console.log(res);
+                (response:Response) =>  {
+                    if(response.status == 200){
+                        this._token = response.text();
+                        localStorage.setItem('id_token', this._token);
+
+                        this._decodedToken = this.jwtHelper.decodeToken(this._token)
+                        this._tokenExpirationDate =  this.jwtHelper.getTokenExpirationDate(this._token)
+                        this._isTokenExpired = this.jwtHelper.isTokenExpired(this._token)
+
+                        this._userId = this._decodedToken._id;
+                        localStorage.setItem('userId', this._userId);
+
+                        this.authenticated(true);
+                    }
                 },
                 error => {
-                    //this.message = error.message;
+                    console.log("Error:");
+                    console.log(error);
                 }
-            );
+            )
+            .subscribe();
     }
 
     public doLogout() {
+        console.log('doLogout');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('id_token');
+
+        this.authenticated(false);
+    }
+
+    private authenticated(is:boolean){
+        this._authenticated = is;
+        this._authenticatedObserver.next(this._authenticated);
 
     }
 
-    public getUserID() {
-
+    public getSession() {
     }
 
-    public getUserName() {
+    isAuthenticated():boolean {
+        return this._authenticated;
     }
 
-    public isAuthenticated() {
-        return this.authenticated;
-    }
 
-    public subscribe(onNext:(value:any) => void, onThrow?:(exception:any) => void, onReturn?:() => void) {
-        return this.locationWatcher.subscribe(onNext, onThrow, onReturn);
-    }
 }

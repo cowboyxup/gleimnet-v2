@@ -1,12 +1,23 @@
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
+import {Headers} from "angular2/http";
+
+//import
 
 export const autKey =  "AuthKey";
 export const usernameKey =  "username";
 export const authHeader =  "authHeader";
 
 
+export function headers(){
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    var basicAuth =  localStorage.getItem('AuthKey');
+    headers.append('Authorization',basicAuth);
+
+    return headers;
+}
 
 
 export interface IDictionary <T>{
@@ -21,6 +32,7 @@ export class Dictionary<T>{
 
     _keys: string[] = new Array<string>()
     _values: T[] = Array<T>();
+
 
     public _values$: Observable<Array<T>>;
     private _valuesObserver: any;

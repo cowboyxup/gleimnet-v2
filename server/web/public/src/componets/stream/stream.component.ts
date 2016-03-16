@@ -16,7 +16,6 @@ import {TimeLinePostComponent} from "./post.component";
 import {ProtectedDirective} from "../../directives/protected.directive";
 
 
-
 @Component({
     selector: 'Stream',
     providers:[TimelineService],
