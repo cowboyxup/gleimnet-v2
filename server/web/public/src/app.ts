@@ -26,10 +26,11 @@ import {Chat} from './componets/chat/chat.component';
 import {Login} from './componets/login/login.component'
 import {Friends} from "./componets/friends/friends";
 import {Stream} from "./componets/stream/stream.component";
-import {Profile} from "./componets/profile/profile";
 import {AuthConfig} from "angular2-jwt/angular2-jwt";
 import {AuthService} from "./services/auth.service";
 import {CORE_DIRECTIVES} from "angular2/common";
+import {ProfileComponent} from "./componets/profile.component";
+import {ProfileService} from "./services/profile.service";
 
 declare var System:any;
 
@@ -71,12 +72,12 @@ declare var System:any;
     },
     {
         path: '/profile',
-        component: Profile,
+        component: ProfileComponent,
         name: 'MyProfile'
     },
     {
         path: '/profile/:id',
-        component: Profile,
+        component: ProfileComponent,
         name: 'Profile'},
     {
         path: '/chat',
@@ -133,9 +134,18 @@ bootstrap(MyApp,
         ROUTER_PROVIDERS,
         HTTP_PROVIDERS,
         AuthService,
+        ProfileService,
         provide(
             LocationStrategy,
             {useClass: HashLocationStrategy}
-        )
+        ),
+        provide(AuthHttp, {
+            useFactory: (http) => {
+                return new AuthHttp(new AuthConfig({
+                    headerPrefix: ""
+                }), http);
+            },
+            deps: [Http]
+        })
     ]
 );

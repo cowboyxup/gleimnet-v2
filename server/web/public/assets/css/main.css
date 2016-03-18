@@ -259,4 +259,5 @@ body{
 .profile_name_box{
     width: 100%;
     min-height: 50px;
+    padding-left: 10px;
 }

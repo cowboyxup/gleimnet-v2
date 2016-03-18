@@ -9,16 +9,16 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 
-import {autKey} from "../../common/consts";
 import {Post} from "../../services/timeline.service";
-import {TimelineService} from "../../services/timeline.service";
 import {TimeLinePostComponent} from "./post.component";
 import {ProtectedDirective} from "../../directives/protected.directive";
+import {StreamService} from "../../services/stream.service";
+import {AuthService} from "../../services/auth.service";
 
 
 @Component({
     selector: 'Stream',
-    providers:[TimelineService],
+    providers:[StreamService],
     directives: [
         TimeLinePostComponent,
         ProtectedDirective
@@ -58,22 +58,21 @@ export class Stream implements OnInit,OnDestroy{
 
     private myArray: Array<Post> = new Array<Post>();
     interval
-    username:string;
 
-    constructor(private _timelineService: TimelineService) { }
+    constructor(private _streamService: StreamService,
+                private _authService:AuthService) {
+
+    }
 
     ngOnInit() {
-        var basicAuth =  localStorage.getItem('AuthKey');
-        if(basicAuth){
+        if(this._authService.isAuthenticated()){
 
-            this.username = localStorage.getItem('username');
+            //this._streamService._postDictionary._values$.subscribe(latestCollection => {
+            //    this.myArray = latestCollection;
+            //});
 
-            this._timelineService._postDictionary._values$.subscribe(latestCollection => {
-                this.myArray = latestCollection;
-            });
-
-            this._timelineService.load(this.username)
-            this.interval = setInterval(() => this._timelineService.load(this.username), 2000 );
+            this._streamService.load()
+            this.interval = setInterval(() => this._streamService.load(), 10000 );
         }
     }
 
@@ -82,15 +81,15 @@ export class Stream implements OnInit,OnDestroy{
     }
 
     postNewPosting(content:string){
-        if(this.username){
+        if(this._authService.isAuthenticated()){
             console.log(content);
-            this._timelineService.postNewPosting(this.username, content);
+            this._streamService.postNewPosting(this._authService.getUserId(), content);
         }
     }
 
     commentOnPosting(content:string, postId:string){
-        if(this.username){
-            this._timelineService.commentOnPosting(content, postId);
+        if(this._authService.isAuthenticated()){
+            this._streamService.commentOnPosting(content, postId);
 
         }
     }

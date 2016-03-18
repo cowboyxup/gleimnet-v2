@@ -11,13 +11,16 @@ import {Router} from "angular2/router";
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 
-import {ProfileService, User,ProfileFriend,Messages, Timeline} from "../../services/profile.service";
-import {ChatService} from "../../services/chat.service";
-import {FriendsService} from "../../services/friendsService";
-import {TimelineService} from "../../services/timeline.service";
-import {Post} from "../../services/timeline.service";
-import {TimeLinePostComponent} from "../stream/post.component";
-import {ProtectedDirective} from "../../directives/protected.directive";
+import {ProfileService, User,ProfileFriend,Messages, Timeline} from "../services/profile.service";
+import {ChatService} from "../services/chat.service";
+import {FriendsService} from "../services/friendsService";
+import {TimelineService} from "../services/timeline.service";
+import {Post} from "../services/timeline.service";
+import {TimeLinePostComponent} from "./stream/post.component";
+import {ProtectedDirective} from "../directives/protected.directive";
+import {AuthHttp} from "angular2-jwt/angular2-jwt";
+import {AuthService} from "../services/auth.service";
+import {FormatedDateFromStringPipe} from "../pipes/dateFormat.pipe";
 
 @Component({
     selector: 'Profile',
@@ -26,19 +29,15 @@ import {ProtectedDirective} from "../../directives/protected.directive";
         ProtectedDirective
     ],
     providers:[
-        TimeLinePostComponent,
-        ProfileService,
-        FriendsService,
-        ChatService,
         TimelineService
     ],
-
+    pipes: [FormatedDateFromStringPipe],
     template: `
         <div protected>
 
-<div class="titelImage" style="background-image:url('img/banner/banner_{{user.username}}.jpg')">
+<div class="titelImage" style="background-image:url('assets/{{user.titlePicture}}')">
 
-    <img *ngIf="user.username" class="thumbnail profilimage" src="img/profilimages/240x240/{{user.avatar}}.png"
+    <img *ngIf="user.username" class="thumbnail profilimage" src="assets/{{user.avatar}}"
                  alt="...">
 
 </div>
@@ -46,7 +45,7 @@ import {ProtectedDirective} from "../../directives/protected.directive";
     <div class="profile_name_box mdl-card mdl-shadow--4dp">
         <div class="mdl-card__supporting-text">
         <h4>
-            {{user.givenName}} {{user.surename}}
+            {{user.givenName}} {{user.username}}
         </h4>
         <div class="row">
             <button *ngIf="addFriendButton && !isMe" type="button"
@@ -71,19 +70,17 @@ import {ProtectedDirective} from "../../directives/protected.directive";
     <div class="mdl-cell mdl-cell--3-col">
         <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col profile_info">
             <div class="mdl-card__supporting-text">
-                <div class="row">
-                    <h4>Geburtsdatum:</h4>
-                    <p>{{userateString}}
-                    <h4>Info:</h4>
-                    <p>{{userescription}}</p>
-                </div>
+                <h5>Geburtsdatum:</h5>
+                <p>{{user.birthdate | formatedDateFromString}}
+                <h5>Info:</h5>
+                <p>{{user.description}}</p>
 
 
-                <h4>Freunde</h4>
+                <h5>Freunde:</h5>
                 <div class="col-md-4 friendImage" *ngFor="#Friend of friends">
                     <div class="mdl-color-text--grey-700 posting_header meta">
                         <a class="" href="#/profile/{{Friend.username}}" role="button">
-                            <img src="img/profilimages/64x64/{{Friend.username}}.png" class="round_avatar">
+                            <img src="img/profilimages/64x64/{{Friend.avatar}}.png" class="round_avatar">
                         </a>
                         <div class="comment__author">
                             <strong>{{Friend.givenName}}</strong>
@@ -112,7 +109,7 @@ import {ProtectedDirective} from "../../directives/protected.directive";
                 </button>
             </form>
         </div>
-        <div class="posting" *ngFor="#posting of messages ">
+        <div class="posting" *ngFor="#posting of posts ">
             <posting [posting]="posting"></posting>
         </div>
 
@@ -125,135 +122,121 @@ import {ProtectedDirective} from "../../directives/protected.directive";
 `
 })
 
-export class Profile implements OnInit, OnDestroy{
+export class ProfileComponent implements OnInit, OnDestroy{
 
-    messages:Messages[];
     friends:ProfileFriend[];
-
-    user = new User();
-    username;
-
     isMe = false;
     addFriendButton=true;
-
     router:Router
-
     interval
+
+
+    userId:string;
+    private user = new User()
+    private posts:Array<Post>;
 
     constructor(
         private _router: Router,
-        private _profileService: ProfileService,
         private _routeParams:RouteParams,
-        private _friendsService:FriendsService,
-        private _chatService:ChatService) {
+        private _profileService: ProfileService,
+        private _authService:AuthService, private _timelineService:TimelineService ) {
 
-        this.username = this._routeParams.get('id');
+        this.posts = new Array<Post>();
+        this.userId = this._routeParams.get('id');
 
-        if(this.username == null){
-            this.username = localStorage.getItem('username');
+        if(this.userId == null){
             this.isMe = true;
-        }else if(this.username == localStorage.getItem('username')){
+            this.userId = this._authService.getUserId();
+        }else if(this.userId == this._authService.getUserId()){
             this.isMe = true;
         }else {
             this.isMe = false;
         }
 
-
     }
 
-    ngOnInit() {
-        var basicAuth =  localStorage.getItem('AuthKey');
-        if(basicAuth){
-            this.loadProfilInfos();
-            this.loadTimeline();
+    ngOnInit(): void {
+        this._profileService.user$
+            .subscribe((user: User) => {
+                    this.user = user;
+                    this.loadTimeline(this.user.timeline);
+                }
+            );
+        //
+        this.loadProfilInfos();
+        this.loadTimeline();
+
             //this.interval = setInterval(() => this.loadTimeline(), 2000 );
-        }
+
+        this._profileService.getUserWithID(this.userId);
+
+        this._timelineService.posts$
+            .subscribe(posts => {
+                    this.posts = posts;
+                }
+            );
     }
+
 
     ngOnDestroy() {
         clearInterval(this.interval);
     }
 
     loadProfilInfos(){
-        if(this.username){
-            this._profileService.loadProfilInfos(this.username)
-                .subscribe(
-                    (res:User) => {
-                        this.user = res;
-                        this.user.dateString = this._profileService.getDateString(this.user.birthdate);
-                        this.friends = this.user.friends;
-                    },
-                    error => {console.log(error.message);}
-                )
+        if(this._authService.isAuthenticated()){
+            this._profileService.loadProfilInfosWithID(this.userId);
         }
     }
 
 
-    loadTimeline(){
-        if(this.username){
-            this._profileService.loadTimeline(this.username)
-                .subscribe(
-                    (res:Timeline) => {this.messages = res.messages; },
-                    error => { console.log(error.message);}
-                );
+    loadTimeline(timeLineId:string){
+        if(this._authService.isAuthenticated()){
+            this._timelineService.load(timeLineId);
         }
     }
-
-
-    //loadTimeline(){
-    //    if(this.username) {
-    //        this._timelineService.loadTimeline(this.username);
-    //    }
-    //}
 
 
     postNewPosting(content:string){
-        if(this.username){
-            this._profileService.postNewPosting(this.username, content)
-                .subscribe(
-                    response => {
-                        this.loadTimeline();
-                    },
-                    error => { console.log(error.message);}
-                );
+        if(this._authService){
+            this._timelineService.postNewPosting(content);
         }
     }
 
     commentOnPosting(content:string, postId:string){
-        if(this.username){
-            this._profileService.commentOnPosting(content, postId)
-                .subscribe(
-                    response => {
-                        this.loadTimeline();
-                    },
-                    error => { console.log(error.message);}
-                );
+        if(this._authService.isAuthenticated()){
+            //this._profileService.commentOnPosting(content, postId)
+            //    .subscribe(
+            //        response => {
+            //            this.loadTimeline();
+            //        },
+            //        error => { console.log(error);}
+            //    );
         }
     }
 
     addAsFriend(){
-        if(this.username) {
-            this._friendsService.requestFriendship(this.username)
-                .subscribe(
-                    response => {
-
-                        this.addFriendButton = false;
-                    },
-                    error => { console.log(error.message);}
-                )
+        if(this._authService.isAuthenticated()) {
+            //this._friendsService.requestFriendship(this.userId)
+            //    .subscribe(
+            //        response => {
+            //
+            //            this.addFriendButton = false;
+            //        },
+            //        error => { console.log(error.message);}
+            //    )
         }
     }
 
     sendMessage(){
-        if(this.username) {
-            this._chatService.newConversation(this.username)
-                .subscribe(
-                    response => {
-                        console.log(response);
-                        this._router.navigateByUrl('/chat');
-                    },
-                    error => { console.log(error.message);}
-                )
+        if(this._authService.isAuthenticated()) {
+            //this._chatService.newConversation(this.userId)
+            //    .subscribe(
+            //        response => {
+            //            console.log(response);
+            //            this._router.navigateByUrl('/chat');
+            //        },
+            //        error => { console.log(error.message);}
+            //    )
         }
     }
 }

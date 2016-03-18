@@ -127,100 +127,100 @@ export class Friends {
         this.userid = localStorage.getItem('id');
     }
 
-    ngOnInit() {
-        if(this.auth){
-            this.loadMyFriends();
-            this.loadUnconfirmedFriends();
-        }
-    }
+    //ngOnInit() {
+    //    if(this.auth){
+    //        this.loadMyFriends();
+    //        this.loadUnconfirmedFriends();
+    //    }
+    //}
+    //
+    //loadProfilInfos(userid:string){
+    //
+    //        this._profileService.loadProfilInfosWithID(userid)
+    //            .subscribe(
+    //                (res:User) => {
+    //                    //this.user = res;
+    //                    //this.user.dateString = this._profileService.getDateString(this.user.birthdate);
+    //                    //this.friends = this.user.friends;
+    //                },
+    //                error => {console.log(error.message);}
+    //            )
+    //
+    //}
 
-    loadProfilInfos(userid:string){
+    //private loadMyFriends():void {
+    //    if(this.username){
+    //        this._profileService.loadProfilInfos(this.username)
+    //            .subscribe(
+    //                (res:User) => {
+    //                    this.myfriends = res.friends;
+    //                },
+    //                error => {console.log(error.message);}
+    //            )
+    //    }
+    //}
 
-            this._profileService.loadProfilInfosWithID(userid)
-                .subscribe(
-                    (res:User) => {
-                        //this.user = res;
-                        //this.user.dateString = this._profileService.getDateString(this.user.birthdate);
-                        //this.friends = this.user.friends;
-                    },
-                    error => {console.log(error.message);}
-                )
+    //private loadUnconfirmedFriends():void {
+    //    if(this.auth){
+    //
+    //        this.unconfirmedFriends = [];
+    //
+    //        this._friendsService.loadUnconfirmedFriends()
+    //            .subscribe(
+    //                (res: Friendship[]) => {
+    //
+    //                    res.forEach(friendship =>{
+    //                        friendship.friends.forEach(friend =>{
+    //                           if(friend.id != this.userid){
+    //                               friendship.userid = friend.id;
+    //
+    //                               this._profileService.loadProfilInfosWithID(friend.id)
+    //                                   .subscribe(
+    //                                       (res:User) => {
+    //                                           friendship.user = res;
+    //                                           this.unconfirmedFriends.push(friendship);
+    //                                       },
+    //                                       error => {console.log(error.message);}
+    //                                   )
+    //
+    //                           }
+    //                        })
+    //                    });
+    //                    console.log(this.unconfirmedFriends);
+    //
+    //
+    //                },
+    //                error => {console.log(error.message);}
+    //            );
+    //    }
+    //}
 
-    }
-
-    private loadMyFriends():void {
-        if(this.username){
-            this._profileService.loadProfilInfos(this.username)
-                .subscribe(
-                    (res:User) => {
-                        this.myfriends = res.friends;
-                    },
-                    error => {console.log(error.message);}
-                )
-        }
-    }
-
-    private loadUnconfirmedFriends():void {
-        if(this.auth){
-
-            this.unconfirmedFriends = [];
-
-            this._friendsService.loadUnconfirmedFriends()
-                .subscribe(
-                    (res: Friendship[]) => {
-
-                        res.forEach(friendship =>{
-                            friendship.friends.forEach(friend =>{
-                               if(friend.id != this.userid){
-                                   friendship.userid = friend.id;
-
-                                   this._profileService.loadProfilInfosWithID(friend.id)
-                                       .subscribe(
-                                           (res:User) => {
-                                               friendship.user = res;
-                                               this.unconfirmedFriends.push(friendship);
-                                           },
-                                           error => {console.log(error.message);}
-                                       )
-
-                               }
-                            })
-                        });
-                        console.log(this.unconfirmedFriends);
-
-
-                    },
-                    error => {console.log(error.message);}
-                );
-        }
-    }
-
-    private confirmFriendship(friendshipId:string){
-        if(this.auth) {
-            this._friendsService.confirmFriendship(friendshipId)
-                .subscribe(
-                    response => {
-                        this.loadMyFriends();
-                        this.loadUnconfirmedFriends();
-                    },
-                    error => { console.log(error.message);}
-                )
-        }
-    }
-
-    private requestFriendship(username:string){
-        if(this.auth) {
-            this._friendsService.requestFriendship(username)
-                .subscribe(
-                    response => {
-                        this.loadMyFriends();
-                        this.loadUnconfirmedFriends();
-                        this.loadSuggestedFriendship();
-                    },
-                    error => { console.log(error.message);}
-                )
-        }
-    }
+    //private confirmFriendship(friendshipId:string){
+    //    if(this.auth) {
+    //        this._friendsService.confirmFriendship(friendshipId)
+    //            .subscribe(
+    //                response => {
+    //                    this.loadMyFriends();
+    //                    this.loadUnconfirmedFriends();
+    //                },
+    //                error => { console.log(error.message);}
+    //            )
+    //    }
+    //}
+    //
+    //private requestFriendship(username:string){
+    //    if(this.auth) {
+    //        this._friendsService.requestFriendship(username)
+    //            .subscribe(
+    //                response => {
+    //                    this.loadMyFriends();
+    //                    this.loadUnconfirmedFriends();
+    //                    this.loadSuggestedFriendship();
+    //                },
+    //                error => { console.log(error.message);}
+    //            )
+    //    }
+    //}
 
     private loadSuggestedFriendship(){
 
