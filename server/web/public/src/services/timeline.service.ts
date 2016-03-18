@@ -4,77 +4,69 @@ import {Response} from "angular2/http";
 import {Headers} from "angular2/http";
 import {Http} from "angular2/http";
 import {Injectable} from "angular2/core";
-import {Dictionary} from "./common";
+import {headers} from "./common";
+import {AuthHttp} from "angular2-jwt/angular2-jwt";
+import {Observer} from "rxjs/Observer";
+
 
 @Injectable()
 export class TimelineService {
 
-    _postDictionary:Dictionary<Post>;
+    private _baseUrl:string = 'api/v1/timeline/';
+    private timelineId:string;
 
-    private username:string;
+    private _posts:Array<Post>;
+    public  posts$: Observable<Array<Post>>;
+    private _postsObserver: Observer<Array<Post>>;
 
-    constructor(public _http: Http) {
-
-        this._postDictionary = new Dictionary<Post>([]);
+    constructor(public _authHttp: AuthHttp) {
+        this.posts$ = new Observable(observer =>
+            this._postsObserver = observer).share();
     }
 
-
-    add(value: Post) {
-        this._postDictionary.addFront(value._id,value);
+    private setPosts(posts:Array<Post>){
+        this._posts = posts;
+        this._postsObserver.next(this._posts);
     }
 
-    private update(){
-       this._postDictionary.update();
-    }
+    load(timelineId: string) {
+        this.timelineId = timelineId
 
-    load(username: string) {
-        this.username = username
-        var url = 'api/timeline/' + username;
-        var headers = this.headers();
-
-        return this._http.get(url, {headers})
+        return this._authHttp.get(this._baseUrl + timelineId, { headers: headers() })
             .map((res:Response) => res.json())
             .subscribe(
-                (timeline:Timeline) => {
-                    timeline.messages.forEach( newPost =>{
-                        if(!this._postDictionary.containsKey(newPost._id)){
-                            this.add(newPost);
-                        }else{
-                            var oldPost:Post = this._postDictionary[newPost._id];
+                (timeline:pagedTimeline) => {
+                    console.log(timeline);
+                    this.setPosts(timeline.posts);
 
-                            newPost.comments.forEach(comment =>{
-                                if(typeof comment != 'undefined' && typeof comment._id != 'undefined') {
-                                    if (oldPost.containsCommentWithiD(comment._id)) {
-                                        oldPost.addComment(comment);
-                                        this.update();
-                                    }
-                                }
-                            })
-                        }
-                    });
+                    //timeline.messages.forEach( newPost =>{
+                    //    if(!this._postDictionary.containsKey(newPost._id)){
+                    //        this.add(newPost);
+                    //    }else{
+                    //        var oldPost:Post = this._postDictionary[newPost._id];
+                    //
+                    //        newPost.comments.forEach(comment =>{
+                    //            if(typeof comment != 'undefined' && typeof comment._id != 'undefined') {
+                    //                if (oldPost.containsCommentWithiD(comment._id)) {
+                    //                    oldPost.addComment(comment);
+                    //                    this.update();
+                    //                }
+                    //            }
+                    //        })
+                    //    }
+                    //});
                 },
-                error => { console.log(error.message);}
+                error => { console.log(error);}
             );
     }
 
 
+    postNewPosting(content:string):any {
 
-    headers(){
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        var basicAuth =  localStorage.getItem('AuthKey');
-        headers.append('Authorization',basicAuth);
-
-        return headers;
-    }
-
-    postNewPosting(username:string, content:string):any {
-        this.username = username
-
-        var url = 'api/timeline/' + username;
+        var url = this._baseUrl + this.timelineId;
         let body = JSON.stringify({content });
 
-        this._http.post(url, body, { headers: this.headers() })
+        this._authHttp.post(url, body, { headers: headers() })
             .map(response =>  { })
             .subscribe(
                 error => { console.log(error);
@@ -82,23 +74,39 @@ export class TimelineService {
     }
 
     commentOnPosting(content:string, postId:string):any {
-        var url = 'api/timeline/message/' + postId;
-        let body = JSON.stringify({content });
+        //var url = 'api/timeline/message/' + postId;
+        //let body = JSON.stringify({content });
+        //
+        //return this._http.post(url, body, { headers: this.headers() })
+        //    .map(response =>  {})
+        //    .subscribe(
+        //        response => {
+        //            this.load(this.username);
+        //        },
+        //        error => { console.log(error);}
+        //    );
 
-        return this._http.post(url, body, { headers: this.headers() })
-            .map(response =>  {})
-            .subscribe(
-                response => {
-                    this.load(this.username);
-                },
-                error => { console.log(error.message);}
-            );
     }
 }
 
-export class Timeline{
+export class pagedTimeline{
     _id:string;
-    messages:Post[];
+    items:{
+        begin:number;
+        ende:number;
+        limit:number;
+        total:number;
+    }
+    pages:{
+        current: number;
+        hasNext: boolean
+        hasPrev: boolean;
+        next: number
+        prev: number;
+        total: number;
+    }
+    posts:Post[];
+    timeCreated:Date;
 }
 
 export class Post{

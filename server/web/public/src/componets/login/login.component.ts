@@ -1,16 +1,11 @@
-
-
-import {contentHeaders } from '../../common/headers';
-import {autKey, authHeader } from '../../common/consts';
-
-import {usernameKey} from "../../common/consts";
-import {AuthService} from "../../services/auth.service";
 import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {Http} from "angular2/http";
 import {FORM_DIRECTIVES} from "angular2/common";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {RouterLink} from "angular2/router";
+
+import {AuthService} from "../../services/auth.service";
 
 @Component({
     selector: 'login',
@@ -31,14 +26,14 @@ import {RouterLink} from "angular2/router";
 
                     <form>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input #username type="text" class="mdl-textfield__input" placeholder="Benutzername">
+                            <input #username type="text" class="mdl-textfield__input" placeholder="Benutzername" type="text">
                             <!--<label for="comment" class="mdl-textfield__label">-->
                                <!--Benutzername-->
                             <!--</label>-->
                         </div>
 
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input #password type="text" class="mdl-textfield__input" placeholder="Password">
+                            <input #password type="text" class="mdl-textfield__input" placeholder="Password" type="password">
                              <!--<label for="comment" class="mdl-textfield__label">-->
                                <!--Password-->
                             <!--</label>-->

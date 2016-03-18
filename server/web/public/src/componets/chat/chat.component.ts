@@ -115,63 +115,63 @@ export class Chat {
     }
 
     loadConversations() {
-        if (this.username) {
-            this._chatService.loadConversations()
-                .subscribe(
-                    (res:ConversationGroup) => {
-
-                        this.myConversations = res;
-                        console.log(this.myConversations);
-
-                        this.myConversations.conversations.forEach(conversation => {
-                            conversation.authors.forEach(user => {
-                                if(!this.userDict[user.id])
-                                    this.userDict[user.id] = new User();
-                            })
-
-                            conversation.messages.forEach(message =>{
-                                if(!this.messageDict[message.id])
-                                    this.messageDict[message.id] = new Message();
-                            })
-                        })
-
-                        for (var userKey in this.userDict) {
-                            if (this.userDict.hasOwnProperty(userKey)) {
-                                if(this.userDict[userKey]._id == null){
-                                    this._profileService.loadProfilInfosWithID(userKey)
-                                        .subscribe(
-                                            user => {
-                                                this.userDict[user._id] = user;
-                                            },
-                                            error => {
-                                                console.log(error.message);
-                                            }
-                                        );
-                                }
-                            }
-                        }
-
-                        for (var messageKey in this.messageDict) {
-                            if(this.messageDict.hasOwnProperty(messageKey)){
-                                if(this.messageDict[messageKey]._id == null){
-                                    this._chatService.loadMessage(messageKey)
-                                        .subscribe(
-                                            message => {
-                                                this.messageDict[message._id] = message;
-                                            },
-                                            error => {
-                                                console.log(error.message);
-                                            }
-                                        );
-                                }
-                            }
-                        }
-                    },
-                    error => {
-                        console.log(error.message);
-                    }
-                );
-        }
+        //if (this.username) {
+        //    this._chatService.loadConversations()
+        //        .subscribe(
+        //            (res:ConversationGroup) => {
+        //
+        //                this.myConversations = res;
+        //                console.log(this.myConversations);
+        //
+        //                this.myConversations.conversations.forEach(conversation => {
+        //                    conversation.authors.forEach(user => {
+        //                        if(!this.userDict[user.id])
+        //                            this.userDict[user.id] = new User();
+        //                    })
+        //
+        //                    conversation.messages.forEach(message =>{
+        //                        if(!this.messageDict[message.id])
+        //                            this.messageDict[message.id] = new Message();
+        //                    })
+        //                })
+        //
+        //                for (var userKey in this.userDict) {
+        //                    if (this.userDict.hasOwnProperty(userKey)) {
+        //                        if(this.userDict[userKey]._id == null){
+        //                            this._profileService.loadProfilInfosWithID(userKey)
+        //                                .subscribe(
+        //                                    user => {
+        //                                        this.userDict[user._id] = user;
+        //                                    },
+        //                                    error => {
+        //                                        console.log(error.message);
+        //                                    }
+        //                                );
+        //                        }
+        //                    }
+        //                }
+        //
+        //                for (var messageKey in this.messageDict) {
+        //                    if(this.messageDict.hasOwnProperty(messageKey)){
+        //                        if(this.messageDict[messageKey]._id == null){
+        //                            this._chatService.loadMessage(messageKey)
+        //                                .subscribe(
+        //                                    message => {
+        //                                        this.messageDict[message._id] = message;
+        //                                    },
+        //                                    error => {
+        //                                        console.log(error.message);
+        //                                    }
+        //                                );
+        //                        }
+        //                    }
+        //                }
+        //            },
+        //            error => {
+        //                console.log(error.message);
+        //            }
+        //        );
+        //}
     }
 
     sendNewMessage(content:string, conversationId:string) {
