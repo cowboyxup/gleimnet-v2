@@ -17,8 +17,8 @@
 				"$date": "1722-12-01T05:00:00.000Z"
 			},
 			"description": "Anna Louisa Karsch, geborene Dürbach, genannt die Karschin war eine deutsche Dichterin. Sie war die Mutter der Dichterin Caroline Louise von Klencke und die Großmutter von Helmina von Chézy.",
-			"avatar": "assets/img/people/anna_louisa_karsch/avatar.jpg",
-			"titlePicture": "assets/img/people/anna_louisa_karsch/cover.jpg",
+			"avatar": "assets/img/people/anna_louisa_karsch/avatar.png",
+			"titlePicture": "assets/img/people/anna_louisa_karsch/cover.png",
 			"tags": [],
 			"birthplace": "Powiat Świebodziński, Polen",
 			"influenceplace": "",
@@ -46,8 +46,8 @@
 				"$date": "1750-01-28T05:00:00.000Z"
 			},
 			"description": "Maria Caroline Flachsland auch Karoline war die Ehefrau von Johann Gottfried von Herder. Sie schrieb eine Biografie ihres Mannes, redigierte und bearbeitete seine Schriften und gab sie nach seinem Tod heraus.",
-			"avatar": "assets/img/people/karoline_herder/avatar.jpg",
-			"titlePicture": "assets/img/people/karoline_herder/cover.jpg",
+			"avatar": "assets/img/people/karoline_herder/avatar.png",
+			"titlePicture": "assets/img/people/karoline_herder/cover.png",
 			"tags": [],
 			"birthplace": "Reichenweier, Elsass",
 			"influenceplace": "",
@@ -75,8 +75,8 @@
 				"$date": "1719-04-02T04:00:00.000Z"
 			},
 			"description": "Johann Wilhelm Ludwig Gleim war ein deutscher Jurist und Dichter der Aufklärungszeit.",
-			"avatar": "assets/img/people/gleim/avatar.jpg",
-			"titlePicture": "assets/img/people/gleim/cover.jpg",
+			"avatar": "assets/img/people/gleim/avatar.png",
+			"titlePicture": "assets/img/people/gleim/cover.png",
 			"tags": [],
 			"birthplace": "Falkenstein/Harz",
 			"influenceplace": "",

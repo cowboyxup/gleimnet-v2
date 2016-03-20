@@ -44,7 +44,8 @@ internals.applyRoutes = function (server, next) {
                         },
                         posts: ['profile', (done, data) => {
                             const friends = data.profile.friends.map(function (item){return item._id});
-                            const sort = Post.sortAdapter('-timeCreated')
+                            friends.push(data.profile._id);
+                            const sort = Post.sortAdapter('-timeCreated');
                             const query = {
                                 author: { $in: friends }
                             };
@@ -57,7 +58,6 @@ internals.applyRoutes = function (server, next) {
                                     console.error(err);
                                     return err;
                                 }
-                                //console.log(JSON.stringify(results, null, '\t'));
                                 return done(null, results);
                             });
                         }],
@@ -66,23 +66,88 @@ internals.applyRoutes = function (server, next) {
                             let allComments = [];
                             for (let i = 0; i < posts.length; ++i) {
                                 for (let j = 0; j < posts[i].comments.length; ++j) {
-                                    allComments.push(posts[i].comments[j]);
+                                    allComments.push(posts[i].comments[j]._id.toString());
                                 }
                             }
-                            console.log(JSON.stringify(allComments, null, '\t'));
+
+                            let clean = posts.filter(function(item) {
+                                return allComments.indexOf(item._id.toString()) === -1;
+                            });
+
+                            return done(null, clean);
+                        }],
+                        comments: ['clean', (done, data) => {
+                            const posts = data.clean;
+                            let allComments = [];
+                            for (let i = 0; i < posts.length; ++i) {
+                                for (let j = 0; j < posts[i].comments.length; ++j) {
+                                    allComments.push(Post._idClass(posts[i].comments[j]._id));
+                                }
+                            }
+                            const queryComments = {
+                                '_id': {
+                                    $in: allComments
+                                }
+                            };
+                            Post.find(queryComments, done);
                         }]
                     }, (err, data) => {
                         if (err) {
                             console.error('Failed to load data.'+err);
                             return reply(Boom.badRequest('not loaded'));
                         }
-                        return reply(data.profile);
+                        let tempPost = data.clean;
+                        let comments = data.comments;
+                        for (let i = 0; i < tempPost.length; ++i) {
+                            for (let j = 0; j < tempPost[i].comments.length; ++j) {
+                                let comment = comments.shift();
+                                comment.comments = undefined;
+                                tempPost[i].comments[j] = comment;
+                            }
+                        }
+                        return reply(tempPost);
                     });
                 }
             }]
         },
         handler: function (request, reply) {
-            return reply(request.pre.data);
+            const limit = request.query.limit;
+            const page = request.query.page;
+            const output = {
+                data: undefined,
+                pages: {
+                    current: page,
+                    prev: 0,
+                    hasPrev: false,
+                    next: 0,
+                    hasNext: false,
+                    total: 0
+                },
+                items: {
+                    limit: limit,
+                    begin: ((page * limit) - limit) + 1,
+                    end: page * limit,
+                    total: 0
+                }
+            };
+
+            output.data = request.pre.data.slice((output.items.begin-1),output.items.end);
+            output.items.total = request.pre.data.length;
+
+            // paging calculations
+            output.pages.total = Math.ceil(output.items.total / limit);
+            output.pages.next = output.pages.current + 1;
+            output.pages.hasNext = output.pages.next <= output.pages.total;
+            output.pages.prev = output.pages.current - 1;
+            output.pages.hasPrev = output.pages.prev !== 0;
+            if (output.items.begin > output.items.total) {
+                output.items.begin = output.items.total;
+            }
+            if (output.items.end > output.items.total) {
+                output.items.end = output.items.total;
+            }
+
+            return reply(output);
         }
     }]);
     next();
