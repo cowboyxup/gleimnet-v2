@@ -15,42 +15,42 @@ import {AuthService} from "../../services/auth.service";
         FORM_DIRECTIVES
     ],
     template: `
-        <div class="mdl-cell mdl-cell--4-col centeredLogin">
-            <div class="demo-card-square mdl-card mdl-shadow--2dp">
-                <div class="mdl-card__title mdl-card--expand">
-                    <h3>Login</h3>
-                    <!--<h2>{{message}}</h2>-->
-                </div>
-
-                <div *ngIf="!authenticated" class="mdl-card__supporting-text">
-
-                    <form>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input #username type="text" class="mdl-textfield__input" placeholder="Benutzername" type="text">
-                            <!--<label for="comment" class="mdl-textfield__label">-->
-                               <!--Benutzername-->
-                            <!--</label>-->
+<div class="row">
+    <div class="centeredLogin">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title activator grey-text text-darken-4">
+                    Login
+                </span>
+                <!--<h2>{{message}}</h2>-->
+                
+                <form>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input #username type="text" class="" type="text">
+                            <label for="password">Benutzername</label>
                         </div>
-
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input #password type="text" class="mdl-textfield__input" placeholder="Password" type="password">
-                             <!--<label for="comment" class="mdl-textfield__label">-->
-                               <!--Password-->
-                            <!--</label>-->
+                    </div>
+                    
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input #password type="text" class="" placeholder="Password" type="password">
+                            <label for="password">Password</label>
                         </div>
+                    </div>
 
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-                            (click)="login(username.value, password.value );" type="button">
+
+                    <a class="waves-effect waves-light btn"
+                        (click)="login(username.value, password.value );" type="button">
                             Anmelden
-                        </button>
-                    </form>
-                </div>
-
-
-
+                    </a>
+                </form>
             </div>
+
         </div>
-        `
+    </div>
+ </div>
+`
 })
 
 export class Login {

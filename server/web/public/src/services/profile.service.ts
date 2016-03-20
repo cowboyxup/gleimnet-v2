@@ -4,12 +4,16 @@ import {Headers} from "angular2/http";
 import {Http} from "angular2/http";
 import {Response} from "angular2/http";
 
-import {Observable} from 'rxjs/Observable';
-import {Subject } from 'rxjs/Subject';
+import 'rxjs/Observable';
 import {headers} from "./common";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
-import {Observer} from "rxjs/Observer";
 import Dictionary from "../common/Dictionary";
+import {Observable} from "rxjs/Observable";
+import {Observer} from "rxjs/Observer";
+import {BehaviorSubject} from "rxjs/Rx";
+import {Subject} from "rxjs/Subject";
+
+
 
 @Injectable()
 export class ProfileService {
@@ -35,13 +39,32 @@ export class ProfileService {
         this._userObserver.next(this._user);
     }
 
-    getUserWithID(id:string){
+
+    getUserForId(id:string):Subject<User>{
+
+        var currentUser: Subject<User> = new BehaviorSubject<User>(null);
 
 
+        let http = this._http;
+        let baseUrl = this.baseUrl;
+
+            http.get(baseUrl  + id, { headers: headers() })
+                .map((res:Response) => res.json())
+                .subscribe(
+                    (res:User) => {
+                        currentUser.next(res);
+                        currentUser.complete();
+                    },
+                    error => {
+                        console.log(error);
+                        currentUser.complete();
+                    }
+                );
+
+        return currentUser;
     }
 
     loadProfilInfosWithID(id:string){
-
 
          this._http.get(this.baseUrl + id, { headers: headers() })
             .map((res:Response) => res.json())

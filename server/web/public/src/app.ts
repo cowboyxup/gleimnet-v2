@@ -32,37 +32,43 @@ import {CORE_DIRECTIVES} from "angular2/common";
 import {ProfileComponent} from "./componets/profile.component";
 import {ProfileService} from "./services/profile.service";
 
+import {servicesInjectables} from "./services/chat/services";
+import {utilInjectables} from "./util/utilInjectables";
+import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
+
 declare var System:any;
 
 @Component({
     selector: 'my-app',
-    directives:[ROUTER_DIRECTIVES, CORE_DIRECTIVES],
+    directives:[
+        ROUTER_DIRECTIVES,
+        CORE_DIRECTIVES,
+        UnreadMessagesCount
+    ],
     template: `
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
-            <!-- Title -->
-            <span class="mdl-layout-title">Gleim.net</span>
-            <!-- Add spacer, to align navigation to the right -->
-            <div class="mdl-layout-spacer"></div>
-            <!-- Navigation. We hide it in small screens. -->
-            <nav class="mdl-navigation mdl-layout--large-screen-only">
-                <a class="mdl-navigation__link" [routerLink]="['/Stream']" >Steam</a>
-                <a class="mdl-navigation__link" [routerLink]="['/MyProfile']" >Me</a>
-                <a class="mdl-navigation__link" [routerLink]="['/Chat']" >Nachrichten</a>
-                <a class="mdl-navigation__link" [routerLink]="['/Friends']">Freunde</a>
-                <a class="mdl-navigation__link" *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a>
-                <a class="mdl-navigation__link" *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a>
-            </nav>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">Gleim.net</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a [routerLink]="['/Stream']" >Steam</a></li>
+                <li><a [routerLink]="['/MyProfile']" >Me</a></li>
+                <li><a [routerLink]="['/Chat']" >
+                    Nachrichten <unreadMessagesCount></unreadMessagesCount>
+                </a></li>
+                <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
+                <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
+            </ul>
         </div>
-    </header>
-
-    <main class="mdl-layout__content">
-        <router-outlet ></router-outlet>
-    </main>
+    </nav>
 </div>
+<main class="mdl-layout__content">
+    <router-outlet ></router-outlet>
+</main>
         `
 })
+
 
 @RouteConfig([
     {
@@ -135,6 +141,8 @@ bootstrap(MyApp,
         HTTP_PROVIDERS,
         AuthService,
         ProfileService,
+        servicesInjectables,
+        utilInjectables,
         provide(
             LocationStrategy,
             {useClass: HashLocationStrategy}
