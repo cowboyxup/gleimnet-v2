@@ -24,6 +24,29 @@ const Post = BaseModel.extend({
             }
             return callback(null, results.updatePost);
         });
+    },
+    addLike: function(userId, callback) {
+        const self = this;
+        Async.auto({
+            updatePost: [function (done, results) {
+                const pushauthor = {
+                    _id: BaseModel._idClass(userId)
+                };
+                const query = {
+                    $addToSet: {
+                        likes: {
+                            $each: [pushauthor]
+                        }
+                    }
+                };
+                Post.findByIdAndUpdate(self._id,query,{safe: true, upsert: true, new: true, multi: true},done);
+            }]
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.updatePost);
+        });
     }
 });
 
@@ -35,6 +58,9 @@ Post.schema = Joi.object().keys({
     timeCreated: Joi.date().required(),
     content: Joi.string().required(),
     comments: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex().required()
+    })),
+    likes: Joi.array().items(Joi.object().keys({
         _id: Joi.string().length(24).hex().required()
     }))
 });
@@ -50,7 +76,8 @@ Post.create = function (userId, content, callback) {
                 author: self._idClass(userId),
                 timeCreated: new Date(),
                 content: content,
-                comments: []
+                comments: [],
+                likes: []
             };
             self.insertOne(document, (done));
         }

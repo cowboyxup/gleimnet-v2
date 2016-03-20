@@ -63,6 +63,45 @@ internals.applyRoutes = function (server, next) {
             return reply(comment);
         }
     }]);
+    server.route([{
+        method: 'POST',
+        path: '/post/{_id}/like',
+        config: {
+            tags: ['api'],
+            auth: {
+                strategy: 'jwt'
+            },
+            validate: {
+                params: {
+                    _id: Joi.string().length(24).hex().required()
+                },
+                payload: {
+                }
+            },
+            pre: [{
+                assign: 'post',
+                method: function(request, reply) {
+                    Post.findById(request.params._id, (err, post) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!post) {
+                            return reply(Boom.notFound('Post not found.'));
+                        }
+                        return reply(post);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            request.pre.post.addLike(request.auth.credentials._id, (err, post) => {
+                if (err) {
+                    return reply(err);
+                }
+                return reply({ message: 'Success.' });
+            });
+        }
+    }]);
     next();
 };
 exports.register = function (server, options, next) {
