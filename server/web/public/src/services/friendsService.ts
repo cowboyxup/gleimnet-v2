@@ -1,77 +1,38 @@
 import {Injectable} from 'angular2/core';
-import {Headers} from "angular2/http";
-
-import {Http} from "angular2/http";
-import {Response} from "angular2/http";
 
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
-import {User} from "../services/profile.service";
+import {AuthHttp} from "angular2-jwt/angular2-jwt";
+import {headers} from "./common";
+import {Response} from "angular2/http";
+import {Paged, User} from "../models";
 
 
 @Injectable()
 export class FriendsService {
 
-    constructor(private _http: Http) {}
+    baseUrl:string = "api/v1/friends";
+    searchedFriends:Subject<Array<User>> = new Subject<Array<User>>();
 
-    headers():Headers{
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        var basicAuth =  localStorage.getItem('AuthKey');
-        headers.append('Authorization',basicAuth);
 
-        return headers;
+    constructor(private _http: AuthHttp) {}
+
+
+    findNewFriend(name:string) {
+        if(name!="") {
+            this._http.get(this.baseUrl + "?search=" + name, {headers: headers()})
+                .map((res:Response) => res.json())
+                .subscribe(
+                    (res:Paged<User>) => {
+                        console.log(res);
+                        this.searchedFriends.next(res.data);
+                    }
+                );
+        }
     }
 
+    requestFriendship(userId:string) {
 
-    requestFriendship(username:string):any{
-
-        var url = 'api/friends';
-        var headers = this.headers();
-        let body = JSON.stringify({username });
-
-        return this._http.post(url,body, {headers})
-            .map(res => {
-                    console.log(res);
-                }
-            );
-    }
-
-    loadUnconfirmedFriends():any {
-        var url = '/api/friends/my/unconfirmed';
-        var headers = this.headers();
-
-        return this._http.get(url, {headers})
-            .map(
-                (res:Response) => res.json(),
-                error => {error}
-            );
-    }
-
-    confirmFriendship(friendshipId:String):any {
-        console.log(friendshipId);
-        var url = '/api/friends/' + friendshipId;
-        var headers = this.headers();
-        let activate = true;
-        let body = JSON.stringify({activate });
-
-        return this._http.post(url,body, {headers})
-            .map(res => {
-                    console.log(res);
-                }
-            );
-    }
-
-    findNewFriend(friendName:String):any {
-        var url = '/api/friends?username=' + friendName;
-        var headers = this.headers();
-
-        return this._http.get(url, {headers})
-            .map(
-                (res:Response) => res.json(),
-                error => {
-                    error
-                });
     }
 }
 

@@ -1,26 +1,22 @@
 import {Component} from 'angular2/core';
 import {OnInit} from "angular2/core";
-import {AfterViewChecked} from "angular2/core";
 import {OnDestroy} from "angular2/core";
-import {RouterLink} from "angular2/router";
-import {Inject} from "angular2/core";
 import {RouteParams,RouteData} from 'angular2/router';
-import {ROUTER_DIRECTIVES} from 'angular2/router';
 import {Router} from "angular2/router";
 
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 
-import {ProfileService, User,ProfileFriend,Messages, Timeline} from "../services/profile.service";
+import {ProfileService,ProfileFriend} from "../services/profile.service";
 import {ChatService} from "../services/chat.service";
 import {FriendsService} from "../services/friendsService";
 import {TimelineService} from "../services/timeline.service";
 import {Post} from "../services/timeline.service";
 import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
-import {AuthHttp} from "angular2-jwt/angular2-jwt";
 import {AuthService} from "../services/auth.service";
 import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
+import {User} from "../models";
 
 @Component({
     selector: 'Profile',
@@ -35,17 +31,16 @@ import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
     template: `
         <div protected>
 
-<div class="titelImage" style="background-image:url('assets/{{user.titlePicture}}')">
+<div class="titelImage" style="background-image:url('assets/img/titelImage/schiller.png')">
 
-    <img *ngIf="user.username" class="thumbnail profilimage" src="assets/{{user.avatar}}"
+    <img *ngIf="user.avatar" class="thumbnail profilimage" src="assets/{{user.avatar}}"
                  alt="...">
-
 </div>
 
     <div class="profile_name_box card">
         <div class="mdl-card__supporting-text">
         <h4>
-            {{user.givenName}} {{user.username}}
+            {{user.givenName}} {{user.nickname}}
         </h4>
         <div class="row">
             <button *ngIf="addFriendButton && !isMe" type="button"
@@ -79,7 +74,7 @@ import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
                 <h5>Freunde:</h5>
                 <div class="col-md-4 friendImage" *ngFor="#Friend of friends">
                     <div class="mdl-color-text--grey-700 posting_header meta">
-                        <a class="" href="#/profile/{{Friend.username}}" role="button">
+                        <a class="" href="#/profile/{{Friend.givenName}}" role="button">
                             <img src="img/profilimages/64x64/{{Friend.avatar}}.png" class="round_avatar">
                         </a>
                         <div class="comment__author">
@@ -132,9 +127,6 @@ import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
 
     </div>
 </div>
-
-<hr>
-
 </div>
 `
 })
@@ -150,14 +142,20 @@ export class ProfileComponent implements OnInit, OnDestroy{
     isMe = false;
     timelineAvailable:boolean = false;
     userId:string;
-    private user = new User()
+    private user=new User("");
     private posts:Array<Post>;
+
+    tp:string;
 
     constructor(
         private _router: Router,
         private _routeParams:RouteParams,
         private _profileService: ProfileService,
-        private _authService:AuthService, private _timelineService:TimelineService ) {
+        private _authService:AuthService,
+        private _timelineService:TimelineService,
+        private _chatService:ChatService) {
+
+        this._chatService.loadConversations();
 
         this.posts = new Array<Post>();
         this.userId = this._routeParams.get('id');
@@ -177,6 +175,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
         this._profileService.user$
             .subscribe((user: User) => {
                     this.user = user;
+                    this.tp = user.titlePicture;
                     this.loadTimeline(this.user.timeline);
                     // this.interval = setInterval(() => this.loadTimeline(this.user.timeline), 2000 );
                 }

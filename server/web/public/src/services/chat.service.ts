@@ -6,12 +6,13 @@ import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 import {Http} from "angular2/http";
 import {headers} from "./common";
+import {AuthHttp} from "angular2-jwt/angular2-jwt";
 
 
 @Injectable()
 export class ChatService {
 
-    constructor(public _http: Http) {
+    constructor(public _http: AuthHttp) {
     }
 
 
@@ -26,11 +27,13 @@ export class ChatService {
 
     loadConversations() {
 
-        var url = 'api/conversations';
+        var url = '/api/v1/conversations';
 
         return this._http.get(url, { headers: headers() })
             .map((responseData) => {
-                return responseData.json();
+                responseData.json();
+            }).subscribe(res =>{
+                console.log(res);
             });
     }
 

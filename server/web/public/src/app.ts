@@ -35,6 +35,7 @@ import {ProfileService} from "./services/profile.service";
 import {servicesInjectables} from "./services/chat/services";
 import {utilInjectables} from "./util/utilInjectables";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
+import {ChatService} from "./services/chat.service";
 
 declare var System:any;
 
@@ -141,6 +142,7 @@ bootstrap(MyApp,
         HTTP_PROVIDERS,
         AuthService,
         ProfileService,
+        ChatService,
         servicesInjectables,
         utilInjectables,
         provide(

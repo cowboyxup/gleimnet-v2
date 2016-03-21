@@ -25,29 +25,37 @@ import {AuthService} from "../../services/auth.service";
     ],
 
     template: `
-    <div protected>
+<div protected class="container">
+    <div class="row">
 
-     <div  class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col stream_form">
-        <form>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-               <input #newPosting
-                       (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
-                       type="text" class="mdl-textfield__input">
-                <label for="comment" class="mdl-textfield__label">
-                    Was bewegt Sie?
-                </label>
+     
+        <div class="card col s12">
+            <div class="card-content">
+            <form class="row">
+                <span class="input-field col s10">
+                    <input #newPosting
+                           (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
+                           type="text" class="mdl-textfield__input">
+                    <label for="comment">
+                        Was bewegt Sie?
+                    </label>
+                </span>
+                <span class="input-group-btn col s1">
+                    <button class="waves-effect waves-light btn send_Button"
+                        (click)="postNewPosting(newPosting.value); newPosting.value='' ">
+                        <i class="large material-icons">send</i>
+                    </button>
+                 </span>
+            </form>
             </div>
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
-                (click)="postNewPosting(newPosting.value); newPosting.value=''">
-                <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
-            </button>
-        </form>
-     </div>
+        </div>
+    </div>   
+       
 
     <div class="posting" *ngFor="#posting of myArray ">
         <posting [posting]="posting"> </posting>
     </div>
-    </div>
+</div>
 `
 
 })
@@ -61,7 +69,7 @@ export class Stream implements OnInit,OnDestroy{
 
     constructor(private _streamService: StreamService,
                 private _authService:AuthService) {
-
+        
     }
 
     ngOnInit() {

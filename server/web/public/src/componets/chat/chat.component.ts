@@ -6,8 +6,7 @@ import {ThreadsService} from "../../services/chat/ThreadsService";
 import {MessagesService} from "../../services/chat/MessagesService";
 import {ChatExampleData} from "./ChatExampleData";
 import {ProtectedDirective} from "../../directives/protected.directive";
-
-
+import {ChatService} from "../../services/chat.service";
 
 
 @Component({

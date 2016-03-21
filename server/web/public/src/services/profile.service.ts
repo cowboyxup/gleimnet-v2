@@ -1,7 +1,4 @@
 import {Injectable} from 'angular2/core';
-import {Headers} from "angular2/http";
-
-import {Http} from "angular2/http";
 import {Response} from "angular2/http";
 
 import 'rxjs/Observable';
@@ -12,6 +9,7 @@ import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
 import {BehaviorSubject} from "rxjs/Rx";
 import {Subject} from "rxjs/Subject";
+import {User} from "../models";
 
 
 
@@ -114,21 +112,7 @@ export class ProfileService {
     }
 }
 
-export class User{
-    _id:  string;
-    avatar:  string;
-    birthdate: string;
-    birthplace: string;
-    description:  string;
-    friends: string[];
-    givenName: string;
-    influenceplace:  string;
-    nickname: string;
-    tags:  string[];
-    timeCreated:  string;
-    timeline:  string;
-    titlePicture:  string;
-}
+
 
 export interface ProfileFriend{
     _id: string;

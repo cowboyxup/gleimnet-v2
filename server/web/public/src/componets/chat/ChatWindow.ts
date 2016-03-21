@@ -23,13 +23,13 @@ import {ThreadsService} from "../../services/chat/ThreadsService";
        [ngClass]="{'base-sent': !incoming, 'base-receive': incoming}">
     <div class="card-content">
     <div class="card-title activator grey-text text-darken-4">
-        <span class="avatar_left" *ngIf="!incoming">
+        <span class="avatar_left" *ngIf="incoming">
             <img class="round_avatar" src="{{message.author.avatarSrc}}">
         </span>  
         
         <span class = "message_auther">{{message.author.name}} • {{message.sentAt | fromNow}}</span>
         
-        <span class="avatar_right" *ngIf="incoming">
+        <span class="avatar_right" *ngIf="!incoming">
             <img class="round_avatar" src="{{message.author.avatarSrc}}">
         </span>
     
@@ -59,7 +59,7 @@ export class ChatMessage implements OnInit {
                 (user:User) => {
                     this.currentUser = user;
                     if (this.message.author && user) {
-                        this.incoming = this.message.author.id !== user.id;
+                        this.incoming = this.message.author._id !== user._id;
                     }
                 });
     }

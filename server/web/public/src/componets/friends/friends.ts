@@ -1,15 +1,10 @@
-
-
 import {FriendsService} from "../../services/friendsService";
 import {ProfileService} from "../../services/profile.service";
-import {User} from "../../services/profile.service";
 import {Friendship} from "../../services/friendsService";
-import {SearchResult} from "../../services/friendsService";
 import {Component} from "angular2/core";
-import {RouteParams} from "angular2/router";
 import {ProtectedDirective} from "../../directives/protected.directive";
-
-
+import {AuthService} from "../../services/auth.service";
+import {User} from "../../models";
 
 @Component({
     selector: 'Friends',
@@ -18,147 +13,141 @@ import {ProtectedDirective} from "../../directives/protected.directive";
     ],
 
     template: `
-    <div protected>
-<div class="container col-md-3">
-
-
-    <h4>Freunde:</h4>
-    <div class="media post" *ngFor="#Friend of myfriends">
-        <div class="media-left">
-            <a href="#/profile/{{Friend.username}}">
-                <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
-            </a>
-        </div>
-        <div class="media-body">
-            <a href="#/profile/{{Friend.username}}">
-                <h4 class="media-heading">{{Friend.surename}}</h4>
-            </a>
-            <a (click)="removeFriend(Friend)">Freundschaft beenden</a>
-        </div>
-    </div>
-
-</div>
-
-
-<div class="container col-md-9 timeline">
-
-    <div >
-        <!--<div *ngIf="unconfirmedFriends != null">-->
-
-        <h4>Freundschaftsanfragen:</h4>
-
-        <div class="media post" *ngFor="#Friendship of unconfirmedFriends">
-            <div class="media-left">
-                <a href="#/profile/{Friendship.user.username}}">
-                    <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friendship.user.avatar}}.png">
-                </a>
-            </div>
-            <div class="media-body">
-                <h4 class="media-heading">{{Friendship.user.givenName}} {{Friendship.user.surename}}</h4>
-                <p>
-                    {{Friendship.user.description}}
-                </p>
-                <a (click)="confirmFriendship(Friendship._id)">als Freund hinzufügen</a>
+<div protected class="row">
+    <div class="col s3">
+        <div class="card">
+            <div class="card-content">
+                <h4>Freunde:</h4>
+                <div class="media post" *ngFor="#Friend of myfriends">
+                    <div class="media-left">
+                        <a href="#/profile/{{Friend.username}}">
+                            <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <a href="#/profile/{{Friend.username}}">
+                            <h4 class="media-heading">{{Friend.surename}}</h4>
+                        </a>
+                        <a (click)="removeFriend(Friend)">Freundschaft beenden</a>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <hr>
     </div>
-
-
-    <h4>Freunde suchen:</h4>
-
-    <div class="row">
-        <div class="col-lg-6 timelineWriteSomeThing">
-            <div class="input-group">
-                <input #friendname
-                       (keyup.enter)="findNewFriend(friendname.value); friendname.value=''"
-                       type="text" class="form-control" placeholder="Name des Freundes">
-                        <span class="input-group-btn">
-                            <button (click)="findNewFriend(friendname.value); friendname.value=''"
-                                    class="btn btn-default" type="button">post
+    <div class="col s9">
+        <div class="card">
+            <div class="card-content">
+                <h4>Freundschaftsanfragen:</h4>
+                <div class="media post" *ngFor="#Friendship of unconfirmedFriends">
+                    <div class="media-left">
+                        <a href="#/profile/{Friendship.user.username}}">
+                            <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friendship.user.avatar}}.png">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">{{Friendship.user.givenName}} {{Friendship.user.surename}}</h4>
+                        <p>
+                            {{Friendship.user.description}}
+                        </p>
+                        <a (click)="confirmFriendship(Friendship._id)">als Freund hinzufügen</a>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h4>Freunde suchen:</h4>
+                
+                    <form class="row">
+                        <span class="input-field col s10">
+                            <input #friendname
+                                   (keyup.enter)="findNewFriend(friendname.value); friendname.value=''"
+                                   type="text" class="form-control">
+                            <label for="comment">
+                                Name des Freundes
+                            </label>
+                        </span>
+                        <span class="input-group-btn col s1">
+                            <button class="waves-effect waves-light btn send_Button"
+                                (click)="findNewFriend(friendname.value); friendname.value=''">
+                                <i class="large material-icons">search</i>
                             </button>
                         </span>
-            </div>
-            <!-- /input-group -->
-        </div>
-        <!-- /.col-lg-6 -->
-    </div>
-    <!-- /.row -->
+                    </form>
+                    
+                    
+                    <div class="card" *ngFor="#user of searchedFriends">
+                        <div class="card-content">
+    
+                            <span class="card-title activator grey-text text-darken-4">
+                                <a>
+                                
 
-
-    <div class="media post" *ngFor="#Friend of searchedFriends">
-        <div class="media-left">
-            <a href="/profile/{{Friend.username}}">
-                <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
-            </a>
-        </div>
-        <div class="media-body">
-            <a href="#/profile/{{Friend.username}}">
-                <h4 class="media-heading">{{Friend.givenName}} {{Friend.surename}}</h4>
-            </a>
-            <p>{{Friend.description}}</p>
-            <a (click)="confirmFriendship(Friend)">als Freund hinzufügen</a>
+                                    <img class="round_avatar48 " alt="" src="assets/{{user.avatar}}">
+                                    {{user.givenName}}
+                                </a>
+                            </span>
+      
+                            <div class="">
+                                <p>{{user.description}}</p>
+                                <a (click)="requestFriendship(user._id)">als Freund hinzufügen</a>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+            <div>
         </div>
     </div>
-</div>
-</div>
-    `,
+</div>`,
     providers:[FriendsService, ProfileService]
 })
 
 export class Friends {
 
-    auth:string;
-    private username;
-    private userid:string;
-
-    myUser:User;
-
     myfriends:Friend[];
     unconfirmedFriends:Friendship[] = [];
-    searchedFriends:User[];
 
-    constructor(private _routeParams:RouteParams,
-                private _friendsService: FriendsService,
-                private _profileService: ProfileService) {
-        this.auth = localStorage.getItem('AuthKey');
-        this.username = localStorage.getItem('username');
-        this.userid = localStorage.getItem('id');
+    searchedFriends:Array<User>;
+
+    constructor(private _friendsService: FriendsService,
+                private _authService:AuthService) {
+
+        this._friendsService.searchedFriends.subscribe((users:Array<User>)=>{
+            this.searchedFriends=users;
+        });
+        
     }
 
-    //ngOnInit() {
-    //    if(this.auth){
-    //        this.loadMyFriends();
-    //        this.loadUnconfirmedFriends();
-    //    }
-    //}
-    //
-    //loadProfilInfos(userid:string){
-    //
-    //        this._profileService.loadProfilInfosWithID(userid)
-    //            .subscribe(
-    //                (res:User) => {
-    //                    //this.user = res;
-    //                    //this.user.dateString = this._profileService.getDateString(this.user.birthdate);
-    //                    //this.friends = this.user.friends;
-    //                },
-    //                error => {console.log(error.message);}
-    //            )
-    //
-    //}
+    ngOnInit() {
+       if(this._authService.isAuthenticated()){
+           this.loadMyFriends();
+           //this.loadUnconfirmedFriends();
+       }
+    }
 
-    //private loadMyFriends():void {
-    //    if(this.username){
-    //        this._profileService.loadProfilInfos(this.username)
-    //            .subscribe(
-    //                (res:User) => {
-    //                    this.myfriends = res.friends;
-    //                },
-    //                error => {console.log(error.message);}
-    //            )
-    //    }
-    //}
+    private findNewFriend(friendName:string){
+        if(this._authService.isAuthenticated()){
+            this._friendsService.findNewFriend(friendName);
+        }
+    }
+
+    private requestFriendship(userId:string){
+        if(this._authService.isAuthenticated()){
+            this._friendsService.requestFriendship(userId);
+        }
+    }
+    
+    private loadMyFriends():void {
+        if(this._authService.isAuthenticated()){
+           // this._friendsService.loadProfilInfos(this.username)
+           //     .subscribe(
+           //         (res:User) => {
+           //             this.myfriends = res.friends;
+           //         },
+           //         error => {console.log(error.message);}
+           //     )
+       }
+    }
 
     //private loadUnconfirmedFriends():void {
     //    if(this.auth){
@@ -195,7 +184,7 @@ export class Friends {
     //    }
     //}
 
-    //private confirmFriendship(friendshipId:string){
+    // private confirmFriendship(friendshipId:string){
     //    if(this.auth) {
     //        this._friendsService.confirmFriendship(friendshipId)
     //            .subscribe(
@@ -206,38 +195,15 @@ export class Friends {
     //                error => { console.log(error.message);}
     //            )
     //    }
-    //}
+    // }
     //
-    //private requestFriendship(username:string){
-    //    if(this.auth) {
-    //        this._friendsService.requestFriendship(username)
-    //            .subscribe(
-    //                response => {
-    //                    this.loadMyFriends();
-    //                    this.loadUnconfirmedFriends();
-    //                    this.loadSuggestedFriendship();
-    //                },
-    //                error => { console.log(error.message);}
-    //            )
-    //    }
-    //}
+
 
     private loadSuggestedFriendship(){
 
     }
 
-    private findNewFriend(friendName:string){
-        if(this.auth) {
-            this._friendsService.findNewFriend(friendName)
-                .subscribe(
-                    (response:SearchResult) => {
-                        this.searchedFriends = response.data;
-                    },
-                    error => { console.log(error.message);
-                    }
-                )
-        }
-    }
+    
 
 
     public removeFriend(){

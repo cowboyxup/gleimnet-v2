@@ -1,13 +1,12 @@
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 import {Response} from "angular2/http";
-import {Headers} from "angular2/http";
-import {Http} from "angular2/http";
 import {Injectable} from "angular2/core";
 import {headers} from "./common";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
 import {Observer} from "rxjs/Observer";
 import {ProfileService} from "./profile.service";
+import {User} from "../models";
 
 
 @Injectable()
@@ -32,7 +31,7 @@ export class TimelineService {
             post =>{
                 if(post.authorName == null){
                     this._profileService.getUserForId(post.author)
-                        .subscribe(user =>{
+                        .subscribe((user:User) =>{
                             if(user != null){
                                 post.authorName = user.givenName;
                             }
@@ -53,7 +52,7 @@ export class TimelineService {
             .map((res:Response) => res.json())
             .subscribe(
                 (timeline:pagedTimeline) => {
-                    console.log(timeline);
+                    //console.log(timeline);
 
 
                     this.setPosts(timeline.posts);
