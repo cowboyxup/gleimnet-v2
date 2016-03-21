@@ -71,6 +71,13 @@ const manifest = {
         },
         {
             plugin: {
+                register: 'susie',
+                options: {
+                }
+            }
+        },
+        {
+            plugin: {
                 register: 'hapi-mongo-models',
                 options: {
                     mongodb: Config.get('/hapiMongoModels/mongodb'),
@@ -129,6 +136,19 @@ const manifest = {
         {
             plugin: {
                 register: './server/admin/v1/saved',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/admin/v1/export',
                 options: {
                 }
             },
@@ -220,6 +240,32 @@ const manifest = {
         {
             plugin: {
                 register: './server/api/v1/conversations',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/api/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/api/v1/meetings',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/api/v1'
+                }
+            }
+        },
+        {
+            plugin: {
+                register: './server/api/v1/stream',
                 options: {
                 }
             },

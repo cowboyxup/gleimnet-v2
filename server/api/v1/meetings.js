@@ -11,12 +11,11 @@ const internals = {};
 internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
-    const Conversation = server.plugins['hapi-mongo-models'].Conversation;
-    const Message = server.plugins['hapi-mongo-models'].Message;
+    const Meeting = server.plugins['hapi-mongo-models'].Meeting;
 
     server.route([{
         method: 'GET',
-        path: '/conversations',
+        path: '/meetings',
         config: {
             tags: ['api'],
             auth: {
@@ -24,41 +23,41 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
                 query: {
-                    sort: Joi.string().default('-timeUpdated'),
+                    sort: Joi.string().default('-time'),
                     limit: Joi.number().default(20),
                     page: Joi.number().default(1)
                 }
             },
             pre: [{
-                assign: 'conversations',
+                assign: 'meetings',
                 method: function(request, reply) {
                     const query = {
-                        authors: { $elemMatch:{_id: Conversation._idClass(request.auth.credentials._id)}}
+                        participants: { $elemMatch:{_id: Meeting._idClass(request.auth.credentials._id)}}
                     };
-                    const fields = '_id authors timeCreated timeUpdated';
+                    const fields = '';
                     const sort = request.query.sort;
                     const limit = request.query.limit;
                     const page = request.query.page;
 
-                    Conversation.pagedFind(query, fields, sort, limit, page, (err, conversations) => {
+                    Meeting.pagedFind(query, fields, sort, limit, page, (err, meetings) => {
                         if (err) {
                             return reply(err);
                         }
-                        if (!conversations) {
+                        if (!meetings) {
                             return reply(Boom.notFound('Document not found.'));
                         }
-                        return reply(conversations);
+                        return reply(meetings);
                     });
                 }
             }]
         },
         handler: function (request, reply) {
-            return reply(request.pre.conversations);
+            return reply(request.pre.meetings);
         }
     }]);
     server.route([{
         method: 'GET',
-        path: '/conversations/{_id}',
+        path: '/meeting/{_id}',
         config: {
             tags: ['api'],
             auth: {
@@ -67,36 +66,30 @@ internals.applyRoutes = function (server, next) {
             validate: {
                 params: {
                     _id: Joi.string().length(24).hex().required()
-                },
-                query: {
-                    limit: Joi.number().default(20),
-                    page: Joi.number().default(1)
                 }
             },
             pre: [{
-                assign: 'conversation',
+                assign: 'meeting',
                 method: function(request, reply) {
-                    const limit = request.query.limit;
-                    const page = request.query.page;
-                    Conversation.findByIdAndPaged(request.params._id, limit, page, (err, timeline) => {
+                    Meeting.findById(request.params._id, (err, meeting) => {
                         if (err) {
                             return reply(err);
                         }
-                        if (!timeline) {
+                        if (!meeting) {
                             return reply(Boom.notFound('Document not found.'));
                         }
-                        reply(timeline);
+                        reply(meeting);
                     });
                 }
             }]
         },
         handler: function (request, reply) {
-            reply (request.pre.conversation);
+            reply (request.pre.meeting);
         }
     }]);
     server.route([{
         method: 'POST',
-        path: '/conversations/{_id}',
+        path: '/meetings/{_id}',
         config: {
             tags: ['api'],
             auth: {
@@ -107,48 +100,37 @@ internals.applyRoutes = function (server, next) {
                     _id: Joi.string().length(24).hex().required()
                 },
                 payload: {
-                    content: Joi.string().required()
+                    confirm: Joi.boolean().required()
                 }
             },
             pre: [{
                 assign: 'conversation',
                 method: function(request, reply) {
-                    Conversation.findById(request.params._id, (err, conversation) => {
+                    Meeting.findById(request.params._id, (err, meeting) => {
                         if (err) {
                             return reply(err);
                         }
-                        if (!conversation) {
+                        if (!meeting) {
                             return reply(Boom.notFound('Conversation not found.'));
                         }
-                        return reply(conversation);
-                    });
-                }
-            },{
-                assign: 'message',
-                method: function (request, reply) {
-                    const userid = request.auth.credentials._id;
-                    Message.create(userid, request.payload.content, (err, message) => {
-                        if (err) {
-                            return reply(Boom.badRequest('Message not created'));
-                        }
-                        return reply(message);
+                        return reply(meeting);
                     });
                 }
             }
             ]
         },
         handler: function (request, reply) {
-            request.pre.conversation.addMessage(request.auth.credentials._id, request.pre.message, (err, conversation) => {
+            request.pre.meeting.confirm(request.auth.credentials._id, (err, meeting) => {
                 if (err) {
                     return reply(err);
                 }
-                return reply(request.pre.message);
+                return reply(meeting);
             });
         }
     }]);
     server.route([{
         method: 'POST',
-        path: '/conversations',
+        path: '/meeting',
         config: {
             tags: ['api'],
             auth: {
@@ -156,49 +138,39 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
                 payload: {
-                    _id: Joi.string().token().lowercase().required()
+                    participants: Joi.array().items(Joi.object().keys({
+                            _id: Joi.string().length(24).hex().required()
+                        })).required(),
+                    location: Joi.string().required(),
+                    time: Joi.date().required()
                 }
             },
             pre: [{
-                assign: 'user',
+                assign: 'users',
                 method: function (request, reply) {
-                    User.findProfileById(request.payload._id, (err, user) => {
-                        if (err) {
-                            return reply(err);
-                        }
-                        if (!user) {
-                            return reply(Boom.notFound('User not found.'));
-                        }
-                        return reply(user);
-                    });
-                }
-            },
-            {
-                assign: 'check',
-                method: function (request, reply) {
-                    let authors = [];
-                    authors.push({_id: Conversation._idClass(request.payload._id)});
-                    authors.push({_id: Conversation._idClass(request.auth.credentials._id)});
+                    let participants = request.payload.participants.map(function (item){
+                        return User._idClass(item._id)});
+                    participants.push(User._idClass(request.auth.credentials._id));
                     const query = {
-                        authors: { $all: authors}
+                        '_id': {
+                            $in: participants
+                        }
                     };
-                    Conversation.find(query, (err, conversation) => {
+                    User.find(query, (err, users) => {
                         if (err) {
                             return reply(err);
                         }
-                        if (conversation.length === 0) {
-                            return reply(true);
+                        //console.log(JSON.stringify(users, null, '\t'))
+                        if (users.length === 0) {
+                            return reply(Boom.notFound('One or more Users not found.'));
                         }
-                        return reply(Boom.conflict('Conversation exist'));
+                        return reply(users);
                     });
                 }
             }]
         },
         handler: function (request, reply) {
-            let authors = [];
-            authors.push(request.payload._id);
-            authors.push(request.auth.credentials._id);
-            Conversation.create(authors, (err, conversation) => {
+            Meeting.create(request.auth.credentials._id, request.pre.users, request.payload.location, request.payload.time, (err, conversation) => {
                 return reply(conversation);
             });
         }
@@ -213,5 +185,5 @@ exports.register = function (server, options, next) {
 
 
 exports.register.attributes = {
-    name: 'conversations'
+    name: 'meetings'
 };

@@ -153,7 +153,8 @@ internals.applyRoutes = function (server, next) {
                                 Message.deleteMany.bind(Message, {}),
                                 Conversation.deleteMany.bind(Conversation, {}),
                                 Timeline.deleteMany.bind(Timeline, {}),
-                                Post.deleteMany.bind(Post, {})
+                                Post.deleteMany.bind(Post, {}),
+                                Meeting.deleteMany.bind(Meeting, {})
                             ], done);
                         },
                         loadFile: (done, data) => {

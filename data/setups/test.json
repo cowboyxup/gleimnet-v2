@@ -1,0 +1,124 @@
+{
+	"users": [
+		{
+			"_id": {
+				"$oid": "56ebde7b06161ce819235deb"
+			},
+			"timeCreated": {
+				"$date": "2016-03-18T10:54:51.627Z"
+			},
+			"isActive": true,
+			"username": "annakarsch",
+			"password": "$2a$10$Yq4cKRGCbAQlp6M9lbMZAOSMrz27J/y8/12YOXIUyfWZnwhCRhriq",
+			"givenName": "Anna Louisa",
+			"surname": "Karsch",
+			"nickname": "Anna Karsch",
+			"birthdate": {
+				"$date": "1722-12-01T05:00:00.000Z"
+			},
+			"description": "Anna Louisa Karsch, geborene Dürbach, genannt die Karschin war eine deutsche Dichterin. Sie war die Mutter der Dichterin Caroline Louise von Klencke und die Großmutter von Helmina von Chézy.",
+			"avatar": "assets/img/people/anna_louisa_karsch/avatar.png",
+			"titlePicture": "assets/img/people/anna_louisa_karsch/cover.png",
+			"tags": [],
+			"birthplace": "Powiat Świebodziński, Polen",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "56ebde7b06161ce819235dea"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "56ebdfd1ca6659040f8ddc90"
+			},
+			"timeCreated": {
+				"$date": "2016-03-18T11:00:33.184Z"
+			},
+			"isActive": true,
+			"username": "karolineherder",
+			"password": "$2a$10$CwS9tFEhEsEkn/zTobSZmeS2nFdEEq8PQn4gtmtrOpPpM1uhxadBu",
+			"givenName": "Maria Karoline",
+			"surname": "Herder",
+			"nickname": "Karoline Herder",
+			"birthdate": {
+				"$date": "1750-01-28T05:00:00.000Z"
+			},
+			"description": "Maria Caroline Flachsland auch Karoline war die Ehefrau von Johann Gottfried von Herder. Sie schrieb eine Biografie ihres Mannes, redigierte und bearbeitete seine Schriften und gab sie nach seinem Tod heraus.",
+			"avatar": "assets/img/people/karoline_herder/avatar.png",
+			"titlePicture": "assets/img/people/karoline_herder/cover.png",
+			"tags": [],
+			"birthplace": "Reichenweier, Elsass",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "56ebdfd0ca6659040f8ddc8f"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "56ebe0b66d5d030c12f619f5"
+			},
+			"timeCreated": {
+				"$date": "2016-03-18T11:04:22.241Z"
+			},
+			"isActive": true,
+			"username": "gleim",
+			"password": "$2a$10$g8kPHbANiC1y1157P7AFgOFCAAgbjmTfD71HfLW1QXl9.S1rBYrni",
+			"givenName": "Johann Wilhelm Ludwig",
+			"surname": "Gleim",
+			"nickname": "Johann Gleim",
+			"birthdate": {
+				"$date": "1719-04-02T04:00:00.000Z"
+			},
+			"description": "Johann Wilhelm Ludwig Gleim war ein deutscher Jurist und Dichter der Aufklärungszeit.",
+			"avatar": "assets/img/people/gleim/avatar.png",
+			"titlePicture": "assets/img/people/gleim/cover.png",
+			"tags": [],
+			"birthplace": "Falkenstein/Harz",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "56ebe0b56d5d030c12f619f4"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		}
+	],
+	"messages": [],
+	"conversations": [],
+	"timelines": [
+		{
+			"_id": {
+				"$oid": "56ebde7b06161ce819235dea"
+			},
+			"timeCreated": {
+				"$date": "2016-03-18T10:54:51.364Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "56ebdfd0ca6659040f8ddc8f"
+			},
+			"timeCreated": {
+				"$date": "2016-03-18T11:00:32.926Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "56ebe0b56d5d030c12f619f4"
+			},
+			"timeCreated": {
+				"$date": "2016-03-18T11:04:21.976Z"
+			},
+			"posts": []
+		}
+	],
+	"posts": [],
+	"meetings": []
+}

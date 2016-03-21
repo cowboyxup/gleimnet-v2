@@ -50,7 +50,7 @@ const User = BaseModel.extend({
                 const friend = {
                     _id: BaseModel._idClass(userId)
                 };
-                User.findByIdAndUpdate(self._id,{$push: {friends: {$each: [friend],$position: 0},},$pull: {unconfirmedFriends: friend, sentFriends: friend},},{safe: true, upsert: true, new: true, multi: true},done);
+                User.findByIdAndUpdate(self._id,{$push: {friends: {$each: [friend],$position: 0}},$pull: {unconfirmedFriends: friend, sentFriends: friend}},{safe: true, upsert: true, new: true, multi: true},done);
             }
         }, (err, results) => {
             if (err) {
@@ -66,7 +66,7 @@ const User = BaseModel.extend({
                 const friend = {
                     _id: BaseModel._idClass(userId)
                 };
-                User.findByIdAndUpdate(self._id,{$pull: {unconfirmedFriends: friend, sentFriends: friend, friends: friend},},{safe: true, upsert: true, new: true, multi: true},done);
+                User.findByIdAndUpdate(self._id,{$pull: {unconfirmedFriends: friend, sentFriends: friend, friends: friend}},{safe: true, upsert: true, new: true, multi: true},done);
             }
         }, (err, results) => {
             if (err) {
@@ -113,7 +113,7 @@ User.schema = Joi.object().keys({
 });
 
 User.indexes = [
-    { key: { username: 1, unique: true } },
+    { key: { username: 1, unique: true } }
 ];
 
 User.generatePasswordHash = function (password, callback) {
