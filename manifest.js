@@ -148,6 +148,19 @@ const manifest = {
         },
         {
             plugin: {
+                register: './server/admin/v1/export',
+                options: {
+                }
+            },
+            options: {
+                select: ['web'],
+                routes: {
+                    prefix: '/admin/v1'
+                }
+            }
+        },
+        {
+            plugin: {
                 register: './server/api/v1/auth',
                 options: {
                 }
