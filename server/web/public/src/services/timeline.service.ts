@@ -6,7 +6,7 @@ import {headers} from "./common";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
 import {Observer} from "rxjs/Observer";
 import {ProfileService} from "./profile.service";
-import {User} from "../models";
+import {User, Post} from "../models";
 
 
 @Injectable()
@@ -77,8 +77,7 @@ export class TimelineService {
                 error => { console.log(error);}
             );
     }
-
-
+    
     postNewPosting(content:string):any {
 
         var url = this._baseUrl + this.timelineId;
@@ -127,38 +126,4 @@ export class pagedTimeline{
     timeCreated:Date;
 }
 
-export class Post{
 
-    constructor(id:string, author:string, content:string) {
-        this._id = id;
-        this.author = author;
-        this.content = content;
-    }
-
-    containsCommentWithiD(id:string):boolean{
-            var contains:boolean = false;
-            this.comments.forEach(comment => {
-                if (comment._id == id) {
-                    return true;
-                }
-            })
-
-        return false;
-    }
-
-    addComment(comment:Comment){
-        this.comments.push(comment);
-    }
-
-    _id:string;
-    author:string;
-    authorName:string
-    content:string;
-    comments:Comment[];
-}
-
-export interface Comment{
-    _id:string;
-    author:string;
-    content:string;
-}

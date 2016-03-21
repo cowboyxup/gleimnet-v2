@@ -1,15 +1,16 @@
 import {FriendsService} from "../../services/friendsService";
 import {ProfileService} from "../../services/profile.service";
-import {Friendship} from "../../services/friendsService";
 import {Component} from "angular2/core";
 import {ProtectedDirective} from "../../directives/protected.directive";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../models";
+import {FriendListItemComponent} from "./friendListItem.component";
 
 @Component({
     selector: 'Friends',
     directives: [
-        ProtectedDirective
+        ProtectedDirective,
+        FriendListItemComponent
     ],
 
     template: `
@@ -18,42 +19,37 @@ import {User} from "../../models";
         <div class="card">
             <div class="card-content">
                 <h4>Freunde:</h4>
-                <div class="media post" *ngFor="#Friend of myfriends">
-                    <div class="media-left">
-                        <a href="#/profile/{{Friend.username}}">
-                            <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friend.username}}.png">
-                        </a>
-                    </div>
-                    <div class="media-body">
-                        <a href="#/profile/{{Friend.username}}">
-                            <h4 class="media-heading">{{Friend.surename}}</h4>
-                        </a>
-                        <a (click)="removeFriend(Friend)">Freundschaft beenden</a>
-                    </div>
+                
+                <div *ngFor="#user of friends" class="row">
+                    <friendListItem [user]="user"></friendListItem>    
                 </div>
+                
             </div>
         </div>
     </div>
     <div class="col s9">
         <div class="card">
             <div class="card-content">
-                <h4>Freundschaftsanfragen:</h4>
-                <div class="media post" *ngFor="#Friendship of unconfirmedFriends">
-                    <div class="media-left">
-                        <a href="#/profile/{Friendship.user.username}}">
-                            <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friendship.user.avatar}}.png">
-                        </a>
+                <div *ngIf="unconfirmedFriends">
+                    <h4>Freundschaftsanfragen:</h4>
+                    <div class="media post" *ngFor="#Friendship of unconfirmedFriends">
+                        <div class="media-left">
+                            <a href="#/profile/{Friendship.user.username}}">
+                                <img class="media-object timelineImage" alt="" src="img/profilimages/64x64/{{Friendship.user.avatar}}.png">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">{{Friendship.user.givenName}} {{Friendship.user.surename}}</h4>
+                            <p>
+                                {{Friendship.user.description}}
+                            </p>
+                            <a (click)="confirmFriendship(Friendship._id)">als Freund hinzufügen</a>
+                        </div>
                     </div>
-                    <div class="media-body">
-                        <h4 class="media-heading">{{Friendship.user.givenName}} {{Friendship.user.surename}}</h4>
-                        <p>
-                            {{Friendship.user.description}}
-                        </p>
-                        <a (click)="confirmFriendship(Friendship._id)">als Freund hinzufügen</a>
-                    </div>
+                    <hr>
                 </div>
                 
-                <hr>
+               
                 
                 <h4>Freunde suchen:</h4>
                 
@@ -79,9 +75,7 @@ import {User} from "../../models";
                         <div class="card-content">
     
                             <span class="card-title activator grey-text text-darken-4">
-                                <a>
-                                
-
+                                <a href="#/profile/{{user._id}}">
                                     <img class="round_avatar48 " alt="" src="assets/{{user.avatar}}">
                                     {{user.givenName}}
                                 </a>
@@ -99,14 +93,13 @@ import {User} from "../../models";
         </div>
     </div>
 </div>`,
-    providers:[FriendsService, ProfileService]
+    providers:[]
 })
 
 export class Friends {
 
-    myfriends:Friend[];
-    unconfirmedFriends:Friendship[] = [];
-
+    friends:Array<User>;
+    unconfirmedFriends:Array<User>;
     searchedFriends:Array<User>;
 
     constructor(private _friendsService: FriendsService,
@@ -115,13 +108,20 @@ export class Friends {
         this._friendsService.searchedFriends.subscribe((users:Array<User>)=>{
             this.searchedFriends=users;
         });
-        
+
+        this._friendsService.unconfirmedFriends.subscribe((users:Array<User>)=>{
+            this.unconfirmedFriends=users;
+        });
+
+        this._friendsService.friends.subscribe((users:Array<User>)=>{
+            this.friends=users;
+        });
     }
 
     ngOnInit() {
        if(this._authService.isAuthenticated()){
            this.loadMyFriends();
-           //this.loadUnconfirmedFriends();
+           this.loadUnconfirmedFriends();
        }
     }
 
@@ -139,78 +139,19 @@ export class Friends {
     
     private loadMyFriends():void {
         if(this._authService.isAuthenticated()){
-           // this._friendsService.loadProfilInfos(this.username)
-           //     .subscribe(
-           //         (res:User) => {
-           //             this.myfriends = res.friends;
-           //         },
-           //         error => {console.log(error.message);}
-           //     )
+            this._friendsService.loadFriends();
        }
     }
 
-    //private loadUnconfirmedFriends():void {
-    //    if(this.auth){
-    //
-    //        this.unconfirmedFriends = [];
-    //
-    //        this._friendsService.loadUnconfirmedFriends()
-    //            .subscribe(
-    //                (res: Friendship[]) => {
-    //
-    //                    res.forEach(friendship =>{
-    //                        friendship.friends.forEach(friend =>{
-    //                           if(friend.id != this.userid){
-    //                               friendship.userid = friend.id;
-    //
-    //                               this._profileService.loadProfilInfosWithID(friend.id)
-    //                                   .subscribe(
-    //                                       (res:User) => {
-    //                                           friendship.user = res;
-    //                                           this.unconfirmedFriends.push(friendship);
-    //                                       },
-    //                                       error => {console.log(error.message);}
-    //                                   )
-    //
-    //                           }
-    //                        })
-    //                    });
-    //                    console.log(this.unconfirmedFriends);
-    //
-    //
-    //                },
-    //                error => {console.log(error.message);}
-    //            );
-    //    }
-    //}
-
-    // private confirmFriendship(friendshipId:string){
-    //    if(this.auth) {
-    //        this._friendsService.confirmFriendship(friendshipId)
-    //            .subscribe(
-    //                response => {
-    //                    this.loadMyFriends();
-    //                    this.loadUnconfirmedFriends();
-    //                },
-    //                error => { console.log(error.message);}
-    //            )
-    //    }
-    // }
-    //
-
-
-    private loadSuggestedFriendship(){
-
+    private loadUnconfirmedFriends():void {
+       if(this._authService.isAuthenticated()){
+           this._friendsService.loadUnconfirmedFriends();
+       }
     }
 
-    
-
-
-    public removeFriend(){
-
+    private removeFriend(userId:string){
+        if(this._authService.isAuthenticated()) {
+            this._friendsService.removeFriend(userId);
+        }
     }
-}
-
-class Friend{
-
 }

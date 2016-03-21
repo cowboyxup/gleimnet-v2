@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy} from "angular2/core";
 import {Input} from "angular2/core";
 import {Component} from "angular2/core";
-import {Post} from "../../services/timeline.service";
 import {TimelineService} from "../../services/timeline.service";
+import {Post} from "../../models";
 
 
 @Component({

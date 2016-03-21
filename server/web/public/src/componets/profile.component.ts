@@ -7,22 +7,23 @@ import {Router} from "angular2/router";
 import {Observable} from 'rxjs/Observable';
 import {Subject } from 'rxjs/Subject';
 
-import {ProfileService,ProfileFriend} from "../services/profile.service";
+import {ProfileService} from "../services/profile.service";
 import {ChatService} from "../services/chat.service";
 import {FriendsService} from "../services/friendsService";
 import {TimelineService} from "../services/timeline.service";
-import {Post} from "../services/timeline.service";
 import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
 import {AuthService} from "../services/auth.service";
 import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
-import {User} from "../models";
+import {User, Post} from "../models";
+import {FriendListItemComponent} from "./friends/friendListItem.component";
 
 @Component({
     selector: 'Profile',
     directives: [
-        TimeLinePostComponent,
-        ProtectedDirective
+        ProtectedDirective,
+        FriendListItemComponent,
+        TimeLinePostComponent
     ],
     providers:[
         TimelineService
@@ -31,7 +32,7 @@ import {User} from "../models";
     template: `
         <div protected>
 
-<div class="titelImage" style="background-image:url('assets/img/titelImage/schiller.png')">
+        <div class="titelImage" style="background-image:url('assets/img/titelImage/schiller.png')">
 
     <img *ngIf="user.avatar" class="thumbnail profilimage" src="assets/{{user.avatar}}"
                  alt="...">
@@ -50,12 +51,15 @@ import {User} from "../models";
                 Freund hinzufügen
             </button>
 
-            <button *ngIf="!isMe" type="button"
-                    class="btn btn-default btn-sm pull-right"
-                    (click)="sendMessage()">
-                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                Nachricht senden
-            </button>
+            <!--<button *ngIf="!isMe" type="button"-->
+                    <!--class="btn btn-default btn-sm pull-right"-->
+                    <!--(click)="sendMessage()">-->
+                <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                <!--Nachricht senden-->
+            <!--</button>-->
+            
+            
+          
         </div>
         </div>
     </div>
@@ -72,16 +76,11 @@ import {User} from "../models";
 
 
                 <h5>Freunde:</h5>
-                <div class="col-md-4 friendImage" *ngFor="#Friend of friends">
-                    <div class="mdl-color-text--grey-700 posting_header meta">
-                        <a class="" href="#/profile/{{Friend.givenName}}" role="button">
-                            <img src="img/profilimages/64x64/{{Friend.avatar}}.png" class="round_avatar">
-                        </a>
-                        <div class="comment__author">
-                            <strong>{{Friend.givenName}}</strong>
-                        </div>
-                    </div>
+                
+                <div *ngFor="#user of friends" class="row">
+                    <friendListItem [user]="user"></friendListItem>    
                 </div>
+                
             </div>
         </div>
     </div>
@@ -133,10 +132,7 @@ import {User} from "../models";
 
 export class ProfileComponent implements OnInit, OnDestroy{
 
-    friends:ProfileFriend[];
-
     addFriendButton=true;
-    router:Router
     interval
 
     isMe = false;
@@ -144,18 +140,17 @@ export class ProfileComponent implements OnInit, OnDestroy{
     userId:string;
     private user=new User("");
     private posts:Array<Post>;
+    private friends:Array<User>;
+
 
     tp:string;
 
-    constructor(
-        private _router: Router,
-        private _routeParams:RouteParams,
-        private _profileService: ProfileService,
-        private _authService:AuthService,
-        private _timelineService:TimelineService,
-        private _chatService:ChatService) {
-
-        this._chatService.loadConversations();
+    constructor(private _routeParams:RouteParams,
+                private _profileService: ProfileService,
+                private _authService:AuthService,
+                private _timelineService:TimelineService,
+                private _friendsService: FriendsService,
+                private _chatService:ChatService) {
 
         this.posts = new Array<Post>();
         this.userId = this._routeParams.get('id');
@@ -169,9 +164,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
             this.isMe = false;
         }
 
-    }
-
-    ngOnInit(): void {
         this._profileService.user$
             .subscribe((user: User) => {
                     this.user = user;
@@ -180,13 +172,6 @@ export class ProfileComponent implements OnInit, OnDestroy{
                     // this.interval = setInterval(() => this.loadTimeline(this.user.timeline), 2000 );
                 }
             );
-        //
-
-        this.loadProfilInfos();
-
-
-
-        //this._profileService.getUserWithID(this.userId);
 
         this._timelineService.posts$
             .subscribe(posts => {
@@ -194,6 +179,16 @@ export class ProfileComponent implements OnInit, OnDestroy{
                     this.timelineAvailable=true;
                 }
             );
+
+        this._friendsService.friends.subscribe((users:Array<User>)=>{
+            this.friends=users;
+        });
+
+    }
+
+    ngOnInit(): void {
+        this.loadProfilInfos();
+        this._friendsService.loadFriends();
     }
 
     getUserForId(userId:string):string{
@@ -239,27 +234,13 @@ export class ProfileComponent implements OnInit, OnDestroy{
 
     addAsFriend(){
         if(this._authService.isAuthenticated()) {
-            //this._friendsService.requestFriendship(this.userId)
-            //    .subscribe(
-            //        response => {
-            //
-            //            this.addFriendButton = false;
-            //        },
-            //        error => { console.log(error.message);}
-            //    )
+
         }
     }
 
     sendMessage(){
         if(this._authService.isAuthenticated()) {
-            //this._chatService.newConversation(this.userId)
-            //    .subscribe(
-            //        response => {
-            //            console.log(response);
-            //            this._router.navigateByUrl('/chat');
-            //        },
-            //        error => { console.log(error.message);}
-            //    )
+
         }
     }
 }

@@ -13,7 +13,8 @@ export class FriendsService {
 
     baseUrl:string = "api/v1/friends";
     searchedFriends:Subject<Array<User>> = new Subject<Array<User>>();
-
+    unconfirmedFriends:Subject<Array<User>> = new Subject<Array<User>>();
+    friends:Subject<Array<User>> = new Subject<Array<User>>();
 
     constructor(private _http: AuthHttp) {}
 
@@ -31,27 +32,55 @@ export class FriendsService {
         }
     }
 
-    requestFriendship(userId:string) {
-
+    loadUnconfirmedFriends() {
+        this._http.get(this.baseUrl + "/unconfirmed", {headers: headers()})
+            .map((res:Response) => res.json())
+            .subscribe(
+                (res:Paged<User>) => {
+                    console.log(res);
+                    this.unconfirmedFriends.next(res.data);
+                }
+            );
     }
-}
 
+    loadFriends() {
+        this._http.get(this.baseUrl, {headers: headers()})
+            .map((res:Response) => res.json())
+            .subscribe(
+                (res:Paged<User>) => {
+                    console.log(res);
+                    this.friends.next(res.data);
+                }
+            );
+    }
 
+    requestFriendship(id:string) {
+        this._http.post(this.baseUrl + "/" + id,"{}" ,{headers: headers()})
+            .map((res:Response) => res.json())
+            .subscribe(
+                (res) => {
+                    console.log(res);
+                    this.loadFriends();
+                    this.loadUnconfirmedFriends();
+                },
+                error =>{
+                    console.log("fehler")
+                }
+            );
+    }
 
-export class Friendship{
-    _id:string
-    isActive:string
-    friends:Friend[];
-    userid:string;
-    user:User;
-}
-
-export class Friend{
-    id:string;
-}
-
-export class SearchResult{
-    data: User[];
-    items:any;
-    pages:any;
+    removeFriend(userId:string) {
+        this._http.delete(this.baseUrl + "/" + userId ,{headers: headers()})
+            .map((res:Response) => res.json())
+            .subscribe(
+                (res) => {
+                    console.log(res);
+                    this.loadFriends();
+                    this.loadUnconfirmedFriends();
+                },
+                error =>{
+                    console.log("fehler")
+                }
+            );
+    }
 }

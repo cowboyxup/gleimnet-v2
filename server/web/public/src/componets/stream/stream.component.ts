@@ -9,11 +9,12 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 
-import {Post} from "../../services/timeline.service";
 import {TimeLinePostComponent} from "./post.component";
 import {ProtectedDirective} from "../../directives/protected.directive";
 import {StreamService} from "../../services/stream.service";
 import {AuthService} from "../../services/auth.service";
+import {Post} from "../../models";
+import {TimelineService} from "../../services/timeline.service";
 
 
 @Component({
@@ -64,23 +65,25 @@ import {AuthService} from "../../services/auth.service";
 
 export class Stream implements OnInit,OnDestroy{
 
-    private myArray: Array<Post> = new Array<Post>();
+    private posts:Array<Post>;
+    
     interval
 
     constructor(private _streamService: StreamService,
-                private _authService:AuthService) {
+                private _authService:AuthService,
+                private _timelineService:TimelineService) {
+
+        this._streamService.posts.subscribe(posts => {
+            this.posts = posts;
+        });
         
     }
 
     ngOnInit() {
         if(this._authService.isAuthenticated()){
 
-            //this._streamService._postDictionary._values$.subscribe(latestCollection => {
-            //    this.myArray = latestCollection;
-            //});
-
             this._streamService.load()
-            this.interval = setInterval(() => this._streamService.load(), 10000 );
+            // this.interval = setInterval(() => this._streamService.load(), 10000 );
         }
     }
 
@@ -89,16 +92,20 @@ export class Stream implements OnInit,OnDestroy{
     }
 
     postNewPosting(content:string){
-        if(this._authService.isAuthenticated()){
-            console.log(content);
-            this._streamService.postNewPosting(this._authService.getUserId(), content);
+        if(this._authService){
+            this._timelineService.postNewPosting(content);
         }
     }
 
     commentOnPosting(content:string, postId:string){
         if(this._authService.isAuthenticated()){
-            this._streamService.commentOnPosting(content, postId);
-
+            //this._profileService.commentOnPosting(content, postId)
+            //    .subscribe(
+            //        response => {
+            //            this.loadTimeline();
+            //        },
+            //        error => { console.log(error);}
+            //    );
         }
     }
 

@@ -114,11 +114,7 @@ export class ProfileService {
 
 
 
-export interface ProfileFriend{
-    _id: string;
-    givenName:string;
-    username:string;
-}
+
 
 export interface Timeline{
     _id:string;

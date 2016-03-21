@@ -9,6 +9,7 @@ export class User{
     description:  string;
     friends: string[];
     givenName: string;
+    surname:string;
     influenceplace:  string;
     nickname: string;
     tags:  string[];
@@ -74,4 +75,44 @@ export class Paged<T>{
     }
     data:Array<T>;
     timeCreated:Date;
+}
+
+
+
+
+
+export class Post{
+
+    constructor(id:string, author:string, content:string) {
+        this._id = id;
+        this.author = author;
+        this.content = content;
+    }
+
+    containsCommentWithiD(id:string):boolean{
+        var contains:boolean = false;
+        this.comments.forEach(comment => {
+            if (comment._id == id) {
+                return true;
+            }
+        })
+
+        return false;
+    }
+
+    addComment(comment:Comment){
+        this.comments.push(comment);
+    }
+
+    _id:string;
+    author:string;
+    authorName:string
+    content:string;
+    comments:Comment[];
+}
+
+export interface Comment{
+    _id:string;
+    author:string;
+    content:string;
 }
