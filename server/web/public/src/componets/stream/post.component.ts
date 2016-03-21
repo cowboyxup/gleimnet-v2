@@ -9,11 +9,11 @@ import {TimelineService} from "../../services/timeline.service";
     selector: 'posting',
     template: `
 
-        <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+        <div class="card">
             <div class="mdl-color-text--grey-700 posting_header meta">
-                <img src="img/profilimages/64x64/{{posting.author}}.png" class="round_avatar">
+                <img src="img/profilimages/64x64/{{posting.authorName}}.png" class="round_avatar">
                 <div class="comment__author">
-                    <strong>{{posting.author}}</strong>
+                    <strong>{{posting.authorName}}</strong>
                     <span>2 days ago</span>
                 </div>
             </div>
@@ -23,20 +23,22 @@ import {TimelineService} from "../../services/timeline.service";
                 </div>
 
             <div class="posting_contet comments">
+               
                <form>
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <div class="input-field col s10">
                         <input #newPosting
                             (keyup.enter)="commentOnPosting(newPosting.value, posting._id); newPosting.value=''"
                             type="text" class="mdl-textfield__input">
-                        <label for="comment" class="mdl-textfield__label">
+                        <label for="comment">
                             Was ist Ihre Meinung dazu?
                         </label>
                     </div>
-                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                        <button class="waves-effect waves-light btn send_Button"
                             (click)="commentOnPosting(newPosting.value, posting._id); newPosting.value=''">
-                        <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
+                                <i class="large material-icons">send</i>
                     </button>
                 </form>
+                
                 <div class="comment mdl-color-text--grey-700" *ngFor="#Comment of posting.comments">
                     <header class="comment__header">
                         <img src="img/profilimages/64x64/{{Comment.author}}.png" class="round_avatar">

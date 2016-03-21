@@ -7,6 +7,7 @@ import {Injectable} from "angular2/core";
 import {headers} from "./common";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
 import {Observer} from "rxjs/Observer";
+import {ProfileService} from "./profile.service";
 
 
 @Injectable()
@@ -19,12 +20,28 @@ export class TimelineService {
     public  posts$: Observable<Array<Post>>;
     private _postsObserver: Observer<Array<Post>>;
 
-    constructor(public _authHttp: AuthHttp) {
+    constructor(public _authHttp: AuthHttp,
+                private _profileService: ProfileService) {
         this.posts$ = new Observable(observer =>
             this._postsObserver = observer).share();
     }
 
     private setPosts(posts:Array<Post>){
+
+        posts.forEach(
+            post =>{
+                if(post.authorName == null){
+                    this._profileService.getUserForId(post.author)
+                        .subscribe(user =>{
+                            if(user != null){
+                                post.authorName = user.givenName;
+                            }
+                        });
+                }
+
+            }
+        );
+
         this._posts = posts;
         this._postsObserver.next(this._posts);
     }
@@ -37,6 +54,8 @@ export class TimelineService {
             .subscribe(
                 (timeline:pagedTimeline) => {
                     console.log(timeline);
+
+
                     this.setPosts(timeline.posts);
 
                     //timeline.messages.forEach( newPost =>{
@@ -134,6 +153,7 @@ export class Post{
 
     _id:string;
     author:string;
+    authorName:string
     content:string;
     comments:Comment[];
 }

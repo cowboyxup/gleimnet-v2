@@ -20,7 +20,7 @@ import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
 import {AuthService} from "../services/auth.service";
-import {FormatedDateFromStringPipe} from "../pipes/dateFormat.pipe";
+import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
 
 @Component({
     selector: 'Profile',
@@ -42,7 +42,7 @@ import {FormatedDateFromStringPipe} from "../pipes/dateFormat.pipe";
 
 </div>
 
-    <div class="profile_name_box mdl-card mdl-shadow--4dp">
+    <div class="profile_name_box card">
         <div class="mdl-card__supporting-text">
         <h4>
             {{user.givenName}} {{user.username}}
@@ -66,10 +66,10 @@ import {FormatedDateFromStringPipe} from "../pipes/dateFormat.pipe";
     </div>
 
 
-<div class="mdl-grid">
-    <div class="mdl-cell mdl-cell--3-col">
-        <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col profile_info">
-            <div class="mdl-card__supporting-text">
+<div class="row">
+    <div class="col s3">
+        <div class="card profile_info">
+            <div class="card-content">
                 <h5>Geburtsdatum:</h5>
                 <p>{{user.birthdate | formatedDateFromString}}
                 <h5>Info:</h5>
@@ -91,26 +91,43 @@ import {FormatedDateFromStringPipe} from "../pipes/dateFormat.pipe";
         </div>
     </div>
 
-    <div class="mdl-cell mdl-cell--9-col">
-        <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col stream_form">
-            <form>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    <div class="col s9">
+        <div class="card stream_form">
+            <div class="card-content">
+            <form class="row">
+                <span class="input-field col s10">
                     <input #newPosting
                            (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
                            type="text" class="mdl-textfield__input">
-                    <label for="comment" class="mdl-textfield__label">
+                    <label for="comment">
                         Was bewegt Sie?
                     </label>
-                </div>
-                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
-                        (click)="postNewPosting(newPosting.value); newPosting.value=''">
-                    <i class="material-icons" role="presentation">check</i><span
-                        class="visuallyhidden">add comment</span>
-                </button>
+                </span>
+                <span class="input-group-btn col s1">
+                    <button class="waves-effect waves-light btn send_Button"
+                        (click)="postNewPosting(newPosting.value); newPosting.value='' ">
+                        <i class="large material-icons">send</i>
+                    </button>
+                 </span>
             </form>
+            </div>
         </div>
-        <div class="posting" *ngFor="#posting of posts ">
-            <posting [posting]="posting"></posting>
+
+        <div *ngIf="timelineAvailable">
+            <div  class="posting" *ngFor="#posting of posts">
+                <posting [posting]="posting"></posting>
+            </div>
+        </div>
+
+        <div *ngIf="!timelineAvailable" class="posting">
+                 <div  class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col stream_form">
+
+                    <div class="spinner">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                 </div>
         </div>
 
     </div>
@@ -125,12 +142,13 @@ import {FormatedDateFromStringPipe} from "../pipes/dateFormat.pipe";
 export class ProfileComponent implements OnInit, OnDestroy{
 
     friends:ProfileFriend[];
-    isMe = false;
+
     addFriendButton=true;
     router:Router
     interval
 
-
+    isMe = false;
+    timelineAvailable:boolean = false;
     userId:string;
     private user = new User()
     private posts:Array<Post>;
@@ -160,21 +178,27 @@ export class ProfileComponent implements OnInit, OnDestroy{
             .subscribe((user: User) => {
                     this.user = user;
                     this.loadTimeline(this.user.timeline);
+                    // this.interval = setInterval(() => this.loadTimeline(this.user.timeline), 2000 );
                 }
             );
         //
+
         this.loadProfilInfos();
-        this.loadTimeline();
 
-            //this.interval = setInterval(() => this.loadTimeline(), 2000 );
 
-        this._profileService.getUserWithID(this.userId);
+
+        //this._profileService.getUserWithID(this.userId);
 
         this._timelineService.posts$
             .subscribe(posts => {
                     this.posts = posts;
+                    this.timelineAvailable=true;
                 }
             );
+    }
+
+    getUserForId(userId:string):string{
+        return "Schiller";
     }
 
 
