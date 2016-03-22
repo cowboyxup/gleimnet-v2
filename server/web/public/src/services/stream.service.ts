@@ -13,7 +13,7 @@ import {Subject} from "rxjs/Subject";
 @Injectable()
 export class StreamService {
 
-    private apiBaseUrl:string = 'api/vi1/stream'
+    private apiBaseUrl:string = 'api/v1/stream'
 
     posts:Subject<Array<Post>> = new Subject<Array<Post>>();
 

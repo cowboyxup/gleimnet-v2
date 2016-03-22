@@ -17,6 +17,8 @@ import {AuthService} from "../services/auth.service";
 import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
 import {User, Post} from "../models";
 import {FriendListItemComponent} from "./friends/friendListItem.component";
+import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
+import {FromNowPipe} from "../util/FromNowPipe";
 
 @Component({
     selector: 'Profile',
@@ -28,39 +30,40 @@ import {FriendListItemComponent} from "./friends/friendListItem.component";
     providers:[
         TimelineService
     ],
-    pipes: [FormatedDateFromStringPipe],
+    pipes: [
+        FormatedDateFromStringPipe,
+        SortByPropertyPipe
+    ],
     template: `
         <div protected>
 
         <div class="titelImage" style="background-image:url('assets/img/titelImage/schiller.png')">
 
-    <img *ngIf="user.avatar" class="thumbnail profilimage" src="assets/{{user.avatar}}"
+    <img *ngIf="user.avatar" class="thumbnail profilimage" src="{{user.avatar}}"
                  alt="...">
 </div>
 
     <div class="profile_name_box card">
         <div class="mdl-card__supporting-text">
-        <h4>
+        <span class="head_profil_name">
             {{user.givenName}} {{user.nickname}}
-        </h4>
-        <div class="row">
+        </span>
+        <span class="head_buttons">
             <button *ngIf="addFriendButton && !isMe" type="button"
-                    class="btn btn-default btn-sm pull-right"
+                    class="btn send_Button"
                     (click)="addAsFriend()">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Freund hinzufügen
             </button>
 
             <!--<button *ngIf="!isMe" type="button"-->
-                    <!--class="btn btn-default btn-sm pull-right"-->
+                    <!--class="btn send_Button"-->
                     <!--(click)="sendMessage()">-->
                 <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                 <!--Nachricht senden-->
             <!--</button>-->
-            
-            
-          
-        </div>
+
+        </span>
         </div>
     </div>
 
@@ -108,7 +111,7 @@ import {FriendListItemComponent} from "./friends/friendListItem.component";
         </div>
 
         <div *ngIf="timelineAvailable">
-            <div  class="posting" *ngFor="#posting of posts">
+            <div  class="posting" *ngFor="#posting of posts | sortByProperty : 'timeCreated'">
                 <posting [posting]="posting"></posting>
             </div>
         </div>
@@ -168,14 +171,22 @@ export class ProfileComponent implements OnInit, OnDestroy{
             .subscribe((user: User) => {
                     this.user = user;
                     this.tp = user.titlePicture;
-                    this.loadTimeline(this.user.timeline);
-                    // this.interval = setInterval(() => this.loadTimeline(this.user.timeline), 2000 );
+                    this._timelineService.setTimeLineID(this.user.timeline);
+                    this.loadTimeline();
+                    this.interval = setInterval(() => this.loadTimeline(), 10000 );
                 }
             );
 
-        this._timelineService.posts$
-            .subscribe(posts => {
-                    this.posts = posts;
+        // this._timelineService.posts$
+        //     .subscribe(posts => {
+        //             this.posts = posts;
+        //             this.timelineAvailable=true;
+        //         }
+        //     );
+
+        this._timelineService.postSubject
+            .subscribe(post => {
+                    this.posts.push(post);
                     this.timelineAvailable=true;
                 }
             );
@@ -207,9 +218,9 @@ export class ProfileComponent implements OnInit, OnDestroy{
     }
 
 
-    loadTimeline(timeLineId:string){
+    loadTimeline(){
         if(this._authService.isAuthenticated()){
-            this._timelineService.load(timeLineId);
+            this._timelineService.load();
         }
     }
 
@@ -219,18 +230,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
             this._timelineService.postNewPosting(content);
         }
     }
-
-    commentOnPosting(content:string, postId:string){
-        if(this._authService.isAuthenticated()){
-            //this._profileService.commentOnPosting(content, postId)
-            //    .subscribe(
-            //        response => {
-            //            this.loadTimeline();
-            //        },
-            //        error => { console.log(error);}
-            //    );
-        }
-    }
+    
 
     addAsFriend(){
         if(this._authService.isAuthenticated()) {

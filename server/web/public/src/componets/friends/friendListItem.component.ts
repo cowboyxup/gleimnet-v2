@@ -10,7 +10,7 @@ import {AuthService} from "../../services/auth.service";
                         <div class="row valign-wrapper">
                             <div class="col s3">
                                 <a href="#/profile/{{user._id}}">
-                                    <img src="assets/{{user.avatar}}" alt="" class="circle responsive-img">
+                                    <img src="{{user.avatar}}" alt="" class="circle responsive-img">
                                 </a>
                             </div>
                             <div class="col s9">

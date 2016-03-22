@@ -4,12 +4,12 @@ import {Response} from "angular2/http";
 import 'rxjs/Observable';
 import {headers} from "./common";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
-import Dictionary from "../common/Dictionary";
 import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
 import {BehaviorSubject} from "rxjs/Rx";
 import {Subject} from "rxjs/Subject";
 import {User} from "../models";
+import {contains, indexOf} from "../common/arrays";
 
 
 
@@ -23,10 +23,9 @@ export class ProfileService {
     private _userObserver: Observer<User>;
 
 
-    private _userDictionary:Dictionary<string, User>;
+    private _userArray:Array<User> = new Array<User>();
 
     constructor(public _http: AuthHttp) {
-        this._userDictionary = new Dictionary<string, User>();
 
         this.user$ = new Observable(observer =>
             this._userObserver = observer).share();
@@ -38,18 +37,32 @@ export class ProfileService {
     }
 
 
+
     getUserForId(id:string):Subject<User>{
 
         var currentUser: Subject<User> = new BehaviorSubject<User>(null);
 
+        //console.log(id);
 
-        let http = this._http;
-        let baseUrl = this.baseUrl;
+        var user = new User("");
+        user._id = id;
+
+        let index:number = indexOf(this._userArray, user, (u:User, user) => {
+            return u._id == user._id;
+        })
+        
+        if(index == -1){
+            currentUser.next(this._userArray[index]);
+            currentUser.complete();
+        }else{
+            let http = this._http;
+            let baseUrl = this.baseUrl;
 
             http.get(baseUrl  + id, { headers: headers() })
                 .map((res:Response) => res.json())
                 .subscribe(
                     (res:User) => {
+                        this._userArray.push(res);
                         currentUser.next(res);
                         currentUser.complete();
                     },
@@ -58,6 +71,7 @@ export class ProfileService {
                         currentUser.complete();
                     }
                 );
+        }
 
         return currentUser;
     }

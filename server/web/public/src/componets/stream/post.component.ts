@@ -3,18 +3,22 @@ import {Input} from "angular2/core";
 import {Component} from "angular2/core";
 import {TimelineService} from "../../services/timeline.service";
 import {Post} from "../../models";
+import {FromNowPipe} from "../../util/FromNowPipe";
 
 
 @Component({
     selector: 'posting',
+    pipes: [
+        FromNowPipe
+    ],
     template: `
 
         <div class="card">
             <div class="mdl-color-text--grey-700 posting_header meta">
                 <img src="img/profilimages/64x64/{{posting.authorName}}.png" class="round_avatar">
                 <div class="comment__author">
-                    <strong>{{posting.authorName}}</strong>
-                    <span>2 days ago</span>
+                    <strong>{{posting.author}}</strong>
+                    <span>{{posting.timeCreated | fromNow}}</span>
                 </div>
             </div>
 
@@ -39,16 +43,16 @@ import {Post} from "../../models";
                     </button>
                 </form>
                 
-                <div class="comment mdl-color-text--grey-700" *ngFor="#Comment of posting.comments">
+                <div class="comment mdl-color-text--grey-700" *ngFor="#comment of posting.comments">
                     <header class="comment__header">
-                        <img src="img/profilimages/64x64/{{Comment.author}}.png" class="round_avatar">
+                        <img src="img/profilimages/64x64/{{comment.author}}.png" class="round_avatar">
                         <div class="comment__author">
-                            <strong>{{Comment.author}}</strong>
-                            <span>2 days ago</span>
+                            <strong>{{comment.author}}</strong>
+                            <span>{{comment.timeCreated | fromNow}}</span>
                         </div>
                     </header>
                     <div class="comment__text">
-                        {{Comment.content}}
+                        {{comment.content}}
                     </div>
                 </div>
               </div>
@@ -61,13 +65,13 @@ import {Post} from "../../models";
 export class TimeLinePostComponent {
     @Input() posting: Post;
 
-    constructor(private _timelineService: TimelineService) { }
+    constructor(private _timelineService: TimelineService) {}
 
 
     commentOnPosting(content:string, postId:string){
-        let username = localStorage.getItem('username');
-        if(username){
-            this._timelineService.commentOnPosting(content, postId);
-        }
+        console.log(content);
+
+        this._timelineService.commentOnPosting(content, postId);
+
     }
 }

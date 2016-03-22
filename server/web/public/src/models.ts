@@ -78,10 +78,12 @@ export class Paged<T>{
 }
 
 
+export interface idI{
+    _id:string;
+}
 
 
-
-export class Post{
+export class Post implements idI{
 
     constructor(id:string, author:string, content:string) {
         this._id = id;
@@ -106,12 +108,14 @@ export class Post{
 
     _id:string;
     author:string;
+    timeCreated:string;
     authorName:string
     content:string;
     comments:Comment[];
+
 }
 
-export interface Comment{
+export class Comment implements idI{
     _id:string;
     author:string;
     content:string;

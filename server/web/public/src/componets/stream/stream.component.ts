@@ -53,7 +53,7 @@ import {TimelineService} from "../../services/timeline.service";
     </div>   
        
 
-    <div class="posting" *ngFor="#posting of myArray ">
+    <div class="posting" *ngFor="#posting of posts ">
         <posting [posting]="posting"> </posting>
     </div>
 </div>
