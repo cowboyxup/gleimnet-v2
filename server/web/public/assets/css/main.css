@@ -32,13 +32,24 @@ span.badge{
 }
 
 .scroll{
-    height: calc(100% - 56px - 20px);
+    height: calc(100% - 56px - 20px - 250px);
     overflow: scroll;
 }
 
 @media only screen and (min-width: 601px){
     .scroll{
-        height: calc(100% - 64px - 20px);
+        height: calc(100% - 64px - 250px);
+    }
+}
+
+.scroll_messages{
+    height: calc(100% - 56px - 20px - 200px);
+    overflow: scroll;
+}
+
+@media only screen and (min-width: 601px){
+    .scroll{
+        height: calc(100% - 64px - 200px);
     }
 }
 
@@ -92,6 +103,13 @@ span.badge{
     padding-bottom: 5px;
 }
 
+.collection .collection-item.active{
+    background-color: rgba(22,125,165,0.5);
+}
+
+.collection{
+    border: none;
+}
 /*Profile*/
 
 

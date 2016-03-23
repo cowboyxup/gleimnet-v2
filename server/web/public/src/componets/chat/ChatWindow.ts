@@ -72,32 +72,37 @@ export class ChatMessage implements OnInit {
         FORM_DIRECTIVES],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-            <div class="panel-body msg-container-base">
-              <chat-message
-                   *ngFor="#message of messages | async"
-                   [message]="message">
-              </chat-message>
-            </div>
-
-            <div class="panel-footer card">
-              <div class="card-content">
+    <div class="card">
+        <div class="card-content">
+            <div class="">
+            
+                <div class="scroll_messages">
+                    <chat-message
+                        *ngFor="#message of messages | async"
+                        [message]="message">
+                    </chat-message>
+                </div>
+            
                 <div class="row">
 
-                <div class="input-field col s10">
-                 <input type="text" 
-                       (keydown.enter)="onEnter($event)"
-                       [(ngModel)]="draftMessage.text" />
-                 <label for="password">Verfasse eine Nachricht</label>
-                </div>
+                    <hr> 
+                    
+                    <div class="input-field col s10">
+                        <input type="text" 
+                            (keydown.enter)="onEnter($event)"
+                            [(ngModel)]="draftMessage.text" />
+                         <label for="password">Verfasse eine Nachricht</label>
+                    </div>
                
-                <span class="input-group-btn col s1">
-                  <button class="waves-effect waves-light btn send_Button"
-                     (click)="onEnter($event)"
-                     >Send</button>
-                </span>
-              </div>
-              </div>
+                    <span class="input-group-btn col s1">
+                        <button class="waves-effect waves-light btn send_Button"
+                            (click)="onEnter($event)">Send</button>
+                    </span>
+                </div>
             </div>
+        </div>
+    </div>
+
   `
 })
 export class ChatWindow implements OnInit {

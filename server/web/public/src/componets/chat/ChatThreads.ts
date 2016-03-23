@@ -12,25 +12,15 @@ import {Thread} from "../../models";
     inputs: ['thread'],
     selector: 'chat-thread',
     template: `
-<div class="media conversation card">
-
-<a (click)="clicked($event)" class="div-link">
-  <div class="card-content">
+    <a (click)="clicked($event)" class="div-link">
+<li class="collection-item avatar" [ngClass]="{active: selected}">
+    <img src="{{thread.avatarSrc}}" alt="" class="circle">
+    <span class="title">{{thread.name}} <span *ngIf="selected">&bull;</span></span>
     
-    <span class="card-title activator grey-text text-darken-4">
-        <img class=" round_avatar48 avatar_left" src="{{thread.avatarSrc}}">
-        {{thread.name}}
-        <span *ngIf="selected">&bull;</span>
-    </span>
-      
-    <div class="media-body">
-      <small class="message-preview">{{thread.lastMessage.text}}</small>
-    </div>
-    
-  </div>
-  </a>
-</div>
-  `
+    <p>{{thread.lastMessage.text}}</p>
+ 
+</li>
+ </a>`
 })
 class ChatThread implements OnInit {
     thread:Thread;
@@ -62,16 +52,20 @@ class ChatThread implements OnInit {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
     <!-- conversations -->
-    <div class="row">
-      <div class="conversation-wrap">
-
-        <chat-thread
-             *ngFor="#thread of threads | async"
-             [thread]="thread">
-        </chat-thread>
-
-      </div>
+    <div class="card">
+        <div class=" scroll">
+        
+            <ul class="collection">
+                <chat-thread class="collection-item avatar"
+                    *ngFor="#thread of threads | async"
+                    [thread]="thread">
+                </chat-thread>
+            </ul>
+           
+        </div>
     </div>
+    
+    
   `
 })
 export class ChatThreads {

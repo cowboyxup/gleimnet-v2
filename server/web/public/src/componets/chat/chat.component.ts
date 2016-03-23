@@ -19,10 +19,10 @@ import {ChatService} from "../../services/chat.service";
     template: `
 <div protected>
     <div class="row">
-        <div class="col s4 scroll">
+        <div class="col s4">
             <chat-threads></chat-threads>
         </div>
-        <div class="col s8 scroll">
+        <div class="col s8">
             <chat-window></chat-window>
         </div>
     </div>

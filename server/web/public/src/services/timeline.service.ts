@@ -99,8 +99,6 @@ export class TimelineService {
         //     }
         // );
 
-        // this._posts = posts;
-        // this._postsObserver.next(this._posts);
     }
 
     load() {
