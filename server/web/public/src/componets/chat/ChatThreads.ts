@@ -56,7 +56,7 @@ class ChatThread implements OnInit {
         <div class=" scroll">
         
             <ul class="collection">
-                <chat-thread class="collection-item avatar"
+                <chat-thread class=""
                     *ngFor="#thread of threads | async"
                     [thread]="thread">
                 </chat-thread>
