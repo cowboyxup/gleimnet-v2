@@ -56,10 +56,7 @@ import {ProfileService} from "../../services/profile.service";
                     </form>
                 </div>
             </div>
-        </div>
-    </div>   
-    <div class="row">
-        <div class="col s12">
+
             <div class="posting" *ngFor="#posting of posts | sortByProperty : 'timeCreated'">
                 <posting [posting]="posting"> </posting>
             </div>
