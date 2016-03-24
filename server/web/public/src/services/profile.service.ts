@@ -4,12 +4,9 @@ import {Response} from "angular2/http";
 import 'rxjs/Observable';
 import {headers} from "./common";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
-import {Observable} from "rxjs/Observable";
-import {Observer} from "rxjs/Observer";
-import {BehaviorSubject} from "rxjs/Rx";
+import { AsyncSubject} from "rxjs/Rx";
 import {Subject} from "rxjs/Subject";
-import {User} from "../models";
-import {contains, indexOf} from "../common/arrays";
+import {User, indexOfId} from "../models";
 
 
 
@@ -17,51 +14,37 @@ import {contains, indexOf} from "../common/arrays";
 export class ProfileService {
     baseUrl = 'api/v1/profile/'
 
-
-    private _user:User;
-    public user$: Observable<User>;
-    private _userObserver: Observer<User>;
-
-
     private _userArray:Array<User> = new Array<User>();
 
-    constructor(public _http: AuthHttp) {
-
-        this.user$ = new Observable(observer =>
-            this._userObserver = observer).share();
-    }
-
-    private setUser(user:User){
-        this._user = user;
-        this._userObserver.next(this._user);
-    }
+    constructor(public _http: AuthHttp) {}
 
 
+    getUserForId(id:string):Subject<User> {
 
-    getUserForId(id:string):Subject<User>{
+        var currentUser:Subject<User> = new AsyncSubject<User>();
 
-        var currentUser: Subject<User> = new BehaviorSubject<User>(null);
+        let index = indexOfId(this._userArray, id);
 
-        //console.log(id);
+        if (index != -1) {
+            // console.log("User ist enthalten");
 
-        var user = new User("");
-        user._id = id;
+            let user: User = this._userArray[index];
 
-        let index:number = indexOf(this._userArray, user, (u:User, user) => {
-            return u._id == user._id;
-        })
-        
-        if(index == -1){
-            currentUser.next(this._userArray[index]);
+            currentUser.next(user);
             currentUser.complete();
-        }else{
+        } else {
+            // console.log("User ist nicht enthalten");
+
             let http = this._http;
             let baseUrl = this.baseUrl;
 
-            http.get(baseUrl  + id, { headers: headers() })
-                .map((res:Response) => res.json())
+            http.get(baseUrl + id, {headers: headers()})
+                .map((res:Response) => {
+                    return res.json();
+                })
                 .subscribe(
                     (res:User) => {
+                        //console.log(res);
                         this._userArray.push(res);
                         currentUser.next(res);
                         currentUser.complete();
@@ -74,18 +57,6 @@ export class ProfileService {
         }
 
         return currentUser;
-    }
-
-    loadProfilInfosWithID(id:string){
-
-         this._http.get(this.baseUrl + id, { headers: headers() })
-            .map((res:Response) => res.json())
-            .subscribe(
-                (res:User) => {
-                    this.setUser(res);
-                },
-                error => {console.log(error);}
-            );
     }
 
     loadTimeline(username:string){
@@ -114,20 +85,7 @@ export class ProfileService {
             .map(response =>  {
             });
     }
-
-    getDateString(dateString:string):string{
-        var date = new Date(dateString)
-        var options = {
-            year: "numeric", month: "short",
-            day: "numeric"
-        };
-
-        return date.toLocaleDateString('de-de',options);
-    }
 }
-
-
-
 
 
 export interface Timeline{

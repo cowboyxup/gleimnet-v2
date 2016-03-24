@@ -60,7 +60,7 @@ import {ProfileService} from "../../services/profile.service";
     </div>   
     <div class="row">
         <div class="col s12">
-            <div class="posting" *ngFor="#posting of posts ">
+            <div class="posting" *ngFor="#posting of posts | sortByProperty : 'timeCreated'">
                 <posting [posting]="posting"> </posting>
             </div>
         </div>
@@ -74,7 +74,7 @@ import {ProfileService} from "../../services/profile.service";
 
 export class Stream implements OnInit,OnDestroy{
 
-    private posts:Array<Post>;
+    private posts:Array<Post> = new Array<Post>();
 
     user:User;
     interval
@@ -85,26 +85,23 @@ export class Stream implements OnInit,OnDestroy{
                 private _profileService:ProfileService) {
 
         
-        this._timelineService.postSubject
+        this._streamService.postSubject
             .subscribe(post => {
                     this.posts.push(post);
                 }
             );
-        
-        
-        this._profileService.user$
-            .subscribe((user: User) => {
-                    this.user = user;
-                    this._timelineService.setTimeLineID(this.user.timeline);
-                }
-            );
-        
+
+
+        this._profileService.getUserForId(this._authService.getUserId())
+            .subscribe((user:User) =>{
+                this.user = user;
+                this._timelineService.setTimeLineID(this.user.timeline);
+        });
+
     }
 
     ngOnInit() {
         if(this._authService.isAuthenticated()){
-
-            this._profileService.loadProfilInfosWithID(this._authService.getUserId())
             this._streamService.load()
             this.interval = setInterval(() => this._streamService.load(), 10000 );
         }

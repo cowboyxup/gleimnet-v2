@@ -109,9 +109,12 @@ export class Post implements idI{
     _id:string;
     author:string;
     timeCreated:string;
-    authorName:string
+    
     content:string;
     comments:Comment[];
+
+    authorName:string
+    authorAvatar:string
 
 }
 
@@ -119,4 +122,19 @@ export class Comment implements idI{
     _id:string;
     author:string;
     content:string;
+
+    authorName:string
+    authorAvatar:string
+}
+
+export function indexOfId(array:idI[], id:string):number {
+    const length = array.length;
+    for (let i = 0; i < length; i++) {
+        if (array[i]._id == id) {
+            // console.log(i);
+            return i;
+        }
+    }
+    // console.log(-1);
+    return -1;
 }
