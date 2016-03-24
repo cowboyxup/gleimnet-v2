@@ -37,21 +37,25 @@ export class StreamService {
 
         if (!isUndefined(posts)) {
 
+            let self = this;
+
             posts.forEach(newPost => {
-                let index:number = this.indexOf(this._posts, newPost)
+                let index:number = self.indexOf(self._posts, newPost)
 
                 if (index == -1) {
-                    this._posts.push(newPost);
-                    this.postSubject.next(newPost);
+
+                    self._posts.push(newPost);
+                    self.postSubject.next(newPost);
+                    
                 } else {
                     var oldPost:Post = this._posts[index];
 
-                    newPost.comments.forEach(comment => {
+                    newPost.comments.forEach(comment =>{
 
                         var commentIndex = -1;
                         const length = oldPost.comments.length;
                         for (let i = 0; i < length; i++) {
-                            if (oldPost.comments[i]._id == comment._id) {
+                            if (oldPost.comments[i]._id ==  comment._id) {
                                 // console.log(i);
                                 commentIndex = i;
                             }
@@ -59,12 +63,13 @@ export class StreamService {
 
                         //console.log(commentIndex);
 
-                        if (commentIndex == -1) {
+                        if(commentIndex == -1){
 
                             oldPost.comments.push(comment);
                         }
 
                     });
+
 
                     //oldPost.setComments(newPost.comments);
                 }

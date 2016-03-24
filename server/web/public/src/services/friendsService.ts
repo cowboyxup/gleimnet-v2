@@ -25,7 +25,7 @@ export class FriendsService {
                 .map((res:Response) => res.json())
                 .subscribe(
                     (res:Paged<User>) => {
-                        console.log(res);
+                        // console.log(res);
                         this.searchedFriends.next(res.data);
                     }
                 );
@@ -37,7 +37,7 @@ export class FriendsService {
             .map((res:Response) => res.json())
             .subscribe(
                 (res:Paged<User>) => {
-                    console.log(res);
+                    // console.log(res);
                     this.unconfirmedFriends.next(res.data);
                 }
             );
@@ -48,7 +48,7 @@ export class FriendsService {
             .map((res:Response) => res.json())
             .subscribe(
                 (res:Paged<User>) => {
-                    console.log(res);
+                    // console.log(res);
                     this.friends.next(res.data);
                 }
             );

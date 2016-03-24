@@ -53,6 +53,8 @@ declare var System:any;
     <nav>
         <div class="nav-wrapper">
             <a href="#" class="brand-logo">Gleim.net</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a [routerLink]="['/Stream']" >Steam</a></li>
                 <li><a [routerLink]="['/MyProfile']" >Me</a></li>
@@ -63,6 +65,18 @@ declare var System:any;
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
+            
+            <ul class="side-nav" id="mobile-demo">
+                <li><a [routerLink]="['/Stream']" >Steam</a></li>
+                <li><a [routerLink]="['/MyProfile']" >Me</a></li>
+                <li><a [routerLink]="['/Chat']" >
+                    Nachrichten <unreadMessagesCount></unreadMessagesCount>
+                </a></li>
+                <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
+                <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
+            </ul>
+            
         </div>
     </nav>
 </div>

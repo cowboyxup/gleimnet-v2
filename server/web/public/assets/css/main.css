@@ -35,8 +35,9 @@
 body{
     background-repeat: no-repeat;
     background-image: url("../img/bgimage.jpg");
+
     background-size: cover;
-    background-attachment:fixed
+    background-attachment:fixed;
 }
 
 nav{
@@ -104,6 +105,7 @@ span.badge{
     width: 48px;
     height: 48px;
     border-radius: 50%;
+    margin-right: 10px;
 }
 
 .input-group-btn{
@@ -238,7 +240,7 @@ nav .brand-logo{
 
 .posting .posting_contet {
     width: 100%;
-    padding: 6px 16px 6px;
+    padding: 3px 20px 6px 75px;
     min-height: 64px;
     display: flex;
     align-items: center;
@@ -316,9 +318,14 @@ nav .brand-logo{
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 0px;
 }
 
+.comment__text{
+    margin-bottom: 10px;
+    padding-left: 60px;
+    padding-right: 20px;
+}
 
 
 
@@ -329,9 +336,6 @@ nav .brand-logo{
     flex-direction: column;
 }
 
-.posting .comments .comment > .comment__text {
-    line-height: 1.5em;
-}
 
 .posting .comments .comment > .comment__actions {
     display: flex;
