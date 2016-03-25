@@ -29,9 +29,9 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
         SortByPropertyPipe
     ],
     template: `
-        <div protected>
+        <div protected> 
 
-            <div class="titelImage" style="background-image:url('assets/img/titelImage/schiller.png')">
+            <div class="titelImage" style="background-image:url('{{user.titlePicture}}')">
                 <img *ngIf="user.avatar" class="thumbnail profilimage" src="{{user.avatar}}" alt="...">
             </div>
 
@@ -48,12 +48,29 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
                 Freund hinzufügen
             </button>
 
-            <!--<button *ngIf="!isMe" type="button"-->
-            <!--class="btn send_Button"-->
-            <!--(click)="sendMessage()">-->
-            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
-            <!--Nachricht senden-->
-            <!--</button>-->
+            
+            <button *ngIf="!isMe" data-target="modal1" class="btn modal-trigger"
+                onclick="$('#modal1').openModal();" >Nachricht senden</button>
+            
+            <div id="modal1" class="modal">
+                <div class="modal-content">
+                    <h4>Nachricht an {{user.givenName}}</h4>
+                    <div class="input-field col s12">
+                        <textarea #newMessage id="textarea1" class="materialize-textarea"></textarea>
+                        <label for="textarea1">Nachricht</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class=" modal-action modal-close waves-effect waves-green btn-flat"
+                        onclick="$('#modal1').closeModal();"
+                        (click)="sendMessage(newMessage.value)">
+                            senden</button>
+                    <button class=" modal-action modal-close waves-effect waves-green btn-flat"
+                        onclick="$('#modal1').closeModal();">
+                            abbrechen
+                    </button>
+                </div>
+             </div>
 
         </span>
                 </div>
@@ -225,9 +242,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
         }
     }
 
-    sendMessage() {
-        if (this._authService.isAuthenticated()) {
+    sendMessage(content:string) {
+        console.log("sendMessage: " + content);
 
+        if (this._authService.isAuthenticated()) {
+            this._chatService.newConversation(this.userId).subscribe(res=>{
+                console.log("yey");
+            },
+            error =>{
+                console.log("err");
+            })
         }
     }
 }

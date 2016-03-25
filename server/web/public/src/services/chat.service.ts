@@ -7,14 +7,15 @@ import {Subject } from 'rxjs/Subject';
 import {Http} from "angular2/http";
 import {headers} from "./common";
 import {AuthHttp} from "angular2-jwt/angular2-jwt";
+import {Paged} from "../models";
 
 
 @Injectable()
 export class ChatService {
 
+    baseUrl = '/api/v1/conversations';
     constructor(public _http: AuthHttp) {
     }
-
 
     loadMessage(id:string){
         var url = 'api/conversations/messages/' + id;
@@ -27,33 +28,40 @@ export class ChatService {
 
     loadConversations() {
 
-        var url = '/api/v1/conversations';
-
-        return this._http.get(url, { headers: headers() })
+        return this._http.get(this.baseUrl, { headers: headers() })
             .map((responseData) => {
-                responseData.json();
-            }).subscribe(res =>{
+                return responseData.json();
+            }).subscribe(( converstions:Paged<Conversation>)=>{
+                console.log(converstions.data[0]._id);
+                this.loadConversation(converstions.data[1]._id);
+            });
+    }
+
+    loadConversation(id:string) {
+
+        return this._http.get(this.baseUrl + "/" + id, { headers: headers() })
+            .map((responseData) => {
+                return responseData.json();
+            }).subscribe(res=>{
                 console.log(res);
             });
     }
 
-    newConversation(username:string):any{
+    newConversation(_id:string):any{
+        let body = JSON.stringify({_id });
 
-        var url = 'api/conversations';
-        let body = JSON.stringify({username });
-
-        return this._http.post(url, body, { headers: headers() })
+        return this._http.post(this.baseUrl, body, { headers: headers() })
             .map((responseData) =>  {
-                responseData.json()
+                console.log(responseData);
+                return responseData.json();
             });
     }
 
     sendNewMessage(content:string, conversationId:string):any{
 
-        var url = 'api/conversations/' + conversationId;
         let body = JSON.stringify({content });
 
-        return this._http.post(url, body, { headers: headers() })
+        return this._http.post(this.baseUrl + "/" + conversationId, body ,{ headers: headers() })
             .map((responseData) => {
                 return responseData.json();
             });
@@ -62,15 +70,12 @@ export class ChatService {
 
 }
 
-export class ConversationGroup{
-    conversations:Conversation[];
-    numberOfItems:string;
-}
+
 
 export class Conversation{
     _id:string;
     timeCreated:string;
-    messages:ConversationMessage[];
+    timeUpdated:string;
     authors:ConversationUser[];
 }
 

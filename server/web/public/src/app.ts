@@ -17,7 +17,6 @@ import {ROUTER_DIRECTIVES,
     LocationStrategy,
     HashLocationStrategy,
     Route,
-    AsyncRoute,
     Router} from 'angular2/router';
 import {HTTP_PROVIDERS, Http} from 'angular2/http';
 import {AuthHttp} from 'angular2-jwt/angular2-jwt';
@@ -31,13 +30,13 @@ import {AuthService} from "./services/auth.service";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {ProfileComponent} from "./componets/profile.component";
 import {ProfileService} from "./services/profile.service";
-
-import {servicesInjectables} from "./services/chat/services";
-import {utilInjectables} from "./util/utilInjectables";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
 import {ChatService} from "./services/chat.service";
 import {FriendsService} from "./services/friendsService";
 import {TimelineService} from "./services/timeline.service";
+import {UserService} from "./services/user.service";
+import {MessagesService} from "./services/chat/MessagesService";
+import {ThreadsService} from "./services/chat/ThreadsService";
 
 declare var System:any;
 
@@ -158,11 +157,12 @@ bootstrap(MyApp,
         HTTP_PROVIDERS,
         AuthService,
         ProfileService,
+        UserService,
         FriendsService,
         TimelineService,
         ChatService,
-        servicesInjectables,
-        utilInjectables,
+        MessagesService,
+        ThreadsService,
         provide(
             LocationStrategy,
             {useClass: HashLocationStrategy}

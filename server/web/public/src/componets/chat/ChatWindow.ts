@@ -9,17 +9,17 @@ import {FORM_DIRECTIVES} from 'angular2/common';
 import {Observable} from 'rxjs';
 import {Message, Thread} from "../../models";
 import {User} from "../../models";
-import {UserService} from "../../services/chat/UserService";
 import {FromNowPipe} from "../../util/FromNowPipe";
 import {MessagesService} from "../../services/chat/MessagesService";
 import {ThreadsService} from "../../services/chat/ThreadsService";
+import {UserService} from "../../services/user.service";
 
 @Component({
     inputs: ['message'],
     selector: 'chat-message',
     pipes: [FromNowPipe],
     template: `
-<div class="card"
+<div class=""
        [ngClass]="{'base-sent': !incoming, 'base-receive': incoming}">
     <div class="card-content">
     <div class="card-title activator grey-text text-darken-4">
@@ -160,7 +160,7 @@ export class ChatWindow implements OnInit {
 
     scrollToBottom():void {
         let scrollPane:any = this.el
-            .nativeElement.querySelector('.msg-container-base');
+            .nativeElement.querySelector('.scroll_messages');
         scrollPane.scrollTop = scrollPane.scrollHeight;
     }
 
