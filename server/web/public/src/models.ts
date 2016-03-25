@@ -1,6 +1,3 @@
-import { uuid } from './util/uuid';
-
-
 export class User{
     _id:  string;
     avatar:  string;
@@ -16,26 +13,15 @@ export class User{
     timeCreated:  string;
     timeline:  string;
     titlePicture:  string;
-
-    constructor(public name: string) {
-        this._id = uuid();
-        this.avatar='assets/img/profileimages/schiller.png';
-    }
 }
 
-export class Thread {
-    id: string;
+export class Thread implements idI{
+    _id: string;
     lastMessage: Message;
     name: string;
     avatarSrc: string;
-
-    constructor(id?: string,
-                name?: string,
-                avatarSrc?: string) {
-        this.id = id || uuid();
-        this.name = name;
-        this.avatarSrc = avatarSrc;
-    }
+    timeUpdated:string;
+    authorIds:string[] = new Array<string>();
 }
 
 export class Message {
@@ -45,15 +31,6 @@ export class Message {
     author: User;
     text: string;
     thread: Thread;
-
-    constructor(obj?: any) {
-        this.id              = obj && obj.id              || uuid();
-        this.isRead          = obj && obj.isRead          || false;
-        this.sentAt          = obj && obj.sentAt          || new Date();
-        this.author          = obj && obj.author          || null;
-        this.text            = obj && obj.text            || null;
-        this.thread          = obj && obj.thread          || null;
-    }
 }
 
 

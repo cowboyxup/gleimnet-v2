@@ -1,4 +1,4 @@
-import {FriendsService} from "../../services/friendsService";
+import {FriendsService} from "../../services/friends.service";
 import {ProfileService} from "../../services/profile.service";
 import {Component} from "angular2/core";
 import {ProtectedDirective} from "../../directives/protected.directive";

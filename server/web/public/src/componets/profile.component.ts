@@ -6,8 +6,8 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
 import {ProfileService} from "../services/profile.service";
-import {ChatService} from "../services/chat.service";
-import {FriendsService} from "../services/friendsService";
+import {ChatService, Conversation} from "../services/chat.service";
+import {FriendsService} from "../services/friends.service";
 import {TimelineService} from "../services/timeline.service";
 import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
@@ -160,7 +160,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     isMe = false;
     timelineAvailable:boolean = false;
     userId:string;
-    private user = new User("");
+    private user = new User();
     private posts:Array<Post>;
     private friends:Array<User>;
 
@@ -215,7 +215,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         console.log("timeline: " + this.user.timeline);
         this._timelineService.setTimeLineID(this.user.timeline);
         this.loadTimeline();
-        this.interval = setInterval(() => this.loadTimeline(), 2000);
+        // this.interval = setInterval(() => this.loadTimeline(), 2000);
     }
 
     ngOnDestroy() {
@@ -243,11 +243,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     sendMessage(content:string) {
-        console.log("sendMessage: " + content);
-
         if (this._authService.isAuthenticated()) {
-            this._chatService.newConversation(this.userId).subscribe(res=>{
-                console.log("yey");
+            this._chatService.newConversation(this.userId).subscribe((conversations:Array<Conversation>)=>{
+                this._chatService.sendNewMessage(content,conversations[0]._id);
             },
             error =>{
                 console.log("err");

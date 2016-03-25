@@ -36,16 +36,16 @@ export class AuthService {
 
         this._token = localStorage.getItem('id_token');
 
-        if(this._token != null){
-           this._decodedToken = this.jwtHelper.decodeToken(this._token)
-           this._tokenExpirationDate =  this.jwtHelper.getTokenExpirationDate(this._token)
-           this._isTokenExpired = this.jwtHelper.isTokenExpired(this._token)
-
-           this._authenticated = !this._isTokenExpired;
-
-           this._userId = this._decodedToken._id;
-           localStorage.setItem('userId', this._userId);
-        }
+        // if(this._token != null){
+        //    this._decodedToken = this.jwtHelper.decodeToken(this._token)
+        //    this._tokenExpirationDate =  this.jwtHelper.getTokenExpirationDate(this._token)
+        //    this._isTokenExpired = this.jwtHelper.isTokenExpired(this._token)
+        //
+        //    this._authenticated = !this._isTokenExpired;
+        //
+        //    this._userId = this._decodedToken._id;
+        //    localStorage.setItem('userId', this._userId);
+        // }
     }
 
     public doLogin(username:string, password:string) {

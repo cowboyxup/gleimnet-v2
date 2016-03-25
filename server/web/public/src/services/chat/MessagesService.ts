@@ -75,7 +75,7 @@ export class MessagesService {
             // note that we're manipulating `message` directly here. Mutability
             // can be confusing and there are lots of reasons why you might want
             // to, say, copy the Message object or some other 'immutable' here
-            if (message.thread.id === thread.id) {
+            if (message.thread._id === thread._id) {
               message.isRead = true;
             }
             return message;
@@ -95,7 +95,7 @@ export class MessagesService {
     return this.newMessages
       .filter((message: Message) => {
                // belongs to this thread
-        return (message.thread.id === thread.id) &&
+        return (message.thread._id === thread._id) &&
                // and isn't authored by this user
                (message.author._id !== user._id);
       });
