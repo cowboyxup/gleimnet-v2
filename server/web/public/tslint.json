@@ -3,10 +3,10 @@
     "class-name": true,
     "curly": false,
     "eofline": true,
-    "indent": "spaces",
+    "indent": "tabs",
     "max-line-length": [
       true,
-      100
+      120
     ],
     "member-ordering": [
       true,
@@ -31,10 +31,6 @@
       "check-catch",
       "check-else",
       "check-whitespace"
-    ],
-    "quotemark": [
-      true,
-      "single"
     ],
     "semicolon": true,
     "triple-equals": [
