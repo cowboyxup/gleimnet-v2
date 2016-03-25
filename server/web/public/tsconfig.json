@@ -1,20 +1,25 @@
 {
-  "version": "1.6.0",
   "compilerOptions": {
+    "target": "ES5",
     "module": "commonjs",
-    "target": "es5",
-    "declaration": false,
-    "noImplicitAny": false,
     "removeComments": true,
-    "noLib": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
-    "listFiles": true
+    "sourceMap": true
   },
-  "exclude": [
-    "node_modules",
+  "files": [
     "typings/main.d.ts",
-    "typings/main"
-  ]
+    "test/injector.spec.ts",
+    "test/sanity-test.spec.ts",
+    "src/app/app.spec.ts",
+    "src/app/app.ts",
+    "src/app/directives/x-large.ts",
+    "src/app/directives/x-large.spec.ts",
+    "src/app/providers/title.spec.ts",
+    "src/app/providers/title.ts",
+    "src/app/home/home.ts",
+    "src/bootstrap.ts",
+    "src/vendor.ts"
+  ],
+  "compileOnSave": false
 }
