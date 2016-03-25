@@ -187,20 +187,21 @@ internals.applyRoutes = function (server, next) {
                             return reply(err);
                         }
                         if (conversation.length === 0) {
-                            return reply(true);
+
+                            let tauthors = [];
+                            tauthors.push(request.payload._id);
+                            tauthors.push(request.auth.credentials._id);
+                            Conversation.create(tauthors, (err, newconversation) => {
+                                return reply(newconversation);
+                            });
                         }
-                        return reply(Boom.conflict('Conversation exist'));
+                        return reply(conversation);
                     });
                 }
             }]
         },
         handler: function (request, reply) {
-            let authors = [];
-            authors.push(request.payload._id);
-            authors.push(request.auth.credentials._id);
-            Conversation.create(authors, (err, conversation) => {
-                return reply(conversation);
-            });
+                return reply(request.pre.check);
         }
     }]);
     next();

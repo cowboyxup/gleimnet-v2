@@ -1,6 +1,6 @@
 import {Component, ChangeDetectionStrategy, Input} from "angular2/core";
 import {User} from "../../models";
-import {FriendsService} from "../../services/friendsService";
+import {FriendsService} from "../../services/friends.service";
 import {AuthService} from "../../services/auth.service";
 
 

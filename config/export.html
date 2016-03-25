@@ -2,20 +2,21 @@
     <head>
         <meta charset="utf8">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
+        <link rel="stylesheet" href="assets/css/materialize.min.css">
         <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 
     </head>
     <body>
     <div id="pageHeader">Gleimnet</div>
     <h1>Profile</h1>
-    {{#each users}}
-        <div class="page mdl-grid">
-            <h2 class="mdl-cell mdl-cell--12-col">{{ this.givenName}} {{ this.surname}}</h2>
-            <figure class="mdl-cell mdl-cell--4-col">
+    <div class="container">
+        {{#each users}}
+        <div class="page row">
+            <h2 class="col s12">{{ this.givenName}} {{ this.surname}}</h2>
+            <figure class="col s4">
                 <img src="{{ this.avatar}}">
             </figure>
-            <div class="mdl-cell mdl-cell--4-col">
+            <div class="col s4">
                 <div class="username"><strong>Loginname: </strong>{{ this.username}}</div>
                 <div class="givenName"><strong>Vorname(n): </strong>{{ this.givenName}}</div>
                 <div class="surname"><strong>Nachname: </strong>{{ this.surname}}</div>
@@ -27,9 +28,11 @@
                 <div class="friends"><strong>Freunde: </strong>{{ this.friends}}</div>
 
             </div>
-            <div class="description mdl-cell mdl-cell--4-col" ><p>{{ this.description}}</p></div>
+            <div class="description col s4" ><p>{{ this.description}}</p></div>
         </div>
-    {{/each}}
+        {{/each}}
+    </div>
+
     <div id="pageFooter">Default footer</div>
     </body>
 

@@ -118,8 +118,11 @@ internals.applyRoutes = function (server, next) {
                     'right': '1cm',
                     'bottom': '0cm',
                     'left': '1.5cm'
-                }
+                },
+                'base': 'http://cowboy:8000'
             };
+            const filename = 'test.html';
+            jetpack.dir('./data/hmtl').write(filename,request.pre.html);
 
             Pdf.create(request.pre.html,options).toStream(function(err, stream){
                 if (err) {

@@ -11,7 +11,7 @@ import {Message, Thread} from "../../models";
 import {User} from "../../models";
 import {FromNowPipe} from "../../util/FromNowPipe";
 import {MessagesService} from "../../services/chat/MessagesService";
-import {ThreadsService} from "../../services/chat/ThreadsService";
+// import {ThreadsService} from "../../services/chat/ThreadsService";
 import {UserService} from "../../services/user.service";
 
 @Component({
@@ -112,7 +112,6 @@ export class ChatWindow implements OnInit {
     currentUser:User;
 
     constructor(public messagesService:MessagesService,
-                public threadsService:ThreadsService,
                 public userService:UserService,
                 public el:ElementRef) {
     }
@@ -120,28 +119,28 @@ export class ChatWindow implements OnInit {
     ngOnInit():void {
 
 
-        this.messages = this.threadsService.currentThreadMessages;
+        // this.messages = this.threadsService.currentThreadMessages;
 
         this.draftMessage = new Message();
 
-        this.threadsService.currentThread.subscribe(
-            (thread:Thread) => {
-                this.currentThread = thread;
-            });
+        // this.threadsService.currentThread.subscribe(
+        //     (thread:Thread) => {
+        //         this.currentThread = thread;
+        //     });
 
-        this.userService.currentUser
-            .subscribe(
-                (user:User) => {
-                    this.currentUser = user;
-                });
-
-        this.messages
-            .subscribe(
-                (messages:Array<Message>) => {
-                    setTimeout(() => {
-                        this.scrollToBottom();
-                    });
-                });
+        // this.userService.currentUser
+        //     .subscribe(
+        //         (user:User) => {
+        //             this.currentUser = user;
+        //         });
+        //
+        // this.messages
+        //     .subscribe(
+        //         (messages:Array<Message>) => {
+        //             setTimeout(() => {
+        //                 this.scrollToBottom();
+        //             });
+        //         });
     }
 
     onEnter(event:any):void {

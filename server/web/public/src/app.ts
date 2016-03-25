@@ -32,11 +32,10 @@ import {ProfileComponent} from "./componets/profile.component";
 import {ProfileService} from "./services/profile.service";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
 import {ChatService} from "./services/chat.service";
-import {FriendsService} from "./services/friendsService";
+import {FriendsService} from "./services/friends.service";
 import {TimelineService} from "./services/timeline.service";
 import {UserService} from "./services/user.service";
 import {MessagesService} from "./services/chat/MessagesService";
-import {ThreadsService} from "./services/chat/ThreadsService";
 
 declare var System:any;
 
@@ -162,7 +161,6 @@ bootstrap(MyApp,
         TimelineService,
         ChatService,
         MessagesService,
-        ThreadsService,
         provide(
             LocationStrategy,
             {useClass: HashLocationStrategy}
