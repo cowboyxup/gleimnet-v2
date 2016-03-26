@@ -31,7 +31,8 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
     template: `
         <div protected> 
 
-            <div class="titelImage" style="background-image:url('{{user.titlePicture}}')">
+            <div class="titelImageContainer">
+                <img class="titelImage" src="{{user.titlePicture}}">
                 <img *ngIf="user.avatar" class="thumbnail profilimage" src="{{user.avatar}}" alt="...">
             </div>
 
