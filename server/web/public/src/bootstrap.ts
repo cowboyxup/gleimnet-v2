@@ -4,7 +4,6 @@
  */
 import {bootstrap} from 'angular2/platform/browser';
 import {provide} from 'angular2/core';
-import {ELEMENT_PROBE_PROVIDERS} from 'angular2/platform/common_dom';
 import {ROUTER_PROVIDERS, LocationStrategy, HashLocationStrategy} from 'angular2/router';
 import {HTTP_PROVIDERS, Http} from 'angular2/http';
 
@@ -19,8 +18,7 @@ import {FriendsService} from "./services/friends.service";
 import {TimelineService} from "./services/timeline.service";
 import {ProfileService} from "./services/profile.service";
 import {ChatService} from "./services/chat.service";
-import {MessagesService} from "./services/chat/MessagesService";
-import {UserService} from "./services/user.service";
+
 /*
  * Bootstrap our Angular app with a top level component `App` and inject
  * our Services and Providers into Angular's dependency injection
@@ -30,14 +28,11 @@ export function main() {
         // These are dependencies of our App
         HTTP_PROVIDERS,
         ROUTER_PROVIDERS,
-        ELEMENT_PROBE_PROVIDERS,
         AuthService,
         FriendsService,
         TimelineService,
         ProfileService,
         ChatService,
-        MessagesService,
-        UserService,
         provide(AuthHttp, {
             useFactory: (http) => {
                 return new AuthHttp(new AuthConfig(), http);

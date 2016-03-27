@@ -5,21 +5,24 @@ import {AuthService} from "../../services/auth.service";
 
 
 @Component({
-    selector: 'friendListItem',
+    selector: 'friendAddListItem',
     template: `
         <div class="row valign-wrapper">
-            <div class="col s4">
+            <div class="col s2">
                 <a href="#/profile/{{user._id}}">
                     <img src="{{user.avatar}}" alt="" class="circle responsive-img">
                 </a>
             </div>
-            <div class="col s8">
+            <div class="col s10">
                 <div >
                     <a href="#/profile/{{user._id}}">
                         {{user.givenName}}
                     </a>
-                    <div>
-                        <a (click)="removeFriend(user._id)">Freundschaft beenden</a>
+                    
+                    <div class="">
+                        <p>{{user.description}}</p>
+                    
+                        <a (click)="addFriend(user._id)">Freundschaftsanfrage versenden</a>
                     </div>
                 </div>
             </div>
@@ -28,16 +31,16 @@ import {AuthService} from "../../services/auth.service";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FriendListItemComponent {
+export class FriendAddListItemComponent {
     @Input() user: User;
 
     constructor(private _friendsService: FriendsService,
                 private _authService: AuthService) { }
 
 
-    private removeFriend(userId: string) {
+    private addFriend(userId: string) {
         if (this._authService.isAuthenticated()) {
-            this._friendsService.removeFriend(userId);
+            this._friendsService.requestFriendship(userId);
         }
     }
 }

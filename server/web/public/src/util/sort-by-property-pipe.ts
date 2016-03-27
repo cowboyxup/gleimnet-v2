@@ -5,7 +5,7 @@ import {Pipe, PipeTransform} from "angular2/core";
     pure: false // causes the pipe to continue to update as the data source is updated
 })
 export class SortByPropertyPipe {
-    transform(list, [propertyName]) {
+    transform(list, [propertyName, order]) {
         return list.sort((b, a) => {
                 let aValue = getNestedValue(a, propertyName);
                 let bValue = getNestedValue(b, propertyName);

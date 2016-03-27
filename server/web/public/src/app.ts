@@ -17,7 +17,7 @@ import {ROUTER_DIRECTIVES,
     Router} from 'angular2/router';
 
 
-import {LoginComponent} from './componets/login/login.component';
+import {LoginComponent} from './componets/login.component';
 import {AuthService} from "./services/auth.service";
 // import {StreamComponent} from "./componets/stream/stream.component";
 
@@ -26,6 +26,7 @@ import {Friends} from "./componets/friends/friends";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {StreamComponent} from "./componets/stream/stream.component";
 import {ProfileComponent} from "./componets/profile.component";
+import {MeetingsComponent} from "./componets/meetings.component";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
 
 declare var System: any;
@@ -45,23 +46,25 @@ declare var System: any;
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a [routerLink]="['/Stream']" >Steam</a></li>
+                <li><a [routerLink]="['/Stream']" >Stream</a></li>
                 <li><a [routerLink]="['/MyProfile']" >Me</a></li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <unreadMessagesCount></unreadMessagesCount>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a [routerLink]="['/Meetings']">Treffen</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
             
             <ul class="side-nav" id="mobile-demo">
-                <li><a [routerLink]="['/Stream']" >Steam</a></li>
+                <li><a [routerLink]="['/Stream']" >Stream</a></li>
                 <li><a [routerLink]="['/MyProfile']" >Me</a></li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <unreadMessagesCount></unreadMessagesCount>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a [routerLink]="['/Meetings']">Treffen</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
@@ -102,6 +105,11 @@ declare var System: any;
         name: 'Friends'
     },
     {
+        path: '/meetings',
+        component: MeetingsComponent,
+        name: 'Meetings'
+    },
+    {
         path: '/login',
         component: LoginComponent,
         name: 'Login'
@@ -124,6 +132,9 @@ export class App {
             .subscribe((isAuthenticated: boolean) => {
                 this.logedIn = isAuthenticated;
                 console.log('isAuthenticated: ' + this.authenticated);
+                // if (isAuthenticated) {
+                //
+                // }
             });
     }
 

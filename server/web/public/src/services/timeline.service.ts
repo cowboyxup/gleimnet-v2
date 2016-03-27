@@ -3,7 +3,7 @@ import {Response} from "angular2/http";
 import {Injectable} from "angular2/core";
 import {headers} from "./common";
 import {ProfileService} from "./profile.service";
-import {User, Post, IdInterface} from "../models";
+import {User, Post, IdInterface, indexOfId} from "../models";
 import {Subject} from "rxjs/Subject";
 import {AuthHttp} from "../common/angular2-jwt";
 
@@ -16,27 +16,14 @@ export class TimelineService {
     private _baseUrl: string = 'api/v1/timeline/';
     private timelineId: string;
 
-    private _posts: Array<Post> = new Array<Post>();
+    private _posts: Array<Post> = [];
 
-    constructor(public _authHttp: AuthHttp,
-                private _profileService: ProfileService) {
+    constructor(public _authHttp: AuthHttp) {
     }
 
     setTimeLineID(timelineId: string) {
         this._posts = [];
         this.timelineId = timelineId;
-    }
-
-    indexOf(array: IdInterface[], item: IdInterface): number {
-        const length = array.length;
-        for (let i = 0; i < length; i++) {
-            if (array[i]._id === item._id) {
-                // console.log(i);
-                return i;
-            }
-        }
-        // console.log(-1);
-        return -1;
     }
 
     load() {
@@ -96,7 +83,7 @@ export class TimelineService {
     private setPosts(posts: Array<Post>) {
 
         posts.forEach(newPost => {
-            let index: number = this.indexOf(this._posts, newPost);
+            let index: number = indexOfId(this._posts, newPost._id);
 
             if (index === -1) {
                 this._posts.push(newPost);

@@ -21,15 +21,16 @@ export class Thread implements IdInterface {
     name: string;
     avatarSrc: string;
     timeUpdated: string;
-    authorIds: string[] = new Array<string>();
+    authorIds: string[] = [];
 }
 
 export class Message {
-    id: string;
-    sentAt: Date;
-    isRead: boolean;
-    author: User;
-    text: string;
+    _id: string;
+    author: string;
+    timeCreated: string;
+    content: string;
+    authorName: string;
+    authorAvatar: string;
     thread: Thread;
 }
 

@@ -15,7 +15,7 @@ import {JwtHelper} from "../common/angular2-jwt";
 export class AuthService {
 
     public authenticated$: Observable<boolean>;
-    private _authenticated: boolean = false;
+    private _authenticated: boolean = true;
     private _authenticatedObserver: Observer<boolean>;
 
     private  jwtHelper: JwtHelper = new JwtHelper();

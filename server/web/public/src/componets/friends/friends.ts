@@ -5,12 +5,15 @@ import {ProtectedDirective} from "../../directives/protected.directive";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../models";
 import {FriendListItemComponent} from "./friendListItem.component";
+import {FriendAddListItemComponent} from "./friendAddListItem.component";
+
 
 @Component({
     selector: 'Friends',
     directives: [
         ProtectedDirective,
-        FriendListItemComponent
+        FriendListItemComponent,
+        FriendAddListItemComponent
     ],
     template: `
         <div protected class="row">
@@ -51,7 +54,7 @@ import {FriendListItemComponent} from "./friendListItem.component";
                             <hr>
                         </div>
                         
-                       
+                      
                         
                         <h4>Freunde suchen:</h4>
                         
@@ -72,24 +75,10 @@ import {FriendListItemComponent} from "./friendListItem.component";
                                 </span>
                             </form>
                             
-                            
-                            <div class="card" *ngFor="#user of searchedFriends">
-                                <div class="card-content">
-            
-                                    <span class="card-title activator grey-text text-darken-4">
-                                        <a href="#/profile/{{user._id}}">
-                                            <img class="round_avatar48 " alt="" src="assets/{{user.avatar}}">
-                                            {{user.givenName}}
-                                        </a>
-                                    </span>
-              
-                                    <div class="">
-                                        <p>{{user.description}}</p>
-                                        <a (click)="requestFriendship(user._id)">als Freund hinzufügen</a>
-                                    </div>
-            
-                                </div>
+                            <div *ngFor="#user of searchedFriends" class="row">
+                                <friendAddListItem [user]="user"></friendAddListItem>    
                             </div>
+
                         </div>
                     <div>
                 </div>

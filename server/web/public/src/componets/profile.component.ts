@@ -84,6 +84,7 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
                         <div class="card-content">
 
                             <h4>Exposé</h4>
+                            <a (click)="editProfile()">Profil bearbeiten</a>
 
                             <h5>Geburtsdatum:</h5>
                             <p>{{user.birthdate | formatedDateFromString}}
@@ -96,7 +97,12 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
 
                             <h5>Geburtsort:</h5>
                             <p>{{user.birthplace}}</p>
-
+                            
+                        </div>
+                    </div>
+                        
+                    <div class="card profile_info">
+                        <div class="card-content">
 
                             <h5>Freunde:</h5>
 
@@ -109,23 +115,24 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
                 </div>
 
                 <div class="col s9">
+
                     <div class="card stream_form">
                         <div class="card-content">
                             <form class="row">
-                <span class="input-field col s10">
-                    <input #newPosting
-                           (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
-                           type="text" class="mdl-textfield__input">
-                    <label for="comment">
-                        Was bewegt Sie?
-                    </label>
-                </span>
-                <span class="input-group-btn col s1">
-                    <button class="waves-effect waves-light btn send_Button"
-                            (click)="postNewPosting(newPosting.value); newPosting.value='' ">
-                        <i class="large material-icons">send</i>
-                    </button>
-                 </span>
+                                <span class="input-field col s10">
+                                    <input #newPosting
+                                           (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
+                                           type="text" class="mdl-textfield__input">
+                                    <label for="comment">
+                                        Was bewegt Sie?
+                                    </label>
+                                </span>
+                                <span class="input-group-btn col s1">
+                                    <button class="waves-effect waves-light btn send_Button"
+                                            (click)="postNewPosting(newPosting.value); newPosting.value='' ">
+                                        <i class="large material-icons">send</i>
+                                    </button>
+                                </span>
                             </form>
                         </div>
                     </div>
@@ -156,11 +163,13 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
 export class ProfileComponent implements OnInit, OnDestroy {
 
     addFriendButton = true;
-    interval;
 
     isMe = false;
     timelineAvailable: boolean = false;
     userId: string;
+
+    private interval;
+
     private user = new User();
     private posts: Array<Post>;
     private friends: Array<User>;
@@ -172,7 +181,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 private _friendsService: FriendsService,
                 private _chatService: ChatService) {
 
-        this.posts = new Array<Post>();
+        this.posts = [];
         this.userId = this._routeParams.get('id');
 
         if (this.userId === null) {
@@ -213,7 +222,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         console.log("timeline: " + this.user.timeline);
         this._timelineService.setTimeLineID(this.user.timeline);
         this.loadTimeline();
-        // this.interval = setInterval(() => this.loadTimeline(), 2000);
+        this.interval = setInterval(() => this.loadTimeline(), 2000);
     }
 
     ngOnDestroy() {
@@ -249,6 +258,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 console.log("err");
             });
         }
+    }
+
+    private editProfile() {
+        // if (this._authService.isAuthenticated()) {
+        // }
     }
 }
 

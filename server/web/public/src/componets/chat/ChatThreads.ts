@@ -4,8 +4,6 @@ import {
     ChangeDetectionStrategy
 } from 'angular2/core';
 
-import {Observable} from 'rxjs';
-// import {ThreadsService} from "../../services/chat/ThreadsService";
 import {Thread} from "../../models";
 import {ChatService} from "../../services/chat.service";
 import {AuthService} from "../../services/auth.service";
@@ -65,6 +63,7 @@ class ChatThread implements OnInit {
                     this.thread &&
                     (currentThread._id === this.thread._id);
             });
+
     }
 
     clicked(event: any): void {

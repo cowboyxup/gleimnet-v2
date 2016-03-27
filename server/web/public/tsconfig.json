@@ -12,7 +12,7 @@
     "src/bootstrap.ts",
     "src/vendor.ts",
     "src/app.ts",
-    "src/componets/login/login.component.ts",
+    "src/componets/login.component.ts",
     "src/services/auth.service.ts",
     "src/services/common.ts",
     "src/componets/stream/stream.component.ts",
@@ -33,9 +33,13 @@
     "src/services/chat.service.ts",
     "src/componets/chat/chat.component.ts",
     "src/componets/chat/unreadMessagesCount.ts",
-    "src/services/chat/MessagesService.ts",
+    "src/componets/chat/ChatWindow.ts",
+    "src/componets/meetings.component.ts",
+    "src/util/dateFormat.pipe.ts",
+    "src/componets/stream/comment.component.ts",
     "src/componets/chat/ChatThreads.ts",
-    "src/componets/chat/ChatWindow.ts"
+    "src/util/sort-by-property-ascending.pipe.ts",
+    "src/componets/friends/friendAddListItem.component.ts"
   ],
   "compileOnSave": false
 }

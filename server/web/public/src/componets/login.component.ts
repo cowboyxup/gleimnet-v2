@@ -5,7 +5,7 @@ import {FORM_DIRECTIVES} from "angular2/common";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {RouterLink} from "angular2/router";
 
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from "../services/auth.service";
 
 @Component({
     selector: 'login',
@@ -62,7 +62,7 @@ export class LoginComponent {
         this._authService.authenticated$
             .subscribe((isAuthenticated: boolean) => {
                    if (isAuthenticated) {
-                       setTimeout( () => this._router.navigate(['Friends']) , 1);
+                       setTimeout( () => this._router.navigate(['Stream']) , 1);
                    }
             });
     }

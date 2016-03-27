@@ -70,24 +70,16 @@ export class StreamService {
                                 commentIndex = i;
                             }
                         }
-
                         //console.log(commentIndex);
-
                         if (commentIndex === -1) {
 
                             oldPost.comments.push(comment);
                         }
-
                     });
-
-
                     //oldPost.setComments(newPost.comments);
                 }
 
             });
         }
     }
-
-
-
 }

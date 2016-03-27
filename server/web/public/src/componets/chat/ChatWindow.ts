@@ -1,18 +1,18 @@
-        import {
+import {
     Component,
     OnInit,
     ElementRef,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy, Input
 } from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 
 import {Observable} from 'rxjs';
 import {Message, Thread} from "../../models";
-import {User} from "../../models";
 import {FromNowPipe} from "../../util/FromNowPipe";
-import {MessagesService} from "../../services/chat/MessagesService";
-// import {ThreadsService} from "../../services/chat/ThreadsService";
-import {UserService} from "../../services/user.service";
+import {ChatService} from "../../services/chat.service";
+import {AuthService} from "../../services/auth.service";
+import {ProfileService} from "../../services/profile.service";
+import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending.pipe";
 
 @Component({
     inputs: [
@@ -28,20 +28,20 @@ import {UserService} from "../../services/user.service";
             <div class="card-content">
                 <div class="card-title activator grey-text text-darken-4">
                     <span class="avatar_left" *ngIf="incoming">
-                        <img class="round_avatar" src="{{message.author.avatarSrc}}">
+                        <img class="round_avatar" src="{{message.authorAvatar}}">
                     </span>  
                     
-                    <span class = "message_auther">{{message.author.name}} • {{message.sentAt | fromNow}}</span>
+                    <span class = "message_auther">{{message.authorName}} • {{message.timeCreated | fromNow}}</span>
                     
                     <span class="avatar_right" *ngIf="!incoming">
-                        <img class="round_avatar" src="{{message.author.avatarSrc}}">
+                        <img class="round_avatar" src="{{message.authorAvatar}}">
                     </span>
                 
                 </div>
                 
                 <div class="messages"
                   [ngClass]="{'msg-sent': !incoming, 'msg-receive': incoming}">
-                  <p>{{message.text}}</p>
+                  <p>{{message.content}}</p>
                   
                 </div>
             </div>
@@ -49,22 +49,25 @@ import {UserService} from "../../services/user.service";
   `
 })
 export class ChatMessage implements OnInit {
+    @Input()
     message: Message;
-    currentUser: User;
     incoming: boolean;
 
-    constructor(public userService: UserService) {
-    }
+    constructor(private _authService: AuthService,
+                private _profileService: ProfileService) {}
 
     ngOnInit(): void {
-        this.userService.currentUser
-            .subscribe(
-                (user: User) => {
-                    this.currentUser = user;
-                    if (this.message.author && user) {
-                        this.incoming = this.message.author._id !== user._id;
+        this.incoming = this.message.author !== this._authService.getUserId();
+
+
+        if (this.message.author !== null) {
+                this._profileService.getUserForId(this.message.author).subscribe(user => {
+                    if (user !== null) {
+                        this.message.authorName = user.givenName;
+                        this.message.authorAvatar = user.avatar;
                     }
                 });
+        }
     }
 
 }
@@ -75,7 +78,10 @@ export class ChatMessage implements OnInit {
         ChatMessage,
         FORM_DIRECTIVES
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    pipes: [
+        SortByPropertyAscendingPipe
+    ],
+    // changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="card">
             <div class="card-content">
@@ -83,10 +89,11 @@ export class ChatMessage implements OnInit {
                 
                     <div class="scroll_messages">
                         <chat-message
-                            *ngFor="#message of messages | async"
+                            *ngFor="#message of messages | sortAscendingByProperty : 'timeCreated' "
                             [message]="message">
                         </chat-message>
-                    </div>
+                    </div >
+                    
                 
                     <div class="row">
     
@@ -95,7 +102,7 @@ export class ChatMessage implements OnInit {
                         <div class="input-field col s10">
                             <input type="text" 
                                 (keydown.enter)="onEnter($event)"
-                                [(ngModel)]="draftMessage.text" />
+                                [(ngModel)]="draftMessage" />
                              <label for="password">Verfasse eine Nachricht</label>
                         </div>
                    
@@ -110,38 +117,27 @@ export class ChatMessage implements OnInit {
     `
 })
 export class ChatWindow implements OnInit {
-    messages: Observable<any>;
+    messages: Array<Message> = [];
     currentThread:  Thread;
-    draftMessage:   Message;
-    currentUser:    User;
+    draftMessage:   string = "";
 
-    constructor(public messagesService: MessagesService,
-                public userService: UserService,
-                public el: ElementRef) {}
+    constructor(private _chatService: ChatService) {}
 
     ngOnInit(): void {
-        // this.messages = this.threadsService.currentThreadMessages;
 
-        this.draftMessage = new Message();
+        this._chatService.currentThread.subscribe(
+            (thread: Thread) => {
+                this.currentThread = thread;
+                this. messages = [];
+            });
 
-        // this.threadsService.currentThread.subscribe(
-        //     (thread:Thread) => {
-        //         this.currentThread = thread;
-        //     });
-
-        // this.userService.currentUser
-        //     .subscribe(
-        //         (user:User) => {
-        //             this.currentUser = user;
-        //         });
-        //
-        // this.messages
-        //     .subscribe(
-        //         (messages:Array<Message>) => {
-        //             setTimeout(() => {
-        //                 this.scrollToBottom();
-        //             });
-        //         });
+        this._chatService.currentThreadMessagesSubject.subscribe(
+            (message: Message) => {
+                this.messages.push(message);
+                setTimeout(() => {
+                    this.scrollToBottom();
+                });
+            });
     }
 
     onEnter(event: any): void {
@@ -150,18 +146,14 @@ export class ChatWindow implements OnInit {
     }
 
     sendMessage(): void {
-        let m: Message = this.draftMessage;
-        m.author = this.currentUser;
-        m.thread = this.currentThread;
-        m.isRead = true;
-        this.messagesService.addMessage(m);
-        this.draftMessage = new Message();
+        this._chatService.sendNewMessage(this.draftMessage, this.currentThread._id);
+        this.draftMessage = "";
     }
 
     scrollToBottom(): void {
-        let scrollPane: any = this.el
-            .nativeElement.querySelector('.scroll_messages');
-        scrollPane.scrollTop = scrollPane.scrollHeight;
+        // let scrollPane: any = this.el
+        //     .nativeElement.querySelector('.scroll_messages');
+        // scrollPane.scrollTop = scrollPane.scrollHeight;
     }
 
 }

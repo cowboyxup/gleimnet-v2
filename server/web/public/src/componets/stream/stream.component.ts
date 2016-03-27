@@ -35,6 +35,7 @@ import {ProfileService} from "../../services/profile.service";
             <div class="row">
                 <div class="col s12">
                     <div class="card">
+                        
                         <div class="card-content">
                             <form class="row">
                                 <span class="input-field col s10">
@@ -58,7 +59,7 @@ import {ProfileService} from "../../services/profile.service";
                     <div class="posting" *ngFor="#posting of posts | sortByProperty : 'timeCreated'">
                         <posting [posting]="posting"> </posting>
                     </div>
-                       </div>
+                </div>
             </div>
         </div>
         `
