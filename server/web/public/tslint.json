@@ -6,7 +6,7 @@
     "indent": "tabs",
     "max-line-length": [
       true,
-      120
+      130
     ],
     "member-ordering": [
       true,

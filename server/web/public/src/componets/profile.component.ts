@@ -12,20 +12,20 @@ import {TimelineService} from "../services/timeline.service";
 import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
 import {AuthService} from "../services/auth.service";
-import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
 import {User, Post} from "../models";
 import {FriendListItemComponent} from "./friends/friendListItem.component";
 import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
+import {ProfileInfoComponent} from  "./profileinfo.componente";
 
 @Component({
     selector: 'Profile',
     directives: [
         ProtectedDirective,
         FriendListItemComponent,
-        TimeLinePostComponent
+        TimeLinePostComponent,
+        ProfileInfoComponent
     ],
     pipes: [
-        FormatedDateFromStringPipe,
         SortByPropertyPipe
     ],
     template: `
@@ -80,26 +80,9 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
 
             <div class="row">
                 <div class="col s3">
-                    <div class="card profile_info">
-                        <div class="card-content">
 
-                            <h4>Exposé</h4>
-                            <a (click)="editProfile()">Profil bearbeiten</a>
-
-                            <h5>Geburtsdatum:</h5>
-                            <p>{{user.birthdate | formatedDateFromString}}
-
-                            <h5>Beschreibung:</h5>
-                            <p>{{user.description}}</p>
-
-                            <h5>Wirkungsort:</h5>
-                            <p>{{user.influenceplace}}</p>
-
-                            <h5>Geburtsort:</h5>
-                            <p>{{user.birthplace}}</p>
-                            
-                        </div>
-                    </div>
+                    
+                    <profileInfo [user]="user"></profileInfo>
                         
                     <div class="card profile_info">
                         <div class="card-content">
@@ -260,9 +243,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
         }
     }
 
-    private editProfile() {
-        // if (this._authService.isAuthenticated()) {
-        // }
-    }
 }
 

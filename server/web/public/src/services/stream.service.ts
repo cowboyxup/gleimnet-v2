@@ -1,6 +1,6 @@
 import {Injectable} from "angular2/core";
 import {Subject} from "rxjs/Subject";
-import {Post, Paged, IdInterface} from "../models";
+import {Post, Paged, IdInterface, indexOfId} from "../models";
 import {headers} from "./common";
 import {Response} from "angular2/http";
 import {AuthHttp} from "../common/angular2-jwt";
@@ -32,54 +32,33 @@ export class StreamService {
 
     }
 
-    private indexOf(array: IdInterface[], item: IdInterface): number {
-        const length = array.length;
-        for (let i = 0; i < length; i++) {
-            if (array[i]._id === item._id) {
-                // console.log(i);
-                return i;
-            }
-        }
-        // console.log(-1);
-        return -1;
-    }
-
     private setPosts(posts: Array<Post>) {
 
-        if (posts !== null) {
+        posts.forEach(newPost => {
+            let index: number = indexOfId(this._posts, newPost._id);
 
-            let self = this;
+            if (index === -1) {
+                this._posts.push(newPost);
+                this.postSubject.next(newPost);
 
-            posts.forEach(newPost => {
-                let index: number = self.indexOf(self._posts, newPost);
+            } else {
+                var oldPost: Post = this._posts[index];
 
-                if (index === -1) {
+                newPost.comments.forEach(comment => {
 
-                    self._posts.push(newPost);
-                    self.postSubject.next(newPost);
-                } else {
-                    var oldPost: Post = this._posts[index];
-
-                    newPost.comments.forEach(comment => {
-
-                        var commentIndex = -1;
-                        const length = oldPost.comments.length;
-                        for (let i = 0; i < length; i++) {
-                            if (oldPost.comments[i]._id ===  comment._id) {
-                                // console.log(i);
-                                commentIndex = i;
-                            }
+                    var commentIndex = -1;
+                    const length = oldPost.comments.length;
+                    for (let i = 0; i < length; i++) {
+                        if (oldPost.comments[i]._id === comment._id) {
+                            commentIndex = i;
                         }
-                        //console.log(commentIndex);
-                        if (commentIndex === -1) {
+                    }
 
-                            oldPost.comments.push(comment);
-                        }
-                    });
-                    //oldPost.setComments(newPost.comments);
-                }
-
-            });
-        }
+                    if (commentIndex === -1) {
+                        oldPost.comments.push(comment);
+                    }
+                });
+            }
+        });
     }
 }

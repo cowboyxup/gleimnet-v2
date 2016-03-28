@@ -39,7 +39,9 @@
     "src/componets/stream/comment.component.ts",
     "src/componets/chat/ChatThreads.ts",
     "src/util/sort-by-property-ascending.pipe.ts",
-    "src/componets/friends/friendAddListItem.component.ts"
+    "src/componets/friends/friendAddListItem.component.ts",
+    "src/componets/profileinfo.componente.ts",
+    "src/common/datePicker/datepicker.ts"
   ],
   "compileOnSave": false
 }
