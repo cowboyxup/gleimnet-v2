@@ -1,8 +1,6 @@
 import {Component, OnInit} from 'angular2/core';
-import {Message, Thread} from '../../models';
-// import * as _ from 'underscore';
-import {MessagesService} from "../../services/chat/MessagesService";
-// import {ThreadsService} from "../../services/chat/ThreadsService";
+import {ChatService} from "../../services/chat.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'unreadMessagesCount',
@@ -11,12 +9,19 @@ import {MessagesService} from "../../services/chat/MessagesService";
   `
 })
 
-export class UnreadMessagesCount implements OnInit {ß
-  unreadMessagesCount: number = 0;
+export class UnreadMessagesCount implements OnInit {
+    unreadMessagesCount: number = 0;
+    private intervalConversationsReload;
 
-  constructor(public messagesService: MessagesService
-              // public threadsService: ThreadsService
-  ) {
+    constructor(public chatService: ChatService,
+              public _authService: AuthService) {
+
+        // this._authService.authenticated$
+        //     .subscribe((isAuthenticated: boolean) => {
+        //         if (isAuthenticated) {
+        //             this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 2000);
+        //         }
+        //     });
   }
 
   ngOnInit(): void {

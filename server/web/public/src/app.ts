@@ -8,40 +8,32 @@ import 'zone.js';
 import 'reflect-metadata';
 
 import {enableProdMode} from "angular2/core";
-import {Component, View, provide} from 'angular2/core';
-import {bootstrap} from 'angular2/platform/browser';
+import {Component, provide} from 'angular2/core';
 import {ROUTER_DIRECTIVES,
     RouteConfig,
-    Location,
     ROUTER_PROVIDERS,
     LocationStrategy,
     HashLocationStrategy,
-    Route,
     Router} from 'angular2/router';
-import {HTTP_PROVIDERS, Http} from 'angular2/http';
-import {AuthHttp} from 'angular2-jwt/angular2-jwt';
+
+
+import {LoginComponent} from './componets/login.component';
+import {AuthService} from "./services/auth.service";
+// import {StreamComponent} from "./componets/stream/stream.component";
 
 import {Chat} from './componets/chat/chat.component';
-import {Login} from './componets/login/login.component'
 import {Friends} from "./componets/friends/friends";
-import {Stream} from "./componets/stream/stream.component";
-import {AuthConfig} from "angular2-jwt/angular2-jwt";
-import {AuthService} from "./services/auth.service";
 import {CORE_DIRECTIVES} from "angular2/common";
+import {StreamComponent} from "./componets/stream/stream.component";
 import {ProfileComponent} from "./componets/profile.component";
-import {ProfileService} from "./services/profile.service";
+import {MeetingsComponent} from "./componets/meetings.component";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
-import {ChatService} from "./services/chat.service";
-import {FriendsService} from "./services/friends.service";
-import {TimelineService} from "./services/timeline.service";
-import {UserService} from "./services/user.service";
-import {MessagesService} from "./services/chat/MessagesService";
 
-declare var System:any;
+declare var System: any;
 
 @Component({
-    selector: 'my-app',
-    directives:[
+    selector: 'app',
+    directives: [
         ROUTER_DIRECTIVES,
         CORE_DIRECTIVES,
         UnreadMessagesCount
@@ -54,23 +46,25 @@ declare var System:any;
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a [routerLink]="['/Stream']" >Steam</a></li>
+                <li><a [routerLink]="['/Stream']" >Stream</a></li>
                 <li><a [routerLink]="['/MyProfile']" >Me</a></li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <unreadMessagesCount></unreadMessagesCount>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a [routerLink]="['/Meetings']">Treffen</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
             
             <ul class="side-nav" id="mobile-demo">
-                <li><a [routerLink]="['/Stream']" >Steam</a></li>
+                <li><a [routerLink]="['/Stream']" >Stream</a></li>
                 <li><a [routerLink]="['/MyProfile']" >Me</a></li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <unreadMessagesCount></unreadMessagesCount>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a [routerLink]="['/Meetings']">Treffen</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
@@ -84,11 +78,10 @@ declare var System:any;
         `
 })
 
-
 @RouteConfig([
     {
         path: '/',
-        component: Stream,
+        component: StreamComponent,
         name: 'Stream'
     },
     {
@@ -99,42 +92,50 @@ declare var System:any;
     {
         path: '/profile/:id',
         component: ProfileComponent,
-        name: 'Profile'},
+        name: 'Profile'
+    },
     {
         path: '/chat',
         component: Chat,
-        name: 'Chat'},
+        name: 'Chat'
+    },
     {
         path: '/friends',
         component: Friends,
-        name: 'Friends'},
+        name: 'Friends'
+    },
+    {
+        path: '/meetings',
+        component: MeetingsComponent,
+        name: 'Meetings'
+    },
     {
         path: '/login',
-        component: Login,
+        component: LoginComponent,
         name: 'Login'
     }
 ])
 
-export class MyApp {
+export class App {
 
-    logedIn:boolean =false;
-    logInOut: string = "Login";
-    private sub:any = null;
+    logedIn: boolean = false;
+    private sub: any = null;
 
 
     constructor(private _router: Router,
-                public _authService:AuthService) {
+                public _authService: AuthService) {
         //enableProdMode();
     }
 
     ngOnInit(): void {
         this._authService.authenticated$
             .subscribe((isAuthenticated: boolean) => {
-                this.logedIn=isAuthenticated;
+                this.logedIn = isAuthenticated;
                 console.log('isAuthenticated: ' + this.authenticated);
-
-            }
-        )
+                // if (isAuthenticated) {
+                //
+                // }
+            });
     }
 
     get authenticated() {
@@ -142,7 +143,7 @@ export class MyApp {
     }
 
     goToLogin() {
-        this._router.navigateByUrl('/login');
+        this._router.navigate(['Stream']);
     }
 
     doLogout() {
@@ -150,28 +151,28 @@ export class MyApp {
     }
 }
 
-bootstrap(MyApp,
-    [
-        ROUTER_PROVIDERS,
-        HTTP_PROVIDERS,
-        AuthService,
-        ProfileService,
-        UserService,
-        FriendsService,
-        TimelineService,
-        ChatService,
-        MessagesService,
-        provide(
-            LocationStrategy,
-            {useClass: HashLocationStrategy}
-        ),
-        provide(AuthHttp, {
-            useFactory: (http) => {
-                return new AuthHttp(new AuthConfig({
-                    headerPrefix: ""
-                }), http);
-            },
-            deps: [Http]
-        })
-    ]
-);
+// bootstrap(MyApp,
+//     [
+//         ROUTER_PROVIDERS,
+//         HTTP_PROVIDERS,
+//         provide(AuthHttp, {
+//             useFactory: (http) => {
+//                 return new AuthHttp(new AuthConfig({
+//                     headerPrefix: ""
+//                 }), http);
+//             },
+//             deps: [Http]
+//         }),
+//         AuthService,
+//         ProfileService,
+//         UserService,
+//         FriendsService,
+//         TimelineService,
+//         ChatService,
+//         MessagesService,
+//         provide(
+//             LocationStrategy,
+//             {useClass: HashLocationStrategy}
+//         )
+//     ]
+// );

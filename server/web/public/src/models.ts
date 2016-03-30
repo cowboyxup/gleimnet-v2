@@ -1,4 +1,4 @@
-export class User{
+export class User {
     _id:  string;
     avatar:  string;
     birthdate: string;
@@ -6,7 +6,7 @@ export class User{
     description:  string;
     friends: string[];
     givenName: string;
-    surname:string;
+    surname: string;
     influenceplace:  string;
     nickname: string;
     tags:  string[];
@@ -15,99 +15,99 @@ export class User{
     titlePicture:  string;
 }
 
-export class Thread implements idI{
+export class Thread implements IdInterface {
     _id: string;
     lastMessage: Message;
     name: string;
     avatarSrc: string;
-    timeUpdated:string;
-    authorIds:string[] = new Array<string>();
+    timeUpdated: string;
+    authorIds: string[] = [];
 }
 
 export class Message {
-    id: string;
-    sentAt: Date;
-    isRead: boolean;
-    author: User;
-    text: string;
+    _id: string;
+    author: string;
+    timeCreated: string;
+    content: string;
+    authorName: string;
+    authorAvatar: string;
     thread: Thread;
 }
 
 
 export class Paged<T>{
-    _id:string;
-    items:{
-        begin:number;
-        ende:number;
-        limit:number;
-        total:number;
-    }
-    pages:{
+    _id: string;
+    items: {
+        begin: number;
+        ende: number;
+        limit: number;
+        total: number;
+    };
+    pages: {
         current: number;
         hasNext: boolean
         hasPrev: boolean;
         next: number
         prev: number;
         total: number;
-    }
-    data:Array<T>;
-    timeCreated:Date;
+    };
+    data: Array<T>;
+    timeCreated: Date;
 }
 
 
-export interface idI{
-    _id:string;
+export interface IdInterface {
+    _id: string;
 }
 
 
-export class Post implements idI{
+export class Post implements IdInterface {
 
-    constructor(id:string, author:string, content:string) {
+    _id: string;
+
+    author: string;
+    timeCreated: string;
+    content: string;
+    comments: Comment[];
+
+    authorName: string;
+    authorAvatar: string;
+
+    constructor(id: string, author: string, content: string) {
         this._id = id;
         this.author = author;
         this.content = content;
     }
 
-    containsCommentWithiD(id:string):boolean{
-        var contains:boolean = false;
+    containsCommentWithiD(id: string): boolean {
+        var contains: boolean = false;
         this.comments.forEach(comment => {
-            if (comment._id == id) {
+            if (comment._id === id) {
                 return true;
             }
-        })
+        });
 
         return false;
     }
 
-    addComment(comment:Comment){
+    addComment(comment: Comment) {
         this.comments.push(comment);
     }
-
-    _id:string;
-    author:string;
-    timeCreated:string;
-    
-    content:string;
-    comments:Comment[];
-
-    authorName:string
-    authorAvatar:string
-
 }
 
-export class Comment implements idI{
-    _id:string;
-    author:string;
-    content:string;
+export class Comment implements IdInterface {
+    _id: string;
+    author: string;
+    content: string;
 
-    authorName:string
-    authorAvatar:string
+    authorName: string;
+    authorAvatar: string;
 }
 
-export function indexOfId(array:idI[], id:string):number {
+export function indexOfId(array: IdInterface[], id: string): number {
     const length = array.length;
     for (let i = 0; i < length; i++) {
-        if (array[i]._id == id) {
+        if (array[i]._id === id) {
             // console.log(i);
             return i;
         }

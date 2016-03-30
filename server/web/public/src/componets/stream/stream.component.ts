@@ -1,9 +1,7 @@
 import {Component} from 'angular2/core';
 import {OnInit} from "angular2/core";
-import {Control} from "angular2/common";
 import {OnDestroy} from "angular2/core";
 
-import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -21,7 +19,7 @@ import {ProfileService} from "../../services/profile.service";
 
 @Component({
     selector: 'Stream',
-    providers:[
+    providers: [
         TimelineService,
         StreamService
     ],
@@ -33,64 +31,63 @@ import {ProfileService} from "../../services/profile.service";
         SortByPropertyPipe
     ],
     template: `
-<div protected class="">
-    <div class="row">
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <form class="row">
-                        <span class="input-field col s10">
-                            <input #newPosting
-                             (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
-                                type="text" class="mdl-textfield__input">
-                            <label for="comment">
-                                Was bewegt Sie?
-                            </label>
-                        </span>
-                        <span class="input-group-btn col s1">
-                            <button class="waves-effect waves-light btn send_Button"
-                                (click)="postNewPosting(newPosting.value); newPosting.value='' ">
-                                <i class="material-icons">send</i>
-                            </button>
-                        </span>
-                    </form>
+        <div protected class="">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card">
+                        
+                        <div class="card-content">
+                            <form class="row">
+                                <span class="input-field col s10">
+                                    <input #newPosting
+                                     (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
+                                        type="text" class="mdl-textfield__input">
+                                    <label for="comment">
+                                        Was bewegt Sie?
+                                    </label>
+                                </span>
+                                <span class="input-group-btn col s1">
+                                    <button class="waves-effect waves-light btn send_Button"
+                                        (click)="postNewPosting(newPosting.value); newPosting.value='' ">
+                                        <i class="material-icons">send</i>
+                                    </button>
+                                </span>
+                            </form>
+                        </div>
+                    </div>
+        
+                    <div class="posting" *ngFor="#posting of posts | sortByProperty : 'timeCreated'">
+                        <posting [posting]="posting"> </posting>
+                    </div>
                 </div>
             </div>
-
-            <div class="posting" *ngFor="#posting of posts | sortByProperty : 'timeCreated'">
-                <posting [posting]="posting"> </posting>
-            </div>
         </div>
-    </div>
-</div>
-`
-
+        `
 })
 
 
 
-export class Stream implements OnInit,OnDestroy{
+export class StreamComponent implements OnInit, OnDestroy {
 
-    private posts:Array<Post> = new Array<Post>();
+    private posts: Array<Post> = [];
 
-    user:User;
-    interval
+    private user: User;
+    private interval;
 
     constructor(private _streamService: StreamService,
-                private _authService:AuthService,
-                private _timelineService:TimelineService,
-                private _profileService:ProfileService) {
+                private _authService: AuthService,
+                private _timelineService: TimelineService,
+                private _profileService: ProfileService) {
 
-        
         this._streamService.postSubject
-            .subscribe(post => {
+            .subscribe( post => {
                     this.posts.push(post);
                 }
             );
 
 
         this._profileService.getUserForId(this._authService.getUserId())
-            .subscribe((user:User) =>{
+            .subscribe(( user: User ) => {
                 this.user = user;
                 this._timelineService.setTimeLineID(this.user.timeline);
         });
@@ -98,8 +95,8 @@ export class Stream implements OnInit,OnDestroy{
     }
 
     ngOnInit() {
-        if(this._authService.isAuthenticated()){
-            this._streamService.load()
+        if (this._authService.isAuthenticated()) {
+            this._streamService.load();
             this.interval = setInterval(() => this._streamService.load(), 10000 );
         }
     }
@@ -108,14 +105,14 @@ export class Stream implements OnInit,OnDestroy{
         clearInterval(this.interval);
     }
 
-    postNewPosting(content:string){
-        if(this._authService){
+    postNewPosting(content: string) {
+        if (this._authService) {
             this._timelineService.postNewPosting(content);
         }
     }
 
-    commentOnPosting(content:string, postId:string){
-        if(this._authService.isAuthenticated()){
+    commentOnPosting(content: string, postId: string) {
+        if (this._authService.isAuthenticated()) {
             //this._profileService.commentOnPosting(content, postId)
             //    .subscribe(
             //        response => {
@@ -132,9 +129,8 @@ export class Stream implements OnInit,OnDestroy{
         let scrollY =  window.scrollY;
         let innerHeight = window.innerHeight;
 
-        if (scrollY + innerHeight == offsetHeight) {
+        if (scrollY + innerHeight === offsetHeight) {
             console.log('At the bottom');
         }
     }
-
 }

@@ -10,11 +10,11 @@ export const usernameKey =  "username";
 export const authHeader =  "authHeader";
 
 
-export function headers(){
+export function headers() {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
     var basicAuth =  localStorage.getItem('AuthKey');
-    headers.append('Authorization',basicAuth);
+    headers.append('Authorization', basicAuth);
 
     return headers;
 }

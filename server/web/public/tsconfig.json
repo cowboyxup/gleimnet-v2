@@ -1,20 +1,47 @@
 {
-  "version": "1.6.0",
   "compilerOptions": {
+    "target": "ES5",
     "module": "commonjs",
-    "target": "es5",
-    "declaration": false,
-    "noImplicitAny": false,
     "removeComments": true,
-    "noLib": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
-    "listFiles": true
+    "sourceMap": true
   },
-  "exclude": [
-    "node_modules",
+  "files": [
     "typings/main.d.ts",
-    "typings/main"
-  ]
+    "src/bootstrap.ts",
+    "src/vendor.ts",
+    "src/app.ts",
+    "src/componets/login.component.ts",
+    "src/services/auth.service.ts",
+    "src/services/common.ts",
+    "src/componets/stream/stream.component.ts",
+    "src/componets/stream/post.component.ts",
+    "src/services/stream.service.ts",
+    "src/directives/protected.directive.ts",
+    "src/models.ts",
+    "src/services/timeline.service.ts",
+    "src/util/sort-by-property-pipe.ts",
+    "src/services/profile.service.ts",
+    "src/common/angular2-jwt.ts",
+    "src/services/friends.service.ts",
+    "src/componets/friends/friends.ts",
+    "src/componets/friends/friendListItem.component.ts",
+    "src/util/FromNowPipe.ts",
+    "src/services/user.service.ts",
+    "src/componets/profile.component.ts",
+    "src/services/chat.service.ts",
+    "src/componets/chat/chat.component.ts",
+    "src/componets/chat/unreadMessagesCount.ts",
+    "src/componets/chat/ChatWindow.ts",
+    "src/componets/meetings.component.ts",
+    "src/util/dateFormat.pipe.ts",
+    "src/componets/stream/comment.component.ts",
+    "src/componets/chat/ChatThreads.ts",
+    "src/util/sort-by-property-ascending.pipe.ts",
+    "src/componets/friends/friendAddListItem.component.ts",
+    "src/componets/profileinfo.componente.ts",
+    "src/common/datePicker/datepicker.ts"
+  ],
+  "compileOnSave": false
 }
