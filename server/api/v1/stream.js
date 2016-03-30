@@ -98,9 +98,16 @@ internals.applyRoutes = function (server, next) {
                         }
                         let tempPost = data.clean;
                         let comments = data.comments;
+
+                        const allCommentsDict = [];
+                        for (let i = 0; i < comments.length; ++i) {
+                            const id = comments[i]._id.toString();
+                            allCommentsDict[id] = comments[i];
+                        }
                         for (let i = 0; i < tempPost.length; ++i) {
                             for (let j = 0; j < tempPost[i].comments.length; ++j) {
-                                let comment = comments.shift();
+                                const id = tempPost[i].comments[j]._id.toString()
+                                let comment = allCommentsDict[id];
                                 comment.comments = undefined;
                                 tempPost[i].comments[j] = comment;
                             }
