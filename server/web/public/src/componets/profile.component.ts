@@ -6,32 +6,33 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
 import {ProfileService} from "../services/profile.service";
-import {ChatService} from "../services/chat.service";
-import {FriendsService} from "../services/friendsService";
+import {ChatService, Conversation} from "../services/chat.service";
+import {FriendsService} from "../services/friends.service";
 import {TimelineService} from "../services/timeline.service";
 import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
 import {AuthService} from "../services/auth.service";
-import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
 import {User, Post} from "../models";
 import {FriendListItemComponent} from "./friends/friendListItem.component";
 import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
+import {ProfileInfoComponent} from  "./profileinfo.componente";
 
 @Component({
     selector: 'Profile',
     directives: [
         ProtectedDirective,
         FriendListItemComponent,
-        TimeLinePostComponent
+        TimeLinePostComponent,
+        ProfileInfoComponent
     ],
     pipes: [
-        FormatedDateFromStringPipe,
         SortByPropertyPipe
     ],
     template: `
         <div protected> 
 
-            <div class="titelImage" style="background-image:url('{{user.titlePicture}}')">
+            <div class="titelImageContainer">
+                <img class="titelImage" src="{{user.titlePicture}}">
                 <img *ngIf="user.avatar" class="thumbnail profilimage" src="{{user.avatar}}" alt="...">
             </div>
 
@@ -79,23 +80,12 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
 
             <div class="row">
                 <div class="col s3">
+
+                    
+                    <profileInfo [user]="user"></profileInfo>
+                        
                     <div class="card profile_info">
                         <div class="card-content">
-
-                            <h4>Exposé</h4>
-
-                            <h5>Geburtsdatum:</h5>
-                            <p>{{user.birthdate | formatedDateFromString}}
-
-                            <h5>Beschreibung:</h5>
-                            <p>{{user.description}}</p>
-
-                            <h5>Wirkungsort:</h5>
-                            <p>{{user.influenceplace}}</p>
-
-                            <h5>Geburtsort:</h5>
-                            <p>{{user.birthplace}}</p>
-
 
                             <h5>Freunde:</h5>
 
@@ -108,23 +98,24 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
                 </div>
 
                 <div class="col s9">
+
                     <div class="card stream_form">
                         <div class="card-content">
                             <form class="row">
-                <span class="input-field col s10">
-                    <input #newPosting
-                           (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
-                           type="text" class="mdl-textfield__input">
-                    <label for="comment">
-                        Was bewegt Sie?
-                    </label>
-                </span>
-                <span class="input-group-btn col s1">
-                    <button class="waves-effect waves-light btn send_Button"
-                            (click)="postNewPosting(newPosting.value); newPosting.value='' ">
-                        <i class="large material-icons">send</i>
-                    </button>
-                 </span>
+                                <span class="input-field col s10">
+                                    <input #newPosting
+                                           (keyup.enter)="postNewPosting(newPosting.value); newPosting.value=''"
+                                           type="text" class="mdl-textfield__input">
+                                    <label for="comment">
+                                        Was bewegt Sie?
+                                    </label>
+                                </span>
+                                <span class="input-group-btn col s1">
+                                    <button class="waves-effect waves-light btn send_Button"
+                                            (click)="postNewPosting(newPosting.value); newPosting.value='' ">
+                                        <i class="large material-icons">send</i>
+                                    </button>
+                                </span>
                             </form>
                         </div>
                     </div>
@@ -155,32 +146,31 @@ import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
 export class ProfileComponent implements OnInit, OnDestroy {
 
     addFriendButton = true;
-    interval
 
     isMe = false;
-    timelineAvailable:boolean = false;
-    userId:string;
-    private user = new User("");
-    private posts:Array<Post>;
-    private friends:Array<User>;
+    timelineAvailable: boolean = false;
+    userId: string;
 
+    private interval;
 
-    tp:string;
+    private user = new User();
+    private posts: Array<Post>;
+    private friends: Array<User>;
 
-    constructor(private _routeParams:RouteParams,
-                private _profileService:ProfileService,
-                private _authService:AuthService,
-                private _timelineService:TimelineService,
-                private _friendsService:FriendsService,
-                private _chatService:ChatService) {
+    constructor(private _routeParams: RouteParams,
+                private _profileService: ProfileService,
+                private _authService: AuthService,
+                private _timelineService: TimelineService,
+                private _friendsService: FriendsService,
+                private _chatService: ChatService) {
 
-        this.posts = new Array<Post>();
+        this.posts = [];
         this.userId = this._routeParams.get('id');
 
-        if (this.userId == null) {
+        if (this.userId === null) {
             this.isMe = true;
             this.userId = this._authService.getUserId();
-        } else if (this.userId == this._authService.getUserId()) {
+        } else if (this.userId === this._authService.getUserId()) {
             this.isMe = true;
         } else {
             this.isMe = false;
@@ -194,24 +184,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
             );
 
         this._profileService.getUserForId(this.userId)
-            .subscribe(user=> {
+            .subscribe( user => {
                 if (user != null) {
                     this.init(user);
                 }
             });
 
-        this._friendsService.friends.subscribe((users:Array<User>)=> {
+        this._friendsService.friends.subscribe(( users: Array<User>) => {
             this.friends = users;
         });
 
     }
 
-    ngOnInit():void {
+    ngOnInit(): void {
         this._friendsService.loadFriends();
     }
 
-    init(user:User) {
-        this.user = user
+    init( user: User ) {
+        this.user = user;
         console.log("timeline: " + this.user.timeline);
         this._timelineService.setTimeLineID(this.user.timeline);
         this.loadTimeline();
@@ -229,7 +219,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
 
-    postNewPosting(content:string) {
+    postNewPosting(content: string) {
         if (this._authService) {
             this._timelineService.postNewPosting(content);
         }
@@ -238,21 +228,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     addAsFriend() {
         if (this._authService.isAuthenticated()) {
-
+            console.log("addAsFriend");
         }
     }
 
-    sendMessage(content:string) {
-        console.log("sendMessage: " + content);
-
+    sendMessage(content: string) {
         if (this._authService.isAuthenticated()) {
-            this._chatService.newConversation(this.userId).subscribe(res=>{
-                console.log("yey");
+            this._chatService.newConversation(this.userId).subscribe((conversations: Array<Conversation>) => {
+                this._chatService.sendNewMessage(content, conversations[0]._id);
             },
-            error =>{
+            error => {
                 console.log("err");
-            })
+            });
         }
     }
+
 }
 

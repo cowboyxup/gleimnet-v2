@@ -5,11 +5,11 @@ import {User} from "../models";
 /**
  * UserService manages our current user
  */
-    
+
 @Injectable()
 export class UserService {
 
-    constructor(){
+    constructor() {
         console.log('UserService');
     }
 

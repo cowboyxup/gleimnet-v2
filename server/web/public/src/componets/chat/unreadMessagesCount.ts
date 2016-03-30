@@ -1,8 +1,6 @@
 import {Component, OnInit} from 'angular2/core';
-import {Message, Thread} from '../../models';
-import * as _ from 'underscore';
-import {MessagesService} from "../../services/chat/MessagesService";
-import {ThreadsService} from "../../services/chat/ThreadsService";
+import {ChatService} from "../../services/chat.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'unreadMessagesCount',
@@ -11,35 +9,43 @@ import {ThreadsService} from "../../services/chat/ThreadsService";
   `
 })
 
-export class UnreadMessagesCount implements OnInit {ß
-  unreadMessagesCount: number = 0;
+export class UnreadMessagesCount implements OnInit {
+    unreadMessagesCount: number = 0;
+    private intervalConversationsReload;
 
-  constructor(public messagesService: MessagesService,
-              public threadsService: ThreadsService) {
+    constructor(public chatService: ChatService,
+              public _authService: AuthService) {
+
+        // this._authService.authenticated$
+        //     .subscribe((isAuthenticated: boolean) => {
+        //         if (isAuthenticated) {
+        //             this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 2000);
+        //         }
+        //     });
   }
 
   ngOnInit(): void {
-    this.messagesService.messages
-      .combineLatest(
-        this.threadsService.currentThread,
-        (messages: Message[], currentThread: Thread) =>
-          [currentThread, messages] )
-
-      .subscribe(([currentThread, messages]: [Thread, Message[]]) => {
-        this.unreadMessagesCount =
-          _.reduce(
-            messages,
-            (sum: number, m: Message) => {
-              let messageIsInCurrentThread: boolean = m.thread &&
-                currentThread &&
-                (currentThread.id === m.thread.id);
-              if (m && !m.isRead && !messageIsInCurrentThread) {
-                sum = sum + 1;
-              }
-              return sum;
-            },
-            0);
-      });
+    // this.messagesService.messages
+    //   .combineLatest(
+    //     this.threadsService.currentThread,
+    //     (messages: Message[], currentThread: Thread) =>
+    //       [currentThread, messages] )
+    //
+    //   .subscribe(([currentThread, messages]: [Thread, Message[]]) => {
+    //     this.unreadMessagesCount =
+    //       _.reduce(
+    //         messages,
+    //         (sum: number, m: Message) => {
+    //           let messageIsInCurrentThread: boolean = m.thread &&
+    //             currentThread &&
+    //             (currentThread._id === m.thread._id);
+    //           if (m && !m.isRead && !messageIsInCurrentThread) {
+    //             sum = sum + 1;
+    //           }
+    //           return sum;
+    //         },
+    //         0);
+    //   });
   }
 }
 
