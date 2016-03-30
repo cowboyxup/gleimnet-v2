@@ -15,12 +15,13 @@ export class UnreadMessagesCount implements OnInit {
 
     constructor(public chatService: ChatService,
               public _authService: AuthService) {
-        this._authService.authenticated$
-            .subscribe((isAuthenticated: boolean) => {
-                if (isAuthenticated) {
-                    this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 2000);
-                }
-            });
+
+        // this._authService.authenticated$
+        //     .subscribe((isAuthenticated: boolean) => {
+        //         if (isAuthenticated) {
+        //             this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 2000);
+        //         }
+        //     });
   }
 
   ngOnInit(): void {

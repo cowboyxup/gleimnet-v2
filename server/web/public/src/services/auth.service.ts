@@ -30,6 +30,7 @@ export class AuthService {
         this.authenticated$ = new Observable(observer =>
             this._authenticatedObserver = observer).share();
 
+
     }
 
     public doLogin(username: string, password: string) {

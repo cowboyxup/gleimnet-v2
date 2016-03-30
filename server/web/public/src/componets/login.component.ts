@@ -6,13 +6,15 @@ import {CORE_DIRECTIVES} from "angular2/common";
 import {RouterLink} from "angular2/router";
 
 import {AuthService} from "../services/auth.service";
+import {DatePicker} from "../common/datePicker/datepicker";
 
 @Component({
     selector: 'login',
     directives: [
         RouterLink,
         CORE_DIRECTIVES,
-        FORM_DIRECTIVES
+        FORM_DIRECTIVES,
+        DatePicker
     ],
     template: `
 <div class="row">
@@ -45,6 +47,7 @@ import {AuthService} from "../services/auth.service";
                             Anmelden
                     </a>
                 </form>
+                
             </div>
 
         </div>
@@ -54,6 +57,7 @@ import {AuthService} from "../services/auth.service";
 })
 
 export class LoginComponent {
+
 
     constructor(private _authService: AuthService,
                 private _router: Router) {}

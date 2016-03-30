@@ -90,6 +90,39 @@ export class ProfileService {
                 console.log(response);
             });
     }
+
+    editUser(user: User): any {
+
+        var description    = user.description;
+        var influenceplace = user.influenceplace;
+        var birthplace     = user.birthplace;
+        //var birthdate      = user.birthdate;
+        var nickname       = user.nickname;
+
+        if (description === "" ) {
+            description = " ";
+        }
+
+        if (influenceplace === "" ) {
+            influenceplace = " ";
+        }
+
+        if (birthplace === "" ) {
+            birthplace = " ";
+        }
+
+        // if (birthdate !== "" ) {
+        //     birthdate = " ";
+        // }
+
+        let body = JSON.stringify({description, influenceplace, birthplace});
+
+
+        return this._http.post(this.baseUrl  + user._id, body, { headers: headers() })
+            .map(response => {
+                console.log(response);
+            });
+    }
 }
 
 
