@@ -55,12 +55,12 @@ internals.applyRoutes = function (server, next) {
                 },
                 payload: {
                     birthdate: Joi.date(),
-                    description: Joi.string(),
+                    description: Joi.string().allow(''),
                     tags: Joi.array().max(5).items(
                         Joi.string()
                     ),
-                    birthplace: Joi.string(),
-                    influenceplace: Joi.string()
+                    birthplace: Joi.string().allow(''),
+                    influenceplace: Joi.string().allow('')
                 }
             },
             pre: [{
