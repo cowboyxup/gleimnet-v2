@@ -1,10 +1,10 @@
-import {Component} from "angular2/core";
+import {Component, OnInit} from "angular2/core";
 import {Router} from "angular2/router";
 import {FORM_DIRECTIVES} from "angular2/common";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {RouterLink} from "angular2/router";
-
 import {AuthService} from "../services/auth.service";
+
 
 @Component({
     selector: 'login',
@@ -33,7 +33,7 @@ import {AuthService} from "../services/auth.service";
                     
                     <div class="row">
                         <div class="input-field col s12">
-                            <input #password type="text" class=""type="password">
+                            <input #password type="text" class="" placeholder="Password" type="password">
                             <label for="password">Password</label>
                         </div>
                     </div>
@@ -57,16 +57,17 @@ export class LoginComponent {
 
 
     constructor(private _authService: AuthService,
-                private _router: Router) {}
+                private _router: Router) {
+        console.log("LoginComponent");
 
-    ngOnInit(): void {
         this._authService.authenticated$
             .subscribe((isAuthenticated: boolean) => {
-                   if (isAuthenticated) {
-                       setTimeout( () => this._router.navigate(['Stream']) , 1);
-                   }
+                if (isAuthenticated) {
+                    setTimeout( () => this._router.navigate(['AdminPanel']) , 1);
+                }
             });
     }
+
 
     login(username: string, password: string) {
         this._authService.doLogin(username, password) ;

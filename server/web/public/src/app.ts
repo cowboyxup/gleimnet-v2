@@ -19,7 +19,6 @@ import {ROUTER_DIRECTIVES,
 
 import {LoginComponent} from './componets/login.component';
 import {AuthService} from "./services/auth.service";
-// import {StreamComponent} from "./componets/stream/stream.component";
 
 import {Chat} from './componets/chat/chat.component';
 import {Friends} from "./componets/friends/friends";
@@ -131,7 +130,7 @@ export class App {
         this._authService.authenticated$
             .subscribe((isAuthenticated: boolean) => {
                 this.logedIn = isAuthenticated;
-                console.log('isAuthenticated: ' + this.authenticated);
+                //console.log('isAuthenticated: ' + this.authenticated);
                 // if (isAuthenticated) {
                 //
                 // }
@@ -143,7 +142,7 @@ export class App {
     }
 
     goToLogin() {
-        this._router.navigate(['Stream']);
+        this._router.navigate(['Login']);
     }
 
     doLogout() {
