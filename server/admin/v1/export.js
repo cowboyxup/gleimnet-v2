@@ -5,6 +5,7 @@ const Boom = require('boom');
 const Async = require('async');
 const jetpack = require('fs-jetpack');
 const Handlebars = require('handlebars');
+const HandlebarsIntl = require('handlebars-intl');
 const Pdf = require('html-pdf');
 
 const internals = {};
@@ -80,6 +81,22 @@ internals.applyRoutes = function (server, next) {
                             });
                         },
                         save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', 'loadMeetings', (done, data) => {
+                            const users = data.loadUsers;
+                            const timeslines = data.loadTimelines;
+
+
+                            const userDict = [];
+                            for (let i = 0; i < users.length; ++i) {
+                                const id = users[i]._id.toString();
+                                userDict[id] = users[i];
+                            }
+
+                            /*for (let i = 0; i < timeslines.length; ++i) {
+                                let timeline = timeslines[i];
+                                timeline._id = userDict[timeline._id.toString];
+                                timeslines[i] = timeline
+                            }*/
+
                             const document = {
                                 users: data.loadUsers,
                                 messages: data.loadMessages,
@@ -102,9 +119,29 @@ internals.applyRoutes = function (server, next) {
                 assign: 'html',
                 method: function (request, reply) {
                     const source = jetpack.dir('./config').read('export.html');
+                    var intlData = {
+                        "locales": "en-US",
+                        "formats": {
+                            "date": {
+                                "short": {
+                                    "day": "numeric",
+                                    "month": "long",
+                                    "year": "numeric"
+                                }
+                            }
+                        }
+                    };
+
+                    HandlebarsIntl.registerWith(Handlebars);
                     const template = Handlebars.compile(source);
-                    //console.log(request.pre.save);
-                    const html = template(request.pre.save);
+
+                    var intlData = {
+                        "locales": "de-DE"
+                    };
+                    console.log(JSON.stringify(request.pre.save, null, '\t'));
+                    const html = template(request.pre.save,{
+                        data: {intl: intlData}
+                    });
                     return reply(html);
                 }
             }]
@@ -119,7 +156,13 @@ internals.applyRoutes = function (server, next) {
                     'bottom': '0cm',
                     'left': '1.5cm'
                 },
-                'base': 'http://cowboy:8000'
+                "header": {
+                    "height": "20mm",
+                },
+                "footer": {
+                    "height": "20mm",
+                },
+                'base': server.info.uri
             };
             const filename = 'test.html';
             jetpack.dir('./data/hmtl').write(filename,request.pre.html);

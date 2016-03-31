@@ -27,6 +27,7 @@
     "good": "^6.6.0",
     "good-console": "^5.3.1",
     "handlebars": "^4.0.5",
+    "handlebars-intl": "^1.1.2",
     "hapi": "^13.2.1",
     "hapi-auth-jwt2": "^5.4.1",
     "hapi-mongo-models": "^4.2.0",
