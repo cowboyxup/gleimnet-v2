@@ -176,6 +176,20 @@ internals.applyRoutes = function (server, next) {
                         }
                         return new Handlebars.SafeString(document);
                     });
+                    Handlebars.registerHelper('tags', function(tags) {
+                        let document = '';
+                        for (let i = 0; i < tags.length; ++i) {
+                            document = document.concat('<span class=\"tag\">'+tags[i]+'</span>, ');
+                        }
+                        return new Handlebars.SafeString(document);
+                    });
+                    Handlebars.registerHelper('friends', function(friends) {
+                        let document = '';
+                        for (let i = 0; i < friends.length; ++i) {
+                            document = document.concat('<span class=\"friends\">'+userDict[friends[i]._id].nickname+'</span>, ');
+                        }
+                        return new Handlebars.SafeString(document);
+                    });
                     const template = Handlebars.compile(source);
 
                     var intlData = {
