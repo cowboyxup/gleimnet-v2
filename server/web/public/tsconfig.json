@@ -41,7 +41,14 @@
     "src/util/sort-by-property-ascending.pipe.ts",
     "src/componets/friends/friendAddListItem.component.ts",
     "src/componets/profileinfo.componente.ts",
-    "src/common/datePicker/datepicker.ts"
+    "src/common/datePicker/datepicker.ts",
+    "src/admin/adminbootstrap.ts",
+    "src/admin/app.ts",
+    "src/admin/components/adminpanel.component.ts",
+    "src/admin/directives/protected.directive.ts",
+    "src/admin/components/login.comoment.ts",
+    "src/admin/services/auth.service.ts",
+    "src/admin/services/admin.service.ts"
   ],
   "compileOnSave": false
 }

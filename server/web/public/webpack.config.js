@@ -20,7 +20,8 @@ module.exports = {
 
   entry: {
     'vendor': './src/vendor.ts',
-    'app': './src/bootstrap.ts' // our angular app
+    'app': './src/bootstrap.ts', // our angular app
+    'admin': './src/admin/adminbootstrap.ts' // our angular app
   },
 
   // Config for our build files
