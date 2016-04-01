@@ -12,14 +12,16 @@ const internals = {};
 
 internals.applyRoutes = function (server, next) {
 
+    const timeslinesDict = [];
+    const postsDict = [];
+    const userDict = [];
+
     server.route({
         method: 'GET',
         path: '/export',
         config: {
             tags: ['api'],
-            auth: {
-                strategy: 'admin'
-            },
+            auth: false,
             validate: {
             },
             pre:[{
@@ -83,25 +85,50 @@ internals.applyRoutes = function (server, next) {
                         save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', 'loadMeetings', (done, data) => {
                             const users = data.loadUsers;
                             const timeslines = data.loadTimelines;
+                            const posts = data.loadPosts;
 
-
-                            const userDict = [];
                             for (let i = 0; i < users.length; ++i) {
                                 const id = users[i]._id.toString();
                                 userDict[id] = users[i];
                             }
 
-                            /*for (let i = 0; i < timeslines.length; ++i) {
+                            for (let i = 0; i < posts.length; ++i) {
+                                const id = posts[i]._id.toString();
+                                postsDict[id] = posts[i];
+                            }
+
+                            //timelines mit posts und comments füllen
+                            for (let i = 0; i < timeslines.length; ++i) {
                                 let timeline = timeslines[i];
-                                timeline._id = userDict[timeline._id.toString];
-                                timeslines[i] = timeline
-                            }*/
+                                for (let j = 0; j < timeline.posts.length; ++j) {
+                                    let id = timeslines[i].posts[j]._id.toString();
+                                    let post = postsDict[id];
+                                    for (let k = 0; k < post.comments.length; ++k) {
+                                        let comment = post.comments[k];
+                                        post.comments[k] = postsDict[comment._id.toString()];
+                                        post.comments[k].comments = undefined;
+                                    }
+                                    timeslines[i].posts[j] = post;
+                                }
+                            }
+                            
+                            // timeslines dict füllen
+                            for (let i = 0; i < timeslines.length; ++i) {
+                                const id = timeslines[i]._id.toString();
+                                timeslinesDict[id] = timeslines[i];
+                            }
+                            
+                            // users mit timesline objects füllen
+                            for (let i = 0; i < users.length; ++i) {
+                                let user = users[i];
+                                user.timeline = timeslinesDict[user.timeline];
+                            }
 
                             const document = {
-                                users: data.loadUsers,
+                                users: users,
                                 messages: data.loadMessages,
                                 conversations: data.loadConversations,
-                                timelines: data.loadTimelines,
+                                timelines: timeslines,
                                 posts: data.loadPosts
                             };
                             return done(null, document);
@@ -119,20 +146,36 @@ internals.applyRoutes = function (server, next) {
                 assign: 'html',
                 method: function (request, reply) {
                     const source = jetpack.dir('./config').read('export.html');
-                    var intlData = {
-                        "locales": "en-US",
-                        "formats": {
-                            "date": {
-                                "short": {
-                                    "day": "numeric",
-                                    "month": "long",
-                                    "year": "numeric"
-                                }
-                            }
-                        }
-                    };
 
                     HandlebarsIntl.registerWith(Handlebars);
+                    Handlebars.registerHelper('timeline', function(timeline) {
+                        let document = '';
+                        for (let i = 0; i < timeline.posts.length; ++i) {
+                            document = document.concat('<div class=\"col s12 card z-depth-0 posting\">');
+                            document = document.concat('<div class=\"posting_header meta\">');
+                            document = document.concat('<img src=\"'+userDict[timeline.posts[i].author].avatar+'\" class="round_avatar48">');
+                            document = document.concat('<div class=\"comment__author\"><strong>'+userDict[timeline.posts[i].author].nickname+'</strong> <span>'+timeline.posts[i].timeCreated.toLocaleString()+'</span></div>');
+                            document = document.concat('</div>');
+                            document = document.concat('<div class=\"posting_contet\">'+timeline.posts[i].content+'</div>');
+                            const comments = timeline.posts[i].comments.reverse();
+                            if (comments.length > 0 ) {
+                                document = document.concat('<div class=\"posting_contet comments\">');
+                                for (let j = 0; j < comments.length; ++j) {
+                                    document = document.concat('<div class=\"comment\">');
+                                    document = document.concat('<div class=\"comment__header\">');
+                                    document = document.concat('<img src=\"'+userDict[comments[j].author].avatar+'\" class="round_avatar48">');
+                                    document = document.concat('<div class=\"comment__author\"><strong>'+userDict[comments[j].author].nickname+'</strong> <span>'+comments[j].timeCreated.toLocaleString()+'</span></div>');
+                                    document = document.concat('</div>');
+                                    document = document.concat('<div class=\"comment__text\">'+comments[j].content+'</div>');
+                                    document = document.concat('</div>');
+
+                                }
+                                document = document.concat('</div>');
+                            }
+                            document = document.concat('</div>');
+                        }
+                        return new Handlebars.SafeString(document);
+                    });
                     const template = Handlebars.compile(source);
 
                     var intlData = {
@@ -165,7 +208,7 @@ internals.applyRoutes = function (server, next) {
                 'base': server.info.uri
             };
             const filename = 'test.html';
-            jetpack.dir('./data/hmtl').write(filename,request.pre.html);
+            jetpack.dir('./data/html').write(filename,request.pre.html);
 
             Pdf.create(request.pre.html,options).toStream(function(err, stream){
                 if (err) {

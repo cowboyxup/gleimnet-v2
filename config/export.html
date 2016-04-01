@@ -6,7 +6,11 @@
 
         <link rel="stylesheet" href="assets/font/material-design-icons/material-icons.css">
         <link rel="stylesheet" href="assets/css/materialize.min.css">
+        <link rel="stylesheet" href="assets/css/main.css">
         <style>
+            body {
+                background-image: none;
+            }
             .container {
                 width: 100% !important;
             }
@@ -16,11 +20,16 @@
             .profile:nth-child(2n+1) {
                 page-break-after: always;
             }
+            .comment__author {
+                position: relative;
+                margin-left: 60px;
+                margin-top: -40px;
+            }
         </style>
 
     </head>
     <body>
-    <div id="pageHeader">Gleimnet</div>
+    <div id="pageHeader"><img src="favicon-32x32.png">Gleimnet</div>
     <h2>Profile</h2>
     <div class="container">
         {{#each users}}
@@ -48,9 +57,12 @@
 
     <h2>Timelines</h2>
     <div class="container">
-        {{#each timelines}}
+        {{#each users}}
         <div class="timeline row">
-            <h3 class="col s12">{{ this._id.givenName}} {{ this._id.surname}}</h3>
+            <h3 class="col s12">{{ this.givenName}} {{ this.surname}}</h3>
+            <div class="col s12">
+                {{timeline this.timeline}}
+            </div>
         </div>
         {{/each}}
     </div>

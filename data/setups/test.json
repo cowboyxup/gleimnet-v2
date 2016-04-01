@@ -79,7 +79,7 @@
 			"titlePicture": "assets/img/people/gleim/cover.png",
 			"tags": [],
 			"birthplace": "Falkenstein/Harz",
-			"influenceplace": "",
+			"influenceplace": " ",
 			"timeline": {
 				"$oid": "56ebe0b56d5d030c12f619f4"
 			},
