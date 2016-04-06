@@ -107,19 +107,28 @@ export class StreamComponent implements OnInit, OnDestroy {
 
     postNewPosting(content: string) {
         if (this._authService) {
-            this._timelineService.postNewPosting(content);
+            this._timelineService.postNewPostingWithStream(content).subscribe(
+                res => {
+                    this._streamService.load();
+                },
+                error => {
+                    console.log(error);
+                });;
         }
     }
 
     commentOnPosting(content: string, postId: string) {
         if (this._authService.isAuthenticated()) {
-            //this._profileService.commentOnPosting(content, postId)
-            //    .subscribe(
-            //        response => {
-            //            this.loadTimeline();
-            //        },
-            //        error => { console.log(error);}
-            //    );
+            this._timelineService.commentOnPostingWithStream(content, postId)
+               .subscribe(
+                   response => {
+                       this._streamService.load();
+                   },
+                   error => {
+                       this._streamService.load();
+                       console.log(error);
+                   }
+               );
         }
     }
 

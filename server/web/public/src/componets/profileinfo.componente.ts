@@ -3,7 +3,6 @@ import {User} from "../models";
 import {ProfileService} from "../services/profile.service";
 import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
 import {AuthService} from "../services/auth.service";
-import {DatePicker} from "../common/datePicker/datepicker";
 
 @Component({
     selector: 'profileInfo',
