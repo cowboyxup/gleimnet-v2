@@ -31,17 +31,18 @@ import {DatePicker} from "../common/datePicker/datepicker";
                     {{tag}}
                  </span>
                 </div>
-               
-                
-                
+
                 
             </div>
             <div *ngIf="editMode"class="card-content">
-                <h4>Exposé</h4>
+                <h4>Exposé 
+                    <a (click)="cancel()"><i class="material-icons">delete</i></a>                
+                    <a (click)="saveEdits()"><i class="material-icons">check</i></a>
+                </h4>
                 
                 <h5>Geburtsdatum:</h5>
-                <input [(ngModel)]="influenceplace" type="date">
-                <p>{{user.birthdate | formatedDateFromString}}
+                <input [(ngModel)]="birthdate" type="date" max="1859-12-31" min="1650-01-02">
+                
                 <h5>Beschreibung:</h5>
                 
                 <textarea placeholder="Beschreibung" class="materialize-textarea" [(ngModel)]="description" ></textarea>
@@ -70,18 +71,17 @@ import {DatePicker} from "../common/datePicker/datepicker";
                         type="text" class="mdl-textfield__input">
                  
                  
-                    <button class="waves-effect waves-light btn send_Button"
+                    <a class="waves-effect waves-light"
                         (click)="addTag(newTag.value); newTag.value='' ">
                         <i class="material-icons">add</i>
-                    </button>
+                    </a>
                     
                  </row>
                 </div>
                 
                 <br>
               
-                <a class="btn" (click)="cancel()"><i class="material-icons">delete</i></a>                
-                <a class="btn" (click)="saveEdits()"><i class="material-icons">check</i></a>
+                
             </div>
         </div>   
        `
