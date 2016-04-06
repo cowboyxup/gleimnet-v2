@@ -69,7 +69,7 @@ import {FORM_DIRECTIVES, CORE_DIRECTIVES} from "angular2/common";
                         
                         <p>
                             <a class="waves-effect waves-light btn"
-                                (click)="export();" type="button">
+                                href="/admin/v1/export" target="_blank" type="button">
                                     Sitzung als PDF exportieren
                             </a>
                         </p>

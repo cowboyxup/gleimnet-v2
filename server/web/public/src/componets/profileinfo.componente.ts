@@ -13,7 +13,7 @@ import {DatePicker} from "../common/datePicker/datepicker";
     template: `
         <div class="card profile_info">
             <div *ngIf="!editMode" class="card-content">
-                <h4>Exposé</h4>
+                <h4>Exposé <a *ngIf="isMe" (click)="editProfile()"><i class="material-icons">mode_edit</i></a> </h4>
                 
                 <h5>Geburtsdatum:</h5>
                 <p>{{user.birthdate | formatedDateFromString}}
@@ -33,7 +33,7 @@ import {DatePicker} from "../common/datePicker/datepicker";
                 </div>
                
                 
-                <a (click)="editProfile()">Profil bearbeiten</a>
+                
                 
             </div>
             <div *ngIf="editMode"class="card-content">
@@ -59,26 +59,29 @@ import {DatePicker} from "../common/datePicker/datepicker";
                  <div class="tags">
                  <span class="chip" *ngFor="#tag of tags">
                     {{tag}}
-                    <a (click)="removeTag(tag)">entfernen</a>
+                    <a (click)="removeTag(tag)"><i class="material-icons">clear</i></a>
                  </span>
                 
                  
-                 <input #newTag
-                    (keyup.enter)="addTag(newTag.value); newTag.value=''"
-                    type="text" class="mdl-textfield__input">
-                 
                  <row>
+                 
+                    <input #newTag
+                        (keyup.enter)="addTag(newTag.value); newTag.value=''"
+                        type="text" class="mdl-textfield__input">
+                 
+                 
                     <button class="waves-effect waves-light btn send_Button"
                         (click)="addTag(newTag.value); newTag.value='' ">
-                        Tag hinzufügen
+                        <i class="material-icons">add</i>
                     </button>
+                    
                  </row>
                 </div>
                 
                 <br>
               
-                <a class="btn" (click)="cancel()">verwerfen</a>                
-                <a class="btn" (click)="saveEdits()">speichern</a>
+                <a class="btn" (click)="cancel()"><i class="material-icons">delete</i></a>                
+                <a class="btn" (click)="saveEdits()"><i class="material-icons">check</i></a>
             </div>
         </div>   
        `
@@ -91,6 +94,8 @@ export class ProfileInfoComponent implements OnInit {
     @Input()
     user: User;
 
+    isMe: boolean = false;
+
     editMode: boolean = false;
     description: string;
     influenceplace: string;
@@ -101,6 +106,7 @@ export class ProfileInfoComponent implements OnInit {
 
     constructor(private _profileService: ProfileService,
                 private _authService: AuthService ) {
+
     }
 
     ngOnInit() {
@@ -111,6 +117,10 @@ export class ProfileInfoComponent implements OnInit {
         this.nickname       = this.user.nickname;
         this.tags           = this.user.tags;
         //this.tags.push("test");
+
+        if ( this._authService.getUserId() === this.user._id ) {
+            this.isMe = true;
+        }
     }
 
     private editProfile() {
@@ -129,12 +139,12 @@ export class ProfileInfoComponent implements OnInit {
         editUser.tags           = this.tags;
 
         this._profileService.editUser(editUser).subscribe(res => {
-            // this._profileService.getUserForId(this.userId)
-            //     .subscribe( user => {
-            //         if (user != null) {
-            //             this.user =user;
-            //         }
-            //     });
+            this._profileService.getUserForId(this.user._id)
+                .subscribe( user => {
+                    if (user != null) {
+                        this.user = user;
+                    }
+                });
             this.editMode = false;
         });
     }
