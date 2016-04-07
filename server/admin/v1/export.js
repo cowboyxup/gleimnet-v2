@@ -14,6 +14,7 @@ internals.applyRoutes = function (server, next) {
 
     const timeslinesDict = [];
     const postsDict = [];
+    const messagesDict = [];
     const userDict = [];
 
     server.route({
@@ -86,6 +87,7 @@ internals.applyRoutes = function (server, next) {
                             const users = data.loadUsers;
                             const timeslines = data.loadTimelines;
                             const posts = data.loadPosts;
+                            const messages = data.loadMessages;
 
                             for (let i = 0; i < users.length; ++i) {
                                 const id = users[i]._id.toString();
@@ -122,6 +124,12 @@ internals.applyRoutes = function (server, next) {
                             for (let i = 0; i < users.length; ++i) {
                                 let user = users[i];
                                 user.timeline = timeslinesDict[user.timeline];
+                            }
+
+                            // messages dict füllen
+                            for (let i = 0; i < messages.length; ++i) {
+                                const id = messages[i]._id.toString();
+                                messagesDict[id] = messages[i];
                             }
 
                             const document = {
@@ -188,6 +196,27 @@ internals.applyRoutes = function (server, next) {
                         for (let i = 0; i < friends.length; ++i) {
                             document = document.concat('<span class=\"friends\">'+userDict[friends[i]._id].nickname+'</span>, ');
                         }
+                        return new Handlebars.SafeString(document);
+                    });
+                    Handlebars.registerHelper('conversation', function(conversation) {
+                        const messages = conversation.messages.reverse();
+                        let document = '';
+                        document = document.concat('<div class=\"col s12\"><h3>');
+                        for (let i = 0; i < conversation.authors.length; ++i) {
+                            document = document.concat('<span class=\"authors\">'+userDict[conversation.authors[i]._id].nickname+'</span>, ');
+                        }
+                        document = document.concat('</h3></div>');
+                        document = document.concat('<div class=\"col s12 card z-depth-0\">');
+                        for (let i = 0; i < messages.length; ++i) {
+                            document = document.concat('<div class=\"card-content\">');
+                                document = document.concat('<div class=\"card-title activator grey-text text-darken-4\">');
+                                    document = document.concat('<span class=\"message_author\">'+userDict[messagesDict[messages[i]._id].author].nickname+' • '+messagesDict[messages[i]._id].timeCreated.toLocaleString()+'</span>');
+                            document = document.concat('<span class=\"avatar_right\"><img src=\"'+userDict[messagesDict[messages[i]._id].author].avatar+'\" class="round_avatar"></span>');
+                                document = document.concat('</div>');
+                                document = document.concat('<span class=\"content\">'+messagesDict[messages[i]._id].content+'</span> ');
+                            document = document.concat('</div>');
+                        }
+                        document = document.concat('</div>');
                         return new Handlebars.SafeString(document);
                     });
                     const template = Handlebars.compile(source);

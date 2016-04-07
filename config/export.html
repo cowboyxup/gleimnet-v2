@@ -11,6 +11,9 @@
             body {
                 background-image: none;
             }
+            .page {
+                page-break-before: always;
+            }
             .container {
                 width: 100% !important;
             }
@@ -18,12 +21,28 @@
                 margin: 0px;
             }
             .profile:nth-child(2n+1) {
-                page-break-after: always;
+                 page-break-after: auto;
+            }
+            .profile {
+                page-break-inside: avoid;
+            }
+            .posting {
+                margin-bottom: 0;
+            }
+            .posting .posting_contet {
+                min-height: 0px;
+
+            }
+            .posting .comments {
+                background-color: #ffffff;
             }
             .comment__author {
                 position: relative;
                 margin-left: 60px;
                 margin-top: -40px;
+            }
+            .conversation .card .card-content {
+                padding: 0px;
             }
         </style>
 
@@ -55,16 +74,29 @@
         {{/each}}
     </div>
 
-    <h2>Timelines</h2>
-    <div class="container">
-        {{#each users}}
-        <div class="timeline row">
-            <h3 class="col s12">{{ this.givenName}} {{ this.surname}}</h3>
-            <div class="col s12">
-                {{timeline this.timeline}}
+    <div class="page">
+        <h2>Timelines</h2>
+        <div class="container">
+            {{#each users}}
+            <div class="timeline row">
+                <h3 class="col s12">{{ this.givenName}} {{ this.surname}}</h3>
+                <div class="col s12">
+                    {{timeline this.timeline}}
+                </div>
             </div>
+            {{/each}}
         </div>
-        {{/each}}
+    </div>
+
+    <div class="page">
+        <h2>Konversations</h2>
+        <div class="container">
+            {{#each conversations}}
+            <div class="conversation row">
+                {{conversation this}}
+            </div>
+            {{/each}}
+        </div>
     </div>
 
     <div id="pageFooter">{{page}}</div>
