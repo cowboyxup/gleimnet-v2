@@ -1,9 +1,8 @@
-import {Component, Input, OnInit, Output} from "angular2/core";
+import {Component, Input, OnInit, Output, ChangeDetectionStrategy} from "angular2/core";
 import {User} from "../models";
 import {ProfileService} from "../services/profile.service";
 import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
 import {AuthService} from "../services/auth.service";
-import {DatePicker} from "../common/datePicker/datepicker";
 
 @Component({
     selector: 'profileInfo',
@@ -13,16 +12,16 @@ import {DatePicker} from "../common/datePicker/datepicker";
     template: `
         <div class="card profile_info">
             <div *ngIf="!editMode" class="card-content">
-                <h4>Exposé</h4>
+                <h4>Exposé <a *ngIf="isMe" (click)="editProfile()"><i class="material-icons">mode_edit</i></a> </h4>
                 
                 <h5>Geburtsdatum:</h5>
-                <p>{{user.birthdate | formatedDateFromString}}
+                <p>{{birthdate | formatedDateFromString}}
                 <h5>Beschreibung:</h5>
-                <p>{{user.description}}</p>
+                <p>{{description}}</p>
                 <h5>Wirkungsort:</h5>
-                <p>{{user.influenceplace}}</p>
+                <p>{{influenceplace}}</p>
                 <h5>Geburtsort:</h5>
-                <p>{{user.birthplace}}</p>
+                <p>{{birthplace}}</p>
                 
                 <h5>Tags:</h5>
                 
@@ -31,17 +30,18 @@ import {DatePicker} from "../common/datePicker/datepicker";
                     {{tag}}
                  </span>
                 </div>
-               
-                
-                <a (click)="editProfile()">Profil bearbeiten</a>
+
                 
             </div>
             <div *ngIf="editMode"class="card-content">
-                <h4>Exposé</h4>
+                <h4>Exposé 
+                    <a (click)="cancel()"><i class="material-icons">delete</i></a>                
+                    <a (click)="saveEdits()"><i class="material-icons">check</i></a>
+                </h4>
                 
                 <h5>Geburtsdatum:</h5>
-                <input [(ngModel)]="influenceplace" type="date">
-                <p>{{user.birthdate | formatedDateFromString}}
+                <input [(ngModel)]="birthdate" type="date" max="1859-12-31" min="1650-01-02">
+                
                 <h5>Beschreibung:</h5>
                 
                 <textarea placeholder="Beschreibung" class="materialize-textarea" [(ngModel)]="description" ></textarea>
@@ -59,26 +59,28 @@ import {DatePicker} from "../common/datePicker/datepicker";
                  <div class="tags">
                  <span class="chip" *ngFor="#tag of tags">
                     {{tag}}
-                    <a (click)="removeTag(tag)">entfernen</a>
+                    <a (click)="removeTag(tag)"><i class="material-icons">clear</i></a>
                  </span>
                 
                  
-                 <input #newTag
-                    (keyup.enter)="addTag(newTag.value); newTag.value=''"
-                    type="text" class="mdl-textfield__input">
-                 
                  <row>
-                    <button class="waves-effect waves-light btn send_Button"
+                 
+                    <input #newTag
+                        (keyup.enter)="addTag(newTag.value); newTag.value=''"
+                        type="text" class="mdl-textfield__input">
+                 
+                 
+                    <a class="waves-effect waves-light"
                         (click)="addTag(newTag.value); newTag.value='' ">
-                        Tag hinzufügen
-                    </button>
+                        <i class="material-icons">add</i>
+                    </a>
+                    
                  </row>
                 </div>
                 
                 <br>
               
-                <a class="btn" (click)="cancel()">verwerfen</a>                
-                <a class="btn" (click)="saveEdits()">speichern</a>
+                
             </div>
         </div>   
        `
@@ -91,6 +93,8 @@ export class ProfileInfoComponent implements OnInit {
     @Input()
     user: User;
 
+    isMe: boolean = false;
+
     editMode: boolean = false;
     description: string;
     influenceplace: string;
@@ -101,16 +105,32 @@ export class ProfileInfoComponent implements OnInit {
 
     constructor(private _profileService: ProfileService,
                 private _authService: AuthService ) {
+
     }
 
     ngOnInit() {
-        this.description    = this.user.description;
-        this.influenceplace = this.user.influenceplace;
-        this.birthplace     = this.user.birthplace;
-        this.birthdate      = this.user.birthdate;
-        this.nickname       = this.user.nickname;
-        this.tags           = this.user.tags;
-        //this.tags.push("test");
+        if (this.user != null) {
+            this.description = this.user.description;
+            this.influenceplace = this.user.influenceplace;
+            this.birthplace = this.user.birthplace;
+            this.birthdate = this.user.birthdate;
+            this.nickname = this.user.nickname;
+            this.tags = this.user.tags;
+
+            //this.tags.push("test");
+
+            console.log(this.birthdate);
+
+            if (this.birthdate != null) {
+                this.birthdate = this.birthdate.substring(0, this.birthdate.indexOf('T'));
+            }
+
+            console.log(this.birthdate);
+
+            if (this._authService.getUserId() === this.user._id) {
+                this.isMe = true;
+            }
+        }
     }
 
     private editProfile() {
@@ -124,17 +144,17 @@ export class ProfileInfoComponent implements OnInit {
         editUser.description    = this.description;
         editUser.influenceplace = this.influenceplace;
         editUser.birthplace     = this.birthplace;
-        // editUser.birthdate      = this.birthdate;
+        editUser.birthdate      = this.birthdate;
         editUser.nickname       = this.nickname;
         editUser.tags           = this.tags;
 
         this._profileService.editUser(editUser).subscribe(res => {
-            // this._profileService.getUserForId(this.userId)
-            //     .subscribe( user => {
-            //         if (user != null) {
-            //             this.user =user;
-            //         }
-            //     });
+            this._profileService.getUserForId(this.user._id)
+                .subscribe( user => {
+                    if (user != null) {
+                        this.user = user;
+                    }
+                });
             this.editMode = false;
         });
     }
@@ -153,6 +173,9 @@ export class ProfileInfoComponent implements OnInit {
     }
 
     private addTag(tag: string) {
-        this.tags.push(tag);
+        if (tag.length > 0) {
+            this.tags.push(tag);
+        }
+
     }
 }

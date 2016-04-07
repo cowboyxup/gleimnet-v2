@@ -11,6 +11,7 @@ export class StreamService {
     postSubject: Subject<Post> = new Subject<Post>();
 
     private apiBaseUrl: string = 'api/v1/stream';
+    private timeLineUrl: string = 'api/v1/timeline/';
     private _posts: Array<Post> = [];
 
 

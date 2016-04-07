@@ -62,6 +62,18 @@ export class TimelineService {
                 });
     }
 
+    postNewPostingWithStream(content: string): any {
+
+        var url = this._baseUrl + this.timelineId;
+        let body = JSON.stringify({content});
+
+        return this._authHttp.post(url, body, {headers: headers()})
+            .map(response => {
+                response.json();
+            });
+
+    }
+
     commentOnPosting(content: string, postId: string): any {
         var url = '/api/v1/post/' + postId;
         let body = JSON.stringify({content});
@@ -78,6 +90,16 @@ export class TimelineService {
                     console.log(error);
                 }
             );
+    }
+
+    commentOnPostingWithStream(content: string, postId: string): any {
+        var url = '/api/v1/post/' + postId;
+        let body = JSON.stringify({content});
+
+        return this._authHttp.post(url, body, {headers: headers()})
+            .map(response => {
+                response.json();
+            });
     }
 
     private setPosts(posts: Array<Post>) {

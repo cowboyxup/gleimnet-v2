@@ -96,8 +96,9 @@ export class ProfileService {
         var description    = user.description;
         var influenceplace = user.influenceplace;
         var birthplace     = user.birthplace;
-        //var birthdate      = user.birthdate;
+        var birthdate      = user.birthdate;
         var nickname       = user.nickname;
+        var tags           = user.tags;
 
         if (description === "" ) {
             description = " ";
@@ -111,11 +112,15 @@ export class ProfileService {
             birthplace = " ";
         }
 
-        // if (birthdate !== "" ) {
-        //     birthdate = " ";
-        // }
+        if (birthdate === "" ) {
+            birthdate = " ";
+        }
 
-        let body = JSON.stringify({description, influenceplace, birthplace});
+        if (nickname === "" ) {
+            nickname = " ";
+        }
+
+        let body = JSON.stringify({description, influenceplace, birthplace, birthdate, tags});
 
 
         return this._http.post(this.baseUrl  + user._id, body, { headers: headers() })
