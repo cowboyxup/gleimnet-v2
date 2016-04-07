@@ -3,35 +3,6 @@
  *custom styles
  *========================================================================== */
 
-@font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src:    local('Material Icons'),
-            local('MaterialIcons-Regular'),
-            url("../fonts/material-design-icons/Material-Design-Icons.eot?#iefix") format("embedded-opentype"),
-            url("../fonts/material-design-icons/Material-Design-Icons.woff2") format("woff2"),
-            url("../fonts/material-design-icons/Material-Design-Icons.woff") format("woff"),
-            url("../fonts/material-design-icons/Material-Design-Icons.ttf") format("truetype"),
-            url("../fonts/material-design-icons/Material-Design-Icons.svg#Material-Design-Icons") format("svg");
-}
-
-.material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-}
-
 body{
     background-repeat: no-repeat;
     background-image: url("../img/bgimage.jpg");
@@ -42,6 +13,12 @@ body{
 
 nav{
     background-color: rgb(22,125,165);
+}
+
+.brand-logo img {
+    float: left;
+    max-height: 52px;
+    margin: 6px;
 }
 
 

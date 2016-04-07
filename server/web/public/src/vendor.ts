@@ -13,4 +13,6 @@ import 'angular2/http';
 // RxJS
 import 'rxjs';
 
+require("materialize-gleimhaus.scss");
+
 // Other vendors for example jQuery or Lodash

@@ -41,7 +41,9 @@ declare var System: any;
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Gleim.net</a>
+            <a href="#" class="brand-logo">
+            <div><img src="favicon-white.png" class="responsive-img">Gleim.net</div>
+            </a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             
             <ul id="nav-mobile" class="right hide-on-med-and-down">

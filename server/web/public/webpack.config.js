@@ -9,6 +9,7 @@ var path = require('path');
 var webpack = require('webpack');
 // Webpack Plugins
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 /*
  * Config
@@ -34,7 +35,8 @@ module.exports = {
 
   resolve: {
     // ensure loader extensions match
-    extensions: ['','.ts','.js','.json', '.css', '.html']
+    modulesDirectories: ["node_modules", "assets/sass"],
+    extensions: ['','.ts','.js','.json', '.css', '.scss', '.html']
   },
 
   module: {
@@ -60,9 +62,19 @@ module.exports = {
 
       // Support for CSS as raw text
       { test: /\.css$/,   loader: 'raw-loader' },
-
+      //{
+      //  test: /\.scss$/,
+      //  loader: ExtractTextPlugin.extract(['style', 'css', 'sass'])
+      //},
+      { test: /\.scss$/,
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader"),
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'url-loader?limit=1024&name=fonts/[name].[ext]'
+      },
       // support for .html as raw text
-      { test: /\.html$/,  loader: 'raw-loader' },
+      { test: /\.html$/,  loader: 'raw-loader' }
     ],
     noParse: [
      /zone\.js\/dist\/.+/,
@@ -71,9 +83,13 @@ module.exports = {
     ]
   },
 
+  sassLoader: {
+  },
+
   plugins: [
     new CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.js', minChunks: Infinity }),
-    new CommonsChunkPlugin({ name: 'common', filename: 'common.js', minChunks: 2, chunks: ['app', 'vendor'] })
+    new CommonsChunkPlugin({ name: 'common', filename: 'common.js', minChunks: 2, chunks: ['app', 'vendor'] }),
+    new ExtractTextPlugin("materialize-gleimhaus.css",{allChunks: false})
   ],
 
   // Other module loader config
