@@ -101,7 +101,7 @@ export class TimelineService {
                 response.json();
             });
     }
-    
+
     private setPosts(posts: Array<Post>) {
 
         posts.forEach(newPost => {

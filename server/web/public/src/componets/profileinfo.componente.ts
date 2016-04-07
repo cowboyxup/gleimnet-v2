@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output} from "angular2/core";
+import {Component, Input, OnInit, Output, ChangeDetectionStrategy} from "angular2/core";
 import {User} from "../models";
 import {ProfileService} from "../services/profile.service";
 import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
@@ -15,13 +15,13 @@ import {AuthService} from "../services/auth.service";
                 <h4>Exposé <a *ngIf="isMe" (click)="editProfile()"><i class="material-icons">mode_edit</i></a> </h4>
                 
                 <h5>Geburtsdatum:</h5>
-                <p>{{user.birthdate | formatedDateFromString}}
+                <p>{{birthdate | formatedDateFromString}}
                 <h5>Beschreibung:</h5>
-                <p>{{user.description}}</p>
+                <p>{{description}}</p>
                 <h5>Wirkungsort:</h5>
-                <p>{{user.influenceplace}}</p>
+                <p>{{influenceplace}}</p>
                 <h5>Geburtsort:</h5>
-                <p>{{user.birthplace}}</p>
+                <p>{{birthplace}}</p>
                 
                 <h5>Tags:</h5>
                 
@@ -109,16 +109,27 @@ export class ProfileInfoComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.description    = this.user.description;
-        this.influenceplace = this.user.influenceplace;
-        this.birthplace     = this.user.birthplace;
-        this.birthdate      = this.user.birthdate;
-        this.nickname       = this.user.nickname;
-        this.tags           = this.user.tags;
-        //this.tags.push("test");
+        if (this.user != null) {
+            this.description = this.user.description;
+            this.influenceplace = this.user.influenceplace;
+            this.birthplace = this.user.birthplace;
+            this.birthdate = this.user.birthdate;
+            this.nickname = this.user.nickname;
+            this.tags = this.user.tags;
 
-        if ( this._authService.getUserId() === this.user._id ) {
-            this.isMe = true;
+            //this.tags.push("test");
+
+            console.log(this.birthdate);
+
+            if (this.birthdate != null) {
+                this.birthdate = this.birthdate.substring(0, this.birthdate.indexOf('T'));
+            }
+
+            console.log(this.birthdate);
+
+            if (this._authService.getUserId() === this.user._id) {
+                this.isMe = true;
+            }
         }
     }
 
@@ -133,7 +144,7 @@ export class ProfileInfoComponent implements OnInit {
         editUser.description    = this.description;
         editUser.influenceplace = this.influenceplace;
         editUser.birthplace     = this.birthplace;
-        // editUser.birthdate      = this.birthdate;
+        editUser.birthdate      = this.birthdate;
         editUser.nickname       = this.nickname;
         editUser.tags           = this.tags;
 
@@ -162,6 +173,9 @@ export class ProfileInfoComponent implements OnInit {
     }
 
     private addTag(tag: string) {
-        this.tags.push(tag);
+        if (tag.length > 0) {
+            this.tags.push(tag);
+        }
+
     }
 }

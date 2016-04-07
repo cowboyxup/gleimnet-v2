@@ -113,7 +113,7 @@ export class StreamComponent implements OnInit, OnDestroy {
                 },
                 error => {
                     console.log(error);
-                });;
+                });
         }
     }
 

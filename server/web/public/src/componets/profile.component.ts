@@ -205,7 +205,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         console.log("timeline: " + this.user.timeline);
         this._timelineService.setTimeLineID(this.user.timeline);
         this.loadTimeline();
-        this.interval = setInterval(() => this.loadTimeline(), 2000);
+        this.interval = setInterval(() => this.loadTimeline(), 5000);
     }
 
     ngOnDestroy() {
