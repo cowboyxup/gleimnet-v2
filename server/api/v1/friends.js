@@ -50,6 +50,35 @@ internals.applyRoutes = function (server, next) {
             });
         }
     });
+    server.route([{
+        method: 'GET',
+        path: '/friends/confirmed',
+        config: {
+            tags: ['api'],
+            auth: {
+                strategy: 'jwt'
+            },
+            validate: {
+            },
+            pre: [{
+                assign: 'profile',
+                method: function(request, reply) {
+                    User.findById(request.auth.credentials._id, (err, profil) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!profil) {
+                            return reply(Boom.notFound('Profile not found.'));
+                        }
+                        return reply(profil);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            return reply('{'+request.pre.profile.friends+'}');
+        }
+    }]);
 
     server.route([{
         method: 'GET',
