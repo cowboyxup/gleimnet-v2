@@ -30,8 +30,9 @@ body{
 
 .brand-logo img {
   float: left;
-  max-height: 52px;
+  max-height: 32px;
   margin: 6px;
+  margin-top: 14px;
 }
 
 
@@ -314,13 +315,13 @@ nav .brand-logo{
   border: none;
 }
 .scroll {
-  max-height: 80vh;
+  height: calc( 100vh -  114px );
   overflow-y: scroll;
   margin-top: 0;
   margin-bottom: 0;
 }
 .scroll_messages {
-  height: calc(100vh - 260px);;
+  height: calc( 100vh -  264px );
   overflow-y: scroll;
   margin-top: 0;
   margin-bottom: 0;
