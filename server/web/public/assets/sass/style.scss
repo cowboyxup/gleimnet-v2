@@ -320,7 +320,7 @@ nav .brand-logo{
   margin-bottom: 0;
 }
 .scroll_messages {
-  height: 80vh;
+  height: calc(100vh - 260px);;
   overflow-y: scroll;
   margin-top: 0;
   margin-bottom: 0;
