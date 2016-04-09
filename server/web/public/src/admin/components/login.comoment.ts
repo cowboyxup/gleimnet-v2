@@ -26,7 +26,7 @@ import {AuthService} from "../services/auth.service";
                 <form>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input #username type="text" class="" type="text">
+                            <input #username type="text" class="" type="text" autofocus>
                             <label for="password">Benutzername</label>
                         </div>
                     </div>
@@ -38,11 +38,10 @@ import {AuthService} from "../services/auth.service";
                         </div>
                     </div>
 
-
-                    <a class="waves-effect waves-light btn"
-                        (click)="login(username.value, password.value );" type="button">
-                            Anmelden
-                    </a>
+                    <button class="btn waves-effect waves-light" type="submit" name="action"
+                        (click)="login(username.value, password.value );">Anmelden
+                        <i class="material-icons right">send</i>
+                    </button>
                 </form>
                 
             </div>

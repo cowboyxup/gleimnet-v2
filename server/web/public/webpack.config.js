@@ -70,11 +70,14 @@ module.exports = {
         loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader"),
       },
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'url-loader?limit=1024&name=fonts/[name].[ext]'
       },
       // support for .html as raw text
-      { test: /\.html$/,  loader: 'raw-loader' }
+      { test: /\.html$/,  loader: 'raw-loader' },
+      { test: /\.png$/,    loader: "url-loader?prefix=img/&limit=5000&name=img/[name].[ext]" },
+      { test: /\.jpg$/,    loader: "url-loader?prefix=img/&limit=5000&name=img/[name].[ext]" },
+      { test: /\.gif$/,    loader: "url-loader?prefix=img/&limit=5000&name=img/[name].[ext]" },
     ],
     noParse: [
      /zone\.js\/dist\/.+/,
@@ -84,6 +87,7 @@ module.exports = {
   },
 
   sassLoader: {
+    exclude: [ /\.jpg\.ts$/, /\.jpg/, /node_modules/ ]
   },
 
   plugins: [
