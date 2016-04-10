@@ -34,6 +34,7 @@ const manifest = {
                     reporters: [{
                         reporter: require('good-console'),
                         events: {
+                            request: '*',
                             response: '*',
                             log: '*'
                         }

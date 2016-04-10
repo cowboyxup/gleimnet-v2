@@ -79,6 +79,14 @@ import {FORM_DIRECTIVES, CORE_DIRECTIVES} from "angular2/common";
                  <div class="card">
                     <div class="card-content">
                         <span class="card-title">SetUp</span>
+
+                         <ul class="collection">
+                            <li *ngFor="#n of setups" class="collection-item"
+                                [class.active]="n === selectedSetups"
+                                 (click)="onSelectSetups(n)">
+                                {{n}}
+                            </li>
+                        </ul>
                         
                         <p>
                             <a class="waves-effect waves-light btn"
@@ -97,8 +105,10 @@ import {FORM_DIRECTIVES, CORE_DIRECTIVES} from "angular2/common";
 export class AdminPanelComponent {
 
     saved: Array<string> = [];
+    setups: Array<string> = [];
 
     selected = "";
+    selectedSetups = "";
 
     constructor(private authService: AuthService,
                 private adminService: AdminService) {
@@ -107,8 +117,13 @@ export class AdminPanelComponent {
             this.saved = savedSessions;
             console.log(this.saved);
         });
+        this.adminService.savedSetups.subscribe((savedSetups: Array<string>) => {
+            this.setups = savedSetups;
+            console.log(this.setups);
+        });
 
         this.adminService.loadSaved();
+        this.adminService.loadSetups();
     }
 
     load() {
@@ -118,6 +133,7 @@ export class AdminPanelComponent {
     }
 
     onSelect(s: string) { this.selected = s; }
+    onSelectSetups(n: string) { this.selectedSetups = n; }
 
     save(institution: string, group: string) {
         this.adminService.save(institution, group);
@@ -128,7 +144,9 @@ export class AdminPanelComponent {
     }
 
     setup() {
-        this.adminService.setup();
+        if (this.selectedSetups !== "") {
+            this.adminService.setup(this.selectedSetups);
+        }
     }
 
 }
