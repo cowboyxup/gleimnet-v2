@@ -19,49 +19,12 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
                 query: {
-                    search: Joi.string().token().lowercase(),
-                    fields: Joi.string(),
-                    sort: Joi.string().default('_id'),
                     limit: Joi.number().default(20),
                     page: Joi.number().default(1)
                 }
             },
-            pre: [
-            ]
-        },
-        handler: function (request, reply) {
-            const query = {};
-            if (request.query.search) {
-                query.username = new RegExp('^.*?' + request.query.search + '.*$', 'i');
-                //query.surename = new RegExp('^.*?' + request.query.search + '.*$', 'i');
-                //query.givenName = new RegExp('^.*?' + request.query.search + '.*$', 'i');
-                //query.nickname = new RegExp('^.*?' + request.query.search + '.*$', 'i');
-            }
-            query.isActive = true;
-            const fields = request.query.fields;
-            const sort = request.query.sort;
-            const limit = request.query.limit;
-            const page = request.query.page;
-            User.pagedFind(query, fields, sort, limit, page, (err, results) => {
-                if (err) {
-                    return reply(err);
-                }
-                reply(results);
-            });
-        }
-    });
-    server.route([{
-        method: 'GET',
-        path: '/friends/confirmed',
-        config: {
-            tags: ['api'],
-            auth: {
-                strategy: 'jwt'
-            },
-            validate: {
-            },
             pre: [{
-                assign: 'profile',
+                assign: 'data',
                 method: function(request, reply) {
                     User.findById(request.auth.credentials._id, (err, profil) => {
                         if (err) {
@@ -76,9 +39,45 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply('{'+request.pre.profile.friends+'}');
+            const limit = request.query.limit;
+            const page = request.query.page;
+            const output = {
+                data: undefined,
+                pages: {
+                    current: page,
+                    prev: 0,
+                    hasPrev: false,
+                    next: 0,
+                    hasNext: false,
+                    total: 0
+                },
+                items: {
+                    limit: limit,
+                    begin: ((page * limit) - limit) + 1,
+                    end: page * limit,
+                    total: 0
+                }
+            };
+
+            output.data = request.pre.data.friends.slice((output.items.begin - 1), output.items.end);
+            output.items.total = request.pre.data.friends.length;
+
+            // paging calculations
+            output.pages.total = Math.ceil(output.items.total / limit);
+            output.pages.next = output.pages.current + 1;
+            output.pages.hasNext = output.pages.next <= output.pages.total;
+            output.pages.prev = output.pages.current - 1;
+            output.pages.hasPrev = output.pages.prev !== 0;
+            if (output.items.begin > output.items.total) {
+                output.items.begin = output.items.total;
+            }
+            if (output.items.end > output.items.total) {
+                output.items.end = output.items.total;
+            }
+
+            return reply(output);
         }
-    }]);
+    });
 
     server.route([{
         method: 'GET',
@@ -89,9 +88,13 @@ internals.applyRoutes = function (server, next) {
                 strategy: 'jwt'
             },
             validate: {
+                query: {
+                    limit: Joi.number().default(20),
+                    page: Joi.number().default(1)
+                }
             },
             pre: [{
-                assign: 'profile',
+                assign: 'data',
                 method: function(request, reply) {
                     User.findById(request.auth.credentials._id, (err, profil) => {
                         if (err) {
@@ -106,7 +109,43 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply('{'+request.pre.profile.unconfirmedFriends+'}');
+            const limit = request.query.limit;
+            const page = request.query.page;
+            const output = {
+                data: undefined,
+                pages: {
+                    current: page,
+                    prev: 0,
+                    hasPrev: false,
+                    next: 0,
+                    hasNext: false,
+                    total: 0
+                },
+                items: {
+                    limit: limit,
+                    begin: ((page * limit) - limit) + 1,
+                    end: page * limit,
+                    total: 0
+                }
+            };
+
+            output.data = request.pre.data.unconfirmedFriends.slice((output.items.begin - 1), output.items.end);
+            output.items.total = request.pre.data.unconfirmedFriends.length;
+
+            // paging calculations
+            output.pages.total = Math.ceil(output.items.total / limit);
+            output.pages.next = output.pages.current + 1;
+            output.pages.hasNext = output.pages.next <= output.pages.total;
+            output.pages.prev = output.pages.current - 1;
+            output.pages.hasPrev = output.pages.prev !== 0;
+            if (output.items.begin > output.items.total) {
+                output.items.begin = output.items.total;
+            }
+            if (output.items.end > output.items.total) {
+                output.items.end = output.items.total;
+            }
+
+            return reply(output);
         }
     }]);
     server.route([{
@@ -118,9 +157,13 @@ internals.applyRoutes = function (server, next) {
                 strategy: 'jwt'
             },
             validate: {
+                query: {
+                    limit: Joi.number().default(20),
+                    page: Joi.number().default(1)
+                }
             },
             pre: [{
-                assign: 'profile',
+                assign: 'data',
                 method: function(request, reply) {
                     User.findById(request.auth.credentials._id, (err, profil) => {
                         if (err) {
@@ -135,7 +178,43 @@ internals.applyRoutes = function (server, next) {
             }]
         },
         handler: function (request, reply) {
-            return reply('{'+request.pre.profile.sentFriends+'}');
+            const limit = request.query.limit;
+            const page = request.query.page;
+            const output = {
+                data: undefined,
+                pages: {
+                    current: page,
+                    prev: 0,
+                    hasPrev: false,
+                    next: 0,
+                    hasNext: false,
+                    total: 0
+                },
+                items: {
+                    limit: limit,
+                    begin: ((page * limit) - limit) + 1,
+                    end: page * limit,
+                    total: 0
+                }
+            };
+
+            output.data = request.pre.data.sentFriends.slice((output.items.begin - 1), output.items.end);
+            output.items.total = request.pre.data.sentFriends.length;
+
+            // paging calculations
+            output.pages.total = Math.ceil(output.items.total / limit);
+            output.pages.next = output.pages.current + 1;
+            output.pages.hasNext = output.pages.next <= output.pages.total;
+            output.pages.prev = output.pages.current - 1;
+            output.pages.hasPrev = output.pages.prev !== 0;
+            if (output.items.begin > output.items.total) {
+                output.items.begin = output.items.total;
+            }
+            if (output.items.end > output.items.total) {
+                output.items.end = output.items.total;
+            }
+
+            return reply(output);
         }
     }]);
 
