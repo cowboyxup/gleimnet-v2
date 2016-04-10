@@ -9,7 +9,7 @@ import {AuthHttp} from "../common/angular2-jwt";
 @Injectable()
 export class FriendsService {
 
-    baseUrl: string = "api/v1/friends";
+    baseUrl: string = "api/v1";
     searchedFriends: Subject<Array<User>> = new Subject<Array<User>>();
     unconfirmedFriends: Subject<Array<User>> = new Subject<Array<User>>();
     friends: Subject<Array<User>> = new Subject<Array<User>>();
@@ -19,7 +19,7 @@ export class FriendsService {
 
     findNewFriend(name: string) {
         if (name !== "") {
-            this._http.get(this.baseUrl + "?search=" + name, {headers: headers()})
+            this._http.get(this.baseUrl + "/profile" + "?search=" + name, {headers: headers()})
                 .map((res: Response) => res.json())
                 .subscribe(
                     (res: Paged<User>) => {
@@ -30,32 +30,27 @@ export class FriendsService {
     }
 
     loadUnconfirmedFriends() {
-        this._http.get(this.baseUrl + "/unconfirmed", {headers: headers()})
+        this._http.get(this.baseUrl + "/friends/unconfirmed", {headers: headers()})
             .map((res: Response) => res.json())
             .subscribe(
-                (res: Array<User>) => {
-                    console.log("loadUnconfirmedFriends");
-                    console.log(res);
-                    this.unconfirmedFriends.next(res);
+                (res: Paged<User>) => {
+                    // console.log(res);
+                    this.unconfirmedFriends.next(res.data);
                 });
     }
 
     loadFriends() {
-        this._http.get(this.baseUrl + "/confirmed", {headers: headers()})
-            .map(
-                (res: Response) => res.json()
-            ).subscribe(
-                (res: Array<User>) => {
+        this._http.get(this.baseUrl, {headers: headers()})
+            .map((res: Response) => res.json())
+            .subscribe(
+                (res: Paged<User>) => {
                     // console.log(res);
-                    this.friends.next(res);
-                },
-                error => {
-                    console.log("fehler");
+                    this.friends.next(res.data);
                 });
     }
 
     requestFriendship(id: string) {
-        this._http.post(this.baseUrl + "/" + id, "{}", {headers: headers()})
+        this._http.post(this.baseUrl + "/friends/" + id, "{}", {headers: headers()})
             .map((res: Response) => res.json())
             .subscribe(
                 (res) => {
@@ -70,7 +65,7 @@ export class FriendsService {
     }
 
     removeFriend(userId: string) {
-        this._http.delete(this.baseUrl + "/" + userId, {headers: headers()})
+        this._http.delete(this.baseUrl + "/friends/" + userId, {headers: headers()})
             .map((res: Response) => res.json())
             .subscribe(
                 (res) => {

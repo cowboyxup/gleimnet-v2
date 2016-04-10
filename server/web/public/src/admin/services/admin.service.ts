@@ -9,6 +9,7 @@ export class AdminService {
     baseUrl: string = "admin/v1";
 
     savedSessions: Subject<Array<string>> = new Subject<Array<string>>();
+    savedSetups: Subject<Array<string>> = new Subject<Array<string>>();
 
     constructor(private _http: AuthHttp) {}
 
@@ -25,6 +26,21 @@ export class AdminService {
                     });
 
                     this.savedSessions.next(a);
+                });
+    }
+    loadSetups() {
+        this._http.get(this.baseUrl + "/setups", {headers: headers()})
+            .map((res: Response) => res.json())
+            .subscribe(
+                (res: SetupsList) => {
+                    console.log(res);
+                    var a: string[] = [];
+
+                    res.files.forEach( path => {
+                        a.push(path.path);
+                    });
+
+                    this.savedSetups.next(a);
                 });
     }
 
@@ -45,8 +61,10 @@ export class AdminService {
             );
     }
 
-    load(filepath: string) {
+    load(string) {
+        let filepath = "saved/" + string;
         let body = JSON.stringify({filepath});
+        console.log(body);
 
         this._http.post(this.baseUrl + "/load" , body, {headers: headers()})
             .map((res: Response) => res.json())
@@ -62,6 +80,7 @@ export class AdminService {
             );
     }
 
+
     export() {
         this._http.get(this.baseUrl + "/export", {headers: headers()})
             .map((res: Response) => window.open("data:application/pdf," + res))
@@ -73,17 +92,30 @@ export class AdminService {
                 });
     }
 
-    setup() {
-        this._http.get(this.baseUrl + "/setups", {headers: headers()})
-            .map((res: Response) => console.log(res))
+    setup(string) {
+        let filepath = "setups/" + string;
+        let body = JSON.stringify({filepath});
+
+        this._http.post(this.baseUrl + "/load" , body, {headers: headers()})
+            .map((res: Response) => res.json())
             .subscribe(
-                res => {
-                    // console.log(res);
-                });
+                (res) => {
+
+                    console.log(res);
+                    this.loadSetups();
+                },
+                error => {
+                    console.log("fehler");
+                }
+            );
     }
+
 }
 
 class PathList {
+    files: GLeimNetSession[];
+}
+class SetupsList {
     files: GLeimNetSession[];
 }
 

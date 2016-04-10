@@ -9,6 +9,48 @@ internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
 
+    server.route({
+        method: 'GET',
+        path: '/profile',
+        config: {
+            tags: ['api'],
+            auth: {
+                strategy: 'jwt',
+            },
+            validate: {
+                query: {
+                    search: Joi.string().token().lowercase(),
+                    fields: Joi.string(),
+                    sort: Joi.string().default('_id'),
+                    limit: Joi.number().default(20),
+                    page: Joi.number().default(1)
+                }
+            },
+            pre: [
+            ]
+        },
+        handler: function (request, reply) {
+            const query = {};
+            if (request.query.search) {
+                query.username = new RegExp('^.*?' + request.query.search + '.*$', 'i');
+                //query.surename = new RegExp('^.*?' + request.query.search + '.*$', 'i');
+                //query.givenName = new RegExp('^.*?' + request.query.search + '.*$', 'i');
+                //query.nickname = new RegExp('^.*?' + request.query.search + '.*$', 'i');
+            }
+            query.isActive = true;
+            const fields = request.query.fields;
+            const sort = request.query.sort;
+            const limit = request.query.limit;
+            const page = request.query.page;
+            User.pagedFind(query, fields, sort, limit, page, (err, results) => {
+                if (err) {
+                    return reply(err);
+                }
+                reply(results);
+            });
+        }
+    });
+
     server.route([{
         method: 'GET',
         path: '/profile/{_id}',

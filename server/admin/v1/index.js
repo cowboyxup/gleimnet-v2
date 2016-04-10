@@ -101,7 +101,8 @@ internals.applyRoutes = function (server, next) {
                                 messages: data.loadMessages,
                                 conversations: data.loadConversations,
                                 timelines: data.loadTimelines,
-                                posts: data.loadPosts
+                                posts: data.loadPosts,
+                                meetings: data.loadMeetings
                             };
                             const savedata = EJSON.stringify(document,null, '\t');
                             const fsOptions = {encoding: 'utf-8'};
@@ -166,68 +167,63 @@ internals.applyRoutes = function (server, next) {
                         },
                         user: ['clean','loadFile', (done, data) => {
                             if (data.loadFile['users'].length === 0) {
-                                return done;
+                                return done(null,[]);
                             }
                             User.insertMany(data.loadFile['users'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;
                                 }
-                                return results;
+                                return done(null, results);
                             });
-                            return done;
                         }],
                         message: ['clean','loadFile', (done, data) => {
                             if (data.loadFile['messages'].length === 0) {
-                                return done;
+                                return done(null,[]);
                             }
                             Message.insertMany(data.loadFile['messages'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;
                                 }
-                                return results;
+                                return done(null,results);
                             });
-                            return done;
                         }],
                         timeline: ['clean','loadFile', (done, data) => {
                             if (data.loadFile['timelines'].length === 0) {
-                                return done;
+                                return done(null,[]);
                             }
                             Timeline.insertMany(data.loadFile['timelines'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;
                                 }
-                                return results;
+                                return done(null,results);
                             });
-                            return done;
                         }],
                         post: ['clean','loadFile', (done, data) => {
                             if (data.loadFile['posts'].length === 0) {
-                                return done;
+                                return done(null,[]);
                             }
                             Post.insertMany(data.loadFile['posts'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;
                                 }
-                                return results;
+                                return done(null,results);
                             });
-                            return done;
                         }],
                         meeting: ['clean','loadFile', (done, data) => {
                             if (data.loadFile['meetings'].length === 0) {
-                                return done;
+                                return done(null,[]);
                             }
                             Meeting.insertMany(data.loadFile['meetings'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;
                                 }
-                                return results;
+                                return done(null,results);
                             });
-                            return done;
                         }]
                     }, (err, data) => {
                         if (err) {
