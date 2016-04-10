@@ -47,7 +47,7 @@ import {ProfileService} from "../../services/profile.service";
                                     </label>
                                 </span>
                                 <span class="input-group-btn col s1">
-                                    <button class="waves-effect waves-light btn send_Button"
+                                    <button class="waves-effect waves-light btn"
                                         (click)="postNewPosting(newPosting.value); newPosting.value='' ">
                                         <i class="material-icons">send</i>
                                     </button>

@@ -33,19 +33,24 @@ export class FriendsService {
         this._http.get(this.baseUrl + "/unconfirmed", {headers: headers()})
             .map((res: Response) => res.json())
             .subscribe(
-                (res: Paged<User>) => {
-                    // console.log(res);
-                    this.unconfirmedFriends.next(res.data);
+                (res: Array<User>) => {
+                    console.log("loadUnconfirmedFriends");
+                    console.log(res);
+                    this.unconfirmedFriends.next(res);
                 });
     }
 
     loadFriends() {
-        this._http.get(this.baseUrl, {headers: headers()})
-            .map((res: Response) => res.json())
-            .subscribe(
-                (res: Paged<User>) => {
+        this._http.get(this.baseUrl + "/confirmed", {headers: headers()})
+            .map(
+                (res: Response) => res.json()
+            ).subscribe(
+                (res: Array<User>) => {
                     // console.log(res);
-                    this.friends.next(res.data);
+                    this.friends.next(res);
+                },
+                error => {
+                    console.log("fehler");
                 });
     }
 

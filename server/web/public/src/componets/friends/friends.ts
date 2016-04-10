@@ -68,7 +68,7 @@ import {FriendAddListItemComponent} from "./friendAddListItem.component";
                                     </label>
                                 </span>
                                 <span class="input-group-btn col s1">
-                                    <button class="waves-effect waves-light btn send_Button"
+                                    <button class="waves-effect waves-light btn"
                                         (click)="findNewFriend(friendname.value); friendname.value=''">
                                         <i class="large material-icons">search</i>
                                     </button>

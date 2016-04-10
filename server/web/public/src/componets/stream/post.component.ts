@@ -51,7 +51,7 @@ import {CommentComponent} from "./comment.component";
                             Was ist Ihre Meinung dazu?
                         </label>
                     </div>
-                        <button class="waves-effect waves-light btn send_Button"
+                        <button class="waves-effect waves-light btn"
                             (click)="commentOnPosting(newPosting.value); newPosting.value=''">
                                 <i class="large material-icons">send</i>
                     </button>

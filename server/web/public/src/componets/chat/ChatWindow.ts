@@ -26,22 +26,23 @@ import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending
         <div class=""
                [ngClass]="{'base-sent': !incoming, 'base-receive': incoming}">
             <div class="card-content">
-                <div class="card-title activator grey-text text-darken-4">
-                    <span class="avatar_left" *ngIf="incoming">
-                        <img class="round_avatar" src="{{message.authorAvatar}}">
-                    </span>  
+                <div class="comment__author">
+                    <a href="#/profile/{{message.author}}">
+                        <span class="avatar_left" *ngIf="incoming">
+                            <img class="round_avatar" src="{{message.authorAvatar}}">
+                        </span>  
                     
-                    <span class = "message_auther">{{message.authorName}} • {{message.timeCreated | fromNow}}</span>
+                        <span class = "message_auther">{{message.authorName}} • {{message.timeCreated | fromNow}}</span>
                     
-                    <span class="avatar_right" *ngIf="!incoming">
-                        <img class="round_avatar" src="{{message.authorAvatar}}">
-                    </span>
-                
+                        <span class="avatar_right" *ngIf="!incoming">
+                            <img class="round_avatar" src="{{message.authorAvatar}}">
+                        </span>
+                    </a>
                 </div>
                 
                 <div class="messages"
                   [ngClass]="{'msg-sent': !incoming, 'msg-receive': incoming}">
-                  <p>{{message.content}}</p>
+                  <p class="flow-text">{{message.content}}</p>
                   
                 </div>
             </div>
@@ -107,8 +108,8 @@ export class ChatMessage implements OnInit {
                         </div>
                    
                         <span class="input-group-btn col s1">
-                            <button class="waves-effect waves-light btn send_Button"
-                                (click)="onEnter($event)">Send</button>
+                            <button class="waves-effect waves-light btn"
+                                (click)="onEnter($event)"><i class="material-icons">send</i></button>
                         </span>
                     </div>
                 </div>

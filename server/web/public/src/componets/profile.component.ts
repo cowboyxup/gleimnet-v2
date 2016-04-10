@@ -42,8 +42,9 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
             {{user.givenName}} {{user.nickname}}
         </span>
         <span class="head_buttons">
+        
             <button *ngIf="addFriendButton && !isMe" type="button"
-                    class="btn send_Button"
+                    class="btn"
                     (click)="addAsFriend()">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Freund hinzufügen
@@ -62,11 +63,11 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class=" modal-action modal-close waves-effect waves-green btn-flat"
+                    <button class=" modal-action modal-close waves-effect btn-flat"
                         onclick="$('#modal1').closeModal();"
                         (click)="sendMessage(newMessage.value)">
                             senden</button>
-                    <button class=" modal-action modal-close waves-effect waves-green btn-flat"
+                    <button class=" modal-action modal-close waves-effect btn-flat"
                         onclick="$('#modal1').closeModal();">
                             abbrechen
                     </button>
@@ -111,7 +112,7 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
                                     </label>
                                 </span>
                                 <span class="input-group-btn col s1">
-                                    <button class="waves-effect waves-light btn send_Button"
+                                    <button class="waves-effect waves-light btn"
                                             (click)="postNewPosting(newPosting.value); newPosting.value='' ">
                                         <i class="large material-icons">send</i>
                                     </button>
