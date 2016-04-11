@@ -12,7 +12,7 @@ import {TimelineService} from "../services/timeline.service";
 import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
 import {AuthService} from "../services/auth.service";
-import {User, Post} from "../models";
+import {User, Post, IdInterface} from "../models";
 import {FriendListItemComponent} from "./friends/friendListItem.component";
 import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
 import {ProfileInfoComponent} from  "./profileinfo.componente";
@@ -90,8 +90,8 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
 
                             <h5>Freunde:</h5>
 
-                            <div *ngFor="#user of friends" class="row">
-                                <friendListItem [user]="user"></friendListItem>
+                            <div *ngFor="#userId of friends" class="row">
+                                <friendListItem [userId]="userId"></friendListItem>
                             </div>
 
                         </div>
@@ -156,7 +156,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     private user = new User();
     private posts: Array<Post>;
-    private friends: Array<User>;
+    private friends: Array<IdInterface>;
 
     constructor(private _routeParams: RouteParams,
                 private _profileService: ProfileService,
@@ -191,7 +191,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this._friendsService.friends.subscribe(( users: Array<User>) => {
+        this._friendsService.friends.subscribe(( users: Array<IdInterface>) => {
             this.friends = users;
         });
 
@@ -230,6 +230,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     addAsFriend() {
         if (this._authService.isAuthenticated()) {
             console.log("addAsFriend");
+            this._friendsService.requestFriendship(this.user._id);
         }
     }
 

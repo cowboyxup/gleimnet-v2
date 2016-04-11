@@ -3,9 +3,10 @@ import {ProfileService} from "../../services/profile.service";
 import {Component} from "angular2/core";
 import {ProtectedDirective} from "../../directives/protected.directive";
 import {AuthService} from "../../services/auth.service";
-import {User} from "../../models";
+import {User, IdInterface} from "../../models";
 import {FriendListItemComponent} from "./friendListItem.component";
 import {FriendAddListItemComponent} from "./friendAddListItem.component";
+import {FriendRequestListItemComponent} from "./friendRequestListItem.component"
 
 
 @Component({
@@ -13,7 +14,8 @@ import {FriendAddListItemComponent} from "./friendAddListItem.component";
     directives: [
         ProtectedDirective,
         FriendListItemComponent,
-        FriendAddListItemComponent
+        FriendAddListItemComponent,
+        FriendRequestListItemComponent
     ],
     template: `
         <div protected class="row">
@@ -22,8 +24,8 @@ import {FriendAddListItemComponent} from "./friendAddListItem.component";
                     <div class="card-content">
                         <h4>Freunde:</h4>
                         
-                        <div *ngFor="#user of friends" class="row">
-                            <friendListItem [user]="user"></friendListItem>    
+                        <div *ngFor="#userId of friends" class="row">
+                            <friendListItem [userId]="userId"> </friendListItem>    
                         </div>
                         
                     </div>
@@ -34,23 +36,12 @@ import {FriendAddListItemComponent} from "./friendAddListItem.component";
                     <div class="card-content">
                         <div *ngIf="unconfirmedFriends">
                             <h4>Freundschaftsanfragen:</h4>
-                            <div class="media post" *ngFor="#Friendship of unconfirmedFriends">
-                                <div class="media-left">
-                                    <a href="#/profile/{Friendship.user.username}}">
-                                        <img class="media-object timelineImage" alt="" 
-                                            src="img/profilimages/64x64/{{Friendship.user.avatar}}.png">
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">
-                                        {{Friendship.user.givenName}} {{Friendship.user.surename}}
-                                    </h4>
-                                    <p>
-                                        {{Friendship.user.description}}
-                                    </p>
-                                    <a (click)="confirmFriendship(Friendship._id)">als Freund hinzufügen</a>
-                                </div>
+                            
+                            <div *ngFor="#userId of unconfirmedFriends" class="row">
+                                <friendRequestListItem [userId]="userId"> </friendRequestListItem>    
                             </div>
+                            
+                           
                             <hr>
                         </div>
                         
@@ -90,8 +81,8 @@ import {FriendAddListItemComponent} from "./friendAddListItem.component";
 
 export class Friends {
 
-    friends: Array<User>;
-    unconfirmedFriends: Array<User>;
+    friends: Array<IdInterface>;
+    unconfirmedFriends: Array<IdInterface>;
     searchedFriends: Array<User>;
 
     constructor(private _friendsService: FriendsService,
@@ -101,11 +92,11 @@ export class Friends {
             this.searchedFriends = users;
         });
 
-        this._friendsService.unconfirmedFriends.subscribe((users: Array<User>) => {
+        this._friendsService.unconfirmedFriends.subscribe((users: Array<IdInterface>) => {
             this.unconfirmedFriends = users;
         });
 
-        this._friendsService.friends.subscribe((users: Array<User>) => {
+        this._friendsService.friends.subscribe((users: Array<IdInterface>) => {
             this.friends = users;
         });
     }

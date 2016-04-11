@@ -27,6 +27,7 @@
     "src/services/friends.service.ts",
     "src/componets/friends/friends.ts",
     "src/componets/friends/friendListItem.component.ts",
+    "src/componets/friends/friendRequestListItem.component.ts",
     "src/util/FromNowPipe.ts",
     "src/services/user.service.ts",
     "src/componets/profile.component.ts",

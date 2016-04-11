@@ -119,13 +119,13 @@ export class ProfileInfoComponent implements OnInit {
 
             //this.tags.push("test");
 
-            console.log(this.birthdate);
+            // console.log(this.birthdate);
 
             if (this.birthdate != null) {
                 this.birthdate = this.birthdate.substring(0, this.birthdate.indexOf('T'));
             }
 
-            console.log(this.birthdate);
+            // console.log(this.birthdate);
 
             if (this._authService.getUserId() === this.user._id) {
                 this.isMe = true;
@@ -164,7 +164,7 @@ export class ProfileInfoComponent implements OnInit {
     }
 
     private removeTag(tag: string) {
-        console.log(tag);
+        // console.log(tag);
 
         var index = this.tags.indexOf(tag, 0);
         if (index > -1) {

@@ -2,7 +2,7 @@ import {Injectable} from 'angular2/core';
 import {Subject } from 'rxjs/Subject';
 import {headers} from "./common";
 import {Response} from "angular2/http";
-import {Paged, User} from "../models";
+import {Paged, User, IdInterface} from "../models";
 import {AuthHttp} from "../common/angular2-jwt";
 
 
@@ -11,8 +11,8 @@ export class FriendsService {
 
     baseUrl: string = "api/v1";
     searchedFriends: Subject<Array<User>> = new Subject<Array<User>>();
-    unconfirmedFriends: Subject<Array<User>> = new Subject<Array<User>>();
-    friends: Subject<Array<User>> = new Subject<Array<User>>();
+    unconfirmedFriends: Subject<Array<IdInterface>> = new Subject<Array<IdInterface>>();
+    friends: Subject<Array<IdInterface>> = new Subject<Array<IdInterface>>();
 
     constructor(private _http: AuthHttp) {}
 
@@ -33,17 +33,17 @@ export class FriendsService {
         this._http.get(this.baseUrl + "/friends/unconfirmed", {headers: headers()})
             .map((res: Response) => res.json())
             .subscribe(
-                (res: Paged<User>) => {
+                (res: Paged<IdInterface>) => {
                     // console.log(res);
                     this.unconfirmedFriends.next(res.data);
                 });
     }
 
     loadFriends() {
-        this._http.get(this.baseUrl, {headers: headers()})
+        this._http.get(this.baseUrl + "/friends", {headers: headers()})
             .map((res: Response) => res.json())
             .subscribe(
-                (res: Paged<User>) => {
+                (res: Paged<IdInterface>) => {
                     // console.log(res);
                     this.friends.next(res.data);
                 });
