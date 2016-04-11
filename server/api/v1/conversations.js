@@ -187,7 +187,6 @@ internals.applyRoutes = function (server, next) {
                             return reply(err);
                         }
                         if (conversation.length === 0) {
-
                             let tauthors = [];
                             tauthors.push(request.payload._id);
                             tauthors.push(request.auth.credentials._id);
@@ -195,7 +194,9 @@ internals.applyRoutes = function (server, next) {
                                 return reply(newconversation);
                             });
                         }
-                        return reply(conversation);
+                        else {
+                            return reply(conversation);
+                        }
                     });
                 }
             }]
