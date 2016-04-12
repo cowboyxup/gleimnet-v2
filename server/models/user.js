@@ -90,7 +90,7 @@ User.schema = Joi.object().keys({
     surname: Joi.string().required(),
     nickname: Joi.string().required(),
     birthdate: Joi.date().required(),
-    description: Joi.string(),
+    description: Joi.string().allow('').required(),
     avatar: Joi.string().required(),
     titlePicture: Joi.string().required(),
     tags: Joi.array().max(5).items(
