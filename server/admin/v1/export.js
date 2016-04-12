@@ -224,7 +224,7 @@ internals.applyRoutes = function (server, next) {
                     var intlData = {
                         "locales": "de-DE"
                     };
-                    console.log(JSON.stringify(request.pre.save, null, '\t'));
+                    //console.log(JSON.stringify(request.pre.save, null, '\t'));
                     const html = template(request.pre.save,{
                         data: {intl: intlData}
                     });
@@ -250,8 +250,8 @@ internals.applyRoutes = function (server, next) {
                 },
                 'base': server.info.uri
             };
-            const filename = 'test.html';
-            jetpack.dir('./data/html').write(filename,request.pre.html);
+            //const filename = 'test.html';
+            //jetpack.dir('./data/html').write(filename,request.pre.html);
 
             Pdf.create(request.pre.html,options).toStream(function(err, stream){
                 if (err) {
