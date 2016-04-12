@@ -32,10 +32,13 @@ internals.applyRoutes = function (server, next) {
         handler: function (request, reply) {
             const query = {};
             if (request.query.search) {
-                query.username = new RegExp('^.*?' + request.query.search + '.*$', 'i');
-                //query.surename = new RegExp('^.*?' + request.query.search + '.*$', 'i');
-                //query.givenName = new RegExp('^.*?' + request.query.search + '.*$', 'i');
-                //query.nickname = new RegExp('^.*?' + request.query.search + '.*$', 'i');
+                const regex = new RegExp('^.*?' + request.query.search + '.*$', 'i');
+                query.$or =  [
+                    { username: regex},
+                    { surname: regex },
+                    { givenName: regex },
+                    { nickname: regex }
+                ];
             }
             query.isActive = true;
             const fields = request.query.fields;

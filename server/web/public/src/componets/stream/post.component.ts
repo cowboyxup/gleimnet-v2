@@ -2,10 +2,11 @@ import {ChangeDetectionStrategy} from "angular2/core";
 import {Input} from "angular2/core";
 import {Component} from "angular2/core";
 import {TimelineService} from "../../services/timeline.service";
-import {Post} from "../../models";
+import {Post, indexOfId} from "../../models";
 import {FromNowPipe} from "../../util/FromNowPipe";
 import {ProfileService} from "../../services/profile.service";
 import {CommentComponent} from "./comment.component";
+import {AuthService} from "../../admin/services/auth.service";
 
 
 @Component({
@@ -22,11 +23,14 @@ import {CommentComponent} from "./comment.component";
                 <a href="#/profile/{{posting.author}}">
                     <img src="{{posting.authorAvatar}}" class="round_avatar48">
                 </a>
-                <div class="comment__author">
-                    <a href="#/profile/{{posting.author}}">
-                        <strong>{{posting.authorName}}</strong>
-                    </a>
-                    <span>{{posting.timeCreated | fromNow}}</span>
+                <div class="comment__author" >
+                
+                    <span class="author">
+                        <a href="#/profile/{{posting.author}}">
+                            <strong>{{posting.authorName}}</strong>
+                        </a>
+                        <span>{{posting.timeCreated | fromNow}}</span>
+                    </span>
                 </div>
             </div>
 
@@ -35,7 +39,12 @@ import {CommentComponent} from "./comment.component";
                         {{posting.content}}
                     </p>
                 </div>
-
+                <span class="like">
+                    {{posting.likes.length}}
+                    <a *ngIf="likedByMe" (click)="removelike()"><i class="material-icons">favorite</i></a> 
+                    <a *ngIf="!likedByMe" (click)="like()"><i class="material-icons">favorite_border</i></a> 
+                </span>
+                
             <div class="posting_contet comments">
                
                 <div class="comment" *ngFor="#comment of posting.comments">
@@ -66,11 +75,18 @@ import {CommentComponent} from "./comment.component";
 export class TimeLinePostComponent {
     @Input() posting: Post;
 
+    likedByMe: boolean = false;
+
     constructor(private _timelineService: TimelineService,
                 private _profileService: ProfileService) {
     }
 
     ngOnInit() {
+
+        let index = indexOfId(this.posting.likes, localStorage.getItem('userId'));
+
+        this.likedByMe = index !== -1;
+
         this._profileService.getUserForId(this.posting.author).subscribe( user => {
             if (user !== null) {
                 this.posting.authorName = user.givenName;
@@ -86,6 +102,15 @@ export class TimeLinePostComponent {
                 }
             });
         });
+    }
+
+    like() {
+        this._timelineService.likePost(this.posting._id);
+        this.likedByMe = true;
+    }
+
+    removelike() {
+        this._timelineService.likePost(this.posting._id);
     }
 
     commentOnPosting(content: string) {

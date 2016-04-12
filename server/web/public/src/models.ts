@@ -72,6 +72,7 @@ export class Post implements IdInterface {
 
     authorName: string;
     authorAvatar: string;
+    likes: Array<IdInterface>;
 
     constructor(id: string, author: string, content: string) {
         this._id = id;
