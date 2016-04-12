@@ -1,0 +1,238 @@
+bodmerjj
+Johann Jakob
+Bodmer
+19. Juli 1698
+assets/img/people/bodmerjj/avatar.png
+assets/img/people/bodmerjj/cover.jpg
+
+
+buergerga
+Gottfried August
+Bürger
+31.12.1747
+assets/img/people/buergerga/avatar.png
+assets/img/people/buergerga/cover.jpg
+
+
+eschenburgjj
+Johann Joachim
+Eschenburg
+7.12.1743
+assets/img/people/eschenburgjj/avatar.png
+assets/img/people/eschenburgjj/cover.jpg
+
+
+goeckingklfg
+Leopold Friedrich Günther
+Goeckingk
+13.7.1748
+assets/img/people/goeckingklfg/avatar.png
+assets/img/people/goeckingklfg/cover.jpg
+
+
+goetzng
+Johann Nicolaus
+Götz
+9.7.1721
+assets/img/people/goetzng/avatar.png
+assets/img/people/goetzng/cover.jpg
+
+
+heinsejjw
+Johann Jacob Wilhelm
+Heinse
+15.2.1746
+assets/img/people/heinsejjw/avatar.png
+assets/img/people/heinsejjw/cover.jpg
+
+
+herderg
+Johann Gottfried
+Herder
+25.8.1744
+assets/img/people/herderg/avatar.png
+assets/img/people/herderg/cover.jpg
+
+
+herderk
+Karoline
+Herder
+28.1.1750 
+assets/img/people/herderk/avatar.png
+assets/img/people/herderk/cover.jpg
+
+
+jacobifh
+Friedrich Heinrich
+Jacobi 
+25.1.1743
+assets/img/people/jacobifh/avatar.png
+assets/img/people/jacobifh/cover.jpg
+
+
+jacobijg
+Johann Georg
+Jacobi
+2.9.1740
+assets/img/people/jacobijg/avatar.png
+assets/img/people/jacobijg/cover.jpg
+
+
+karschal
+Anna Louisa
+Karsch
+1.12.1722
+assets/img/people/karschal/avatar.png
+assets/img/people/karschal/cover.jpg
+
+
+kleistec
+Ewald Christian
+von Kleist
+7.3.1715
+assets/img/people/kleistec/avatar.png
+assets/img/people/kleistec/cover.jpg
+
+
+klenckecl
+Caroline Luise
+von Klencke
+21.6.1754
+assets/img/people/klenckecl/avatar.png
+assets/img/people/klenckecl/cover.jpg
+
+
+klopstockfg
+Friedrich Gottlieb
+Klopstock
+2.7.1724
+assets/img/people/klopstockfg/avatar.png
+assets/img/people/klopstockfg/cover.jpg
+
+
+krausecg
+Christian Gottfried
+Krause
+7.4.1719 
+assets/img/people/krausecg/avatar.png
+assets/img/people/krausecg/cover.jpg
+
+
+larochems
+Marie Sophie
+La Roche
+6.12.1730
+assets/img/people/larochems/avatar.png
+assets/img/people/larochems/cover.jpg
+
+
+lessingge
+Gotthold Ephraim
+Lessing
+22. Januar 1729
+assets/img/people/lessingge/avatar.png
+assets/img/people/lessingge/cover.jpg
+
+
+muellerj
+Johannes
+Müller
+3.1.1752
+assets/img/people/muellerj/avatar.png
+assets/img/people/muellerj/cover.jpg
+
+
+nicolaicf
+Christoph Friedrich
+Nikolai
+18.3.1733
+assets/img/people/nicolaicf/avatar.png
+assets/img/people/nicolaicf/cover.jpg
+
+
+ramlerkw
+Karl Wilhelm Ramler
+25.2.1725
+assets/img/people/ramlerkw/avatar.png
+assets/img/people/ramlerkw/cover.jpg
+
+
+reckeeck
+Elisabeth Charlotte Constanzia
+von der Recke
+20.5.1754
+assets/img/people/reckeeck/avatar.png
+assets/img/people/reckeeck/cover.jpg
+
+
+richterjp
+Johann Paul Friedrich
+Richter
+21.3.1763
+assets/img/people/richterjp/avatar.png
+assets/img/people/richterjp/cover.jpg
+
+
+rodecb
+Christian Bernhard
+Rode
+25.7.1725
+assets/img/people/rodecb/avatar.png
+assets/img/people/rodecb/cover.jpg
+
+
+seumejg
+Johann Gottfried
+Seume
+29.1.1763
+assets/img/people/seumejg/avatar.png
+assets/img/people/seumejg/cover.jpg
+
+
+spaldingjj
+Johann Joachim
+Spalding
+1.11.1714
+assets/img/people/spaldingjj/avatar.png
+assets/img/people/spaldingjj/cover.jpg
+
+
+sulzerjg
+Johann Georg
+Sulzer
+16.101720
+assets/img/people/sulzerjg/avatar.png
+assets/img/people/sulzerjg/cover.jpg
+
+
+uzjp
+Johann Peter
+Uz
+3.10.1720 
+assets/img/people/uzjp/avatar.png
+assets/img/people/uzjp/cover.jpg
+
+
+vossjh
+Johann Heinrich
+Voß
+20.2.1751
+assets/img/people/vossjh/avatar.png
+assets/img/people/vossjh/cover.jpg
+
+
+weitschpjf
+Pascha Johann Friedrich
+Weitsch
+16.10.1723
+assets/img/people/weitschpjf/avatar.png
+assets/img/people/weitschpjf/cover.jpg
+
+
+wielandcm
+Pascha Johann Friedrich
+Weitsch
+16.10.1723
+assets/img/people/wielandcm/avatar.png
+assets/img/people/wielandcm/cover.jpg
+
