@@ -99,7 +99,25 @@ export class TimelineService {
         return this._authHttp.post(url, body, {headers: headers()})
             .map(response => {
                 response.json();
-            });
+            })
+            .subscribe(
+                response => {
+                    this.load();
+                }
+            );
+    }
+
+    likePost(postId: string) {
+        var url = '/api/v1/post/' + postId + "/like";
+        return this._authHttp.post(url, "{}", {headers: headers()})
+            .map(response => {
+                response.json();
+            })
+            .subscribe(
+                response => {
+                    this.load();
+                }
+            );
     }
 
     private setPosts(posts: Array<Post>) {
@@ -114,6 +132,7 @@ export class TimelineService {
             } else {
                 var oldPost: Post = this._posts[index];
 
+                oldPost.likes = newPost.likes;
                 newPost.comments.forEach(comment => {
 
                     var commentIndex = -1;

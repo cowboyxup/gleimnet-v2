@@ -134,9 +134,6 @@ body{
   padding-right: 20px;
 }
 
-
-
-
 .comment__header > .comment__author {
   flex-grow: 1;
   display: flex;
@@ -153,7 +150,11 @@ body{
   margin-top: 16px;
 }
 
-
+.posting .like {
+  float: right;
+  padding-right: 20px;
+  padding-bottom: 4px;
+}
 
 /* 4. Profile
    ========================================================================== */

@@ -18,7 +18,7 @@ export class FriendsService {
 
 
     findNewFriend(name: string) {
-        if (name !== "") {
+        if (name !== "" || name !== " ") {
             this._http.get(this.baseUrl + "/profile" + "?search=" + name, {headers: headers()})
                 .map((res: Response) => res.json())
                 .subscribe(

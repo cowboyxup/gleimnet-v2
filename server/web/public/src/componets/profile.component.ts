@@ -39,7 +39,7 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
             <div class="profile_name_box card">
                 <div class="mdl-card__supporting-text">
         <span class="head_profil_name">
-            {{user.givenName}} {{user.nickname}}
+            {{user.givenName}} {{user.surname}}
         </span>
         <span class="head_buttons">
         
@@ -121,22 +121,22 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
                         </div>
                     </div>
 
-                    <div *ngIf="timelineAvailable">
+                    <div>
                         <div class="posting" *ngFor="#posting of posts | sortByProperty : 'timeCreated'">
                             <posting [posting]="posting"></posting>
                         </div>
                     </div>
 
-                    <div *ngIf="!timelineAvailable" class="posting">
-                        <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col stream_form">
+                    <!--<div *ngIf="!timelineAvailable" class="posting">-->
+                        <!--<div class="mdl-card mdl-shadow&#45;&#45;4dp mdl-cell mdl-cell&#45;&#45;12-col stream_form">-->
 
-                            <div class="spinner">
-                                <div class="bounce1"></div>
-                                <div class="bounce2"></div>
-                                <div class="bounce3"></div>
-                            </div>
-                        </div>
-                    </div>
+                            <!--<div class="spinner">-->
+                                <!--<div class="bounce1"></div>-->
+                                <!--<div class="bounce2"></div>-->
+                                <!--<div class="bounce3"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                 </div>
             </div>
@@ -149,7 +149,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     addFriendButton = true;
 
     isMe = false;
-    timelineAvailable: boolean = false;
+    // timelineAvailable: boolean = false;
     userId: string;
 
     private interval;
@@ -180,7 +180,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this._timelineService.postSubject
             .subscribe(post => {
                     this.posts.push(post);
-                    this.timelineAvailable = true;
+                    // this.timelineAvailable = true;
                 }
             );
 

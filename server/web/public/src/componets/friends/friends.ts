@@ -6,7 +6,7 @@ import {AuthService} from "../../services/auth.service";
 import {User, IdInterface} from "../../models";
 import {FriendListItemComponent} from "./friendListItem.component";
 import {FriendAddListItemComponent} from "./friendAddListItem.component";
-import {FriendRequestListItemComponent} from "./friendRequestListItem.component"
+import {FriendRequestListItemComponent} from "./friendRequestListItem.component";
 
 
 @Component({

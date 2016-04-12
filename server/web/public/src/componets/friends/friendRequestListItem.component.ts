@@ -35,9 +35,9 @@ import {ProfileService} from "../../services/profile.service";
 export class FriendRequestListItemComponent implements OnInit {
     @Input() userId: IdInterface;
 
-    avatar:string;
-    givenName:string
-    description:string;
+    avatar: string;
+    givenName: string;
+    description: string;
 
     constructor(private _friendsService: FriendsService,
                 private _authService: AuthService,
