@@ -38,7 +38,7 @@ Async.auto({
         Promptly.prompt('Geburtsdatum im Format: DD-MM-YYYY', { default: null }, done);
     }],
     description: ['birthdate', (done, results) => {
-        Promptly.prompt('Informationstext', { default: null }, done);
+        Promptly.prompt('Informationstext', { default: '' }, done);
     }],
     avatar: ['description', (done, results) => {
         Promptly.prompt('Profilbild Pfad relativ zu public', { default: null }, done);
