@@ -240,7 +240,7 @@ User.findProfileById = function (id, callback) {
             timeCreated: user.timeCreated,
             username: user.username,
             givenName: user.givenName,
-            surname: user.surename,
+            surname: user.surname,
             nickname: user.nickname,
             birthdate: user.birthdate,
             description: user.description,
