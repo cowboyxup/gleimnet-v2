@@ -191,7 +191,9 @@ internals.applyRoutes = function (server, next) {
                             tauthors.push(request.payload._id);
                             tauthors.push(request.auth.credentials._id);
                             Conversation.create(tauthors, (err, newconversation) => {
-                                return reply(newconversation);
+                                const tmp = [];
+                                tmp.push(newconversation);
+                                return reply(tmp);
                             });
                         }
                         else {
