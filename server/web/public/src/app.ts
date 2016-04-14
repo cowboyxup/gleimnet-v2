@@ -42,20 +42,20 @@ declare var System: any;
     <nav>
         <div class="nav-wrapper">
             <a href="#" class="brand-logo">
-            <div><img src="favicon-white.png" class="responsive-img">Gleim.net</div>
+            <div><img src="favicon-white.png" class="responsive-img">Gleim-net</div>
             </a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a [routerLink]="['/Stream']" >Stream</a></li>
-                <li><a [routerLink]="['/MyProfile']" >Me</a></li>
+                <li><a [routerLink]="['/MyProfile']" >Profil</a></li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <unreadMessagesCount></unreadMessagesCount>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
                 <li><a [routerLink]="['/Meetings']">Treffen</a></li>
-                <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
-                <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
+                <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Anmelden</a></li>
+                <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Abmelden</a></li>
             </ul>
             
             <ul class="side-nav" id="mobile-demo">
@@ -66,8 +66,8 @@ declare var System: any;
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
                 <li><a [routerLink]="['/Meetings']">Treffen</a></li>
-                <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
-                <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
+                <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Anmelden</a></li>
+                <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Abmelden</a></li>
             </ul>
             
         </div>

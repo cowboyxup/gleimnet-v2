@@ -12,7 +12,7 @@ import {AuthService} from "../services/auth.service";
     template: `
         <div class="card profile_info">
             <div *ngIf="!editMode" class="card-content">
-                <h4>Exposé <a *ngIf="isMe" (click)="editProfile()"><i class="material-icons">mode_edit</i></a> </h4>
+                <h4>Profil <a *ngIf="isMe" (click)="editProfile()"><i class="material-icons">mode_edit</i></a> </h4>
                 
                 <h5>Geburtsdatum:</h5>
                 <p>{{birthdate | formatedDateFromString}}

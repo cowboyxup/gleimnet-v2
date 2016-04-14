@@ -47,7 +47,7 @@ import {FriendRequestListItemComponent} from "./friendRequestListItem.component"
                         
                       
                         
-                        <h4>Freunde suchen:</h4>
+                        <h4>Personen suchen:</h4>
                         
                             <form class="row">
                                 <span class="input-field col s10">

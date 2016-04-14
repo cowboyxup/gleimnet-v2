@@ -32,13 +32,13 @@ import {LoginComponent} from "./components/login.comoment";
             <a href="#" class="brand-logo">
                 <div>
                     <img src="favicon-white.png" class="responsive-img">
-                    Gleim.net Admin Panel
+                    Gleim-net Admin Panel
                 </div>
             </a>
             
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <!--<li><a [routerLink]="['/Login']">Login</a></li>-->
-                <li><a *ngIf="!authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
+                <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Anmelden</a></li>
+                <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Abmelden</a></li>
             </ul>
         </div>
     </nav>
@@ -78,6 +78,10 @@ export class App {
                 //
                 // }
             });
+    }
+
+    goToLogin() {
+        this._router.navigate(['Login']);
     }
 
 
