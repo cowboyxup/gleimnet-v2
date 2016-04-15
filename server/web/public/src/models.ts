@@ -4,7 +4,7 @@ export class User {
     birthdate: string;
     birthplace: string;
     description:  string;
-    friends: string[];
+    friends: IdInterface[];
     givenName: string;
     surname: string;
     influenceplace:  string;

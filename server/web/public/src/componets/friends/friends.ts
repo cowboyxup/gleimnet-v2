@@ -52,7 +52,7 @@ import {FriendRequestListItemComponent} from "./friendRequestListItem.component"
                             <form class="row">
                                 <span class="input-field col s10">
                                     <input #friendname
-                                           (keyup.enter)="findNewFriend(friendname.value); friendname.value=''"
+                                           (keyup.enter)="findNewFriend(friendname.value);"
                                            type="text" class="form-control">
                                     <label for="comment">
                                         Name des Freundes

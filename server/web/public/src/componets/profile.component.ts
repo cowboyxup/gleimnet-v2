@@ -188,12 +188,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
             .subscribe( user => {
                 if (user != null) {
                     this.init(user);
+                    this.friends = user.friends;
                 }
             });
 
-        this._friendsService.friends.subscribe(( users: Array<IdInterface>) => {
-            this.friends = users;
-        });
+        // this._friendsService.friends.subscribe(( users: Array<IdInterface>) => {
+        //     this.friends = users;
+        // });
 
     }
 

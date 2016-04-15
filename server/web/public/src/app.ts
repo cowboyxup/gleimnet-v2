@@ -48,12 +48,11 @@ declare var System: any;
             
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a [routerLink]="['/Stream']" >Stream</a></li>
-                <li><a [routerLink]="['/MyProfile']" >Me</a></li>
+                <li><a [routerLink]="['/MyProfile']" >Profil</a></li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <unreadMessagesCount></unreadMessagesCount>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
-                <li><a [routerLink]="['/Meetings']">Treffen</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
@@ -65,7 +64,6 @@ declare var System: any;
                     Nachrichten <unreadMessagesCount></unreadMessagesCount>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
-                <li><a [routerLink]="['/Meetings']">Treffen</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
@@ -104,11 +102,6 @@ declare var System: any;
         path: '/friends',
         component: Friends,
         name: 'Friends'
-    },
-    {
-        path: '/meetings',
-        component: MeetingsComponent,
-        name: 'Meetings'
     },
     {
         path: '/login',
@@ -151,29 +144,3 @@ export class App {
         this._authService.doLogout();
     }
 }
-
-// bootstrap(MyApp,
-//     [
-//         ROUTER_PROVIDERS,
-//         HTTP_PROVIDERS,
-//         provide(AuthHttp, {
-//             useFactory: (http) => {
-//                 return new AuthHttp(new AuthConfig({
-//                     headerPrefix: ""
-//                 }), http);
-//             },
-//             deps: [Http]
-//         }),
-//         AuthService,
-//         ProfileService,
-//         UserService,
-//         FriendsService,
-//         TimelineService,
-//         ChatService,
-//         MessagesService,
-//         provide(
-//             LocationStrategy,
-//             {useClass: HashLocationStrategy}
-//         )
-//     ]
-// );
