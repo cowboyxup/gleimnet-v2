@@ -12,7 +12,7 @@ import {TimelineService} from "../services/timeline.service";
 import {TimeLinePostComponent} from "./stream/post.component";
 import {ProtectedDirective} from "../directives/protected.directive";
 import {AuthService} from "../services/auth.service";
-import {User, Post, IdInterface} from "../models";
+import {User, Post, IdInterface, indexOfId} from "../models";
 import {FriendListItemComponent} from "./friends/friendListItem.component";
 import {SortByPropertyPipe} from "../util/sort-by-property-pipe";
 import {ProfileInfoComponent} from  "./profileinfo.componente";
@@ -127,16 +127,7 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
                         </div>
                     </div>
 
-                    <!--<div *ngIf="!timelineAvailable" class="posting">-->
-                        <!--<div class="mdl-card mdl-shadow&#45;&#45;4dp mdl-cell mdl-cell&#45;&#45;12-col stream_form">-->
-
-                            <!--<div class="spinner">-->
-                                <!--<div class="bounce1"></div>-->
-                                <!--<div class="bounce2"></div>-->
-                                <!--<div class="bounce3"></div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
+                  
 
                 </div>
             </div>
@@ -189,6 +180,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 if (user != null) {
                     this.init(user);
                     this.friends = user.friends;
+
+                    let indexOfMe = indexOfId(this.friends, this._authService.getUserId());
+
+                    if(indexOfMe !== -1) {
+                        this.addFriendButton = false;
+                    }
+
                 }
             });
 
