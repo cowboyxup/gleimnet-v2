@@ -45,7 +45,7 @@ internals.applyRoutes = function (server, next) {
                     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     const Timeline = server.plugins['hapi-mongo-models'].Timeline;
                     const Post = server.plugins['hapi-mongo-models'].Post;
-                    const Meeting = server.plugins['hapi-mongo-models'].Meeting;
+                    const Comment = server.plugins['hapi-mongo-models'].Comment;
                     Async.auto({
                         loadUsers: (done) => {
                             User.find({}, (err, data) => {
@@ -87,7 +87,7 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        loadMeetings: (done) => {
+                        loadComments: (done) => {
                             Meeting.find({}, (err, data) => {
                                 if (err) {
                                     return err;
@@ -95,14 +95,14 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', 'loadMeetings', (done, data) => {
+                        save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', 'loadComments', (done, data) => {
                             const document = {
                                 users: data.loadUsers,
                                 messages: data.loadMessages,
                                 conversations: data.loadConversations,
                                 timelines: data.loadTimelines,
                                 posts: data.loadPosts,
-                                meetings: data.loadMeetings
+                                comments: data.loadComments
                             };
                             const savedata = EJSON.stringify(document,null, '\t');
                             const fsOptions = {encoding: 'utf-8'};
@@ -146,7 +146,7 @@ internals.applyRoutes = function (server, next) {
                     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     const Timeline = server.plugins['hapi-mongo-models'].Timeline;
                     const Post = server.plugins['hapi-mongo-models'].Post;
-                    const Meeting = server.plugins['hapi-mongo-models'].Meeting;
+                    const Comment = server.plugins['hapi-mongo-models'].Comment;
                     Async.auto({
                         clean: (done) => {
                             Async.parallel([
@@ -155,7 +155,7 @@ internals.applyRoutes = function (server, next) {
                                 Conversation.deleteMany.bind(Conversation, {}),
                                 Timeline.deleteMany.bind(Timeline, {}),
                                 Post.deleteMany.bind(Post, {}),
-                                Meeting.deleteMany.bind(Meeting, {})
+                                Comment.deleteMany.bind(Comment, {})
                             ], done);
                         },
                         loadFile: (done, data) => {
@@ -213,11 +213,11 @@ internals.applyRoutes = function (server, next) {
                                 return done(null,results);
                             });
                         }],
-                        meeting: ['clean','loadFile', (done, data) => {
-                            if (data.loadFile['meetings'].length === 0) {
+                        comments: ['clean','loadFile', (done, data) => {
+                            if (data.loadFile['comments'].length === 0) {
                                 return done(null,[]);
                             }
-                            Meeting.insertMany(data.loadFile['meetings'],(err, results) =>{
+                            Comment.insertMany(data.loadFile['comments'],(err, results) =>{
                                 if (err) {
                                     console.error(err);
                                     return err;

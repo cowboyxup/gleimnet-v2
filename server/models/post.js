@@ -4,6 +4,7 @@ const Async = require('async');
 const ObjectAssign = require('object-assign');
 const BaseModel = require('hapi-mongo-models').BaseModel;
 const User = require('./user');
+const Comment = require('./comment');
 
 const Post = BaseModel.extend({
     constructor: function (attrs) {
@@ -109,7 +110,7 @@ Post.findAndPopulateComments = function (query, callback) {
                     $in: allComments
                 }
             };
-            Post.find(queryComments, done);
+            Comment.find(queryComments, done);
         }]
     }, (err, results) => {
         if (err) {
@@ -119,7 +120,6 @@ Post.findAndPopulateComments = function (query, callback) {
         for (let i = 0; i < tempPost.length; ++i) {
             for (let j = 0; j < tempPost[i].comments.length; ++j) {
                 let comment = results.comments.shift();
-                comment.comments = undefined;
                 tempPost[i].comments[j] = comment;
             }
         }
