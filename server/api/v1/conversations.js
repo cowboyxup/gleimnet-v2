@@ -148,6 +148,46 @@ internals.applyRoutes = function (server, next) {
     }]);
     server.route([{
         method: 'POST',
+        path: '/conversations/{_id}/read',
+        config: {
+            tags: ['api'],
+            auth: {
+                strategy: 'jwt'
+            },
+            validate: {
+                params: {
+                    _id: Joi.string().length(24).hex().required()
+                },
+                payload: {
+                    read: Joi.bool().required()
+                }
+            },
+            pre: [{
+                assign: 'conversation',
+                method: function(request, reply) {
+                    Conversation.findById(request.params._id, (err, conversation) => {
+                        if (err) {
+                            return reply(err);
+                        }
+                        if (!conversation) {
+                            return reply(Boom.notFound('Conversation not found.'));
+                        }
+                        return reply(conversation);
+                    });
+                }
+            }]
+        },
+        handler: function (request, reply) {
+            request.pre.conversation.read(request.auth.credentials._id, (err, conversation) => {
+                if (err) {
+                    return reply(err);
+                }
+                return reply(conversation);
+            });
+        }
+    }]);
+    server.route([{
+        method: 'POST',
         path: '/conversations',
         config: {
             tags: ['api'],
