@@ -1,16 +1,16 @@
 
 /*
- * Providers provided by Angular
- */
+* Providers provided by Angular
+*/
 import {bootstrap} from 'angular2/platform/browser';
 import {provide} from 'angular2/core';
-import {ROUTER_PROVIDERS, LocationStrategy, APP_BASE_HREF} from 'angular2/router';
+import {ROUTER_PROVIDERS, LocationStrategy, HashLocationStrategy} from 'angular2/router';
 import {HTTP_PROVIDERS, Http} from 'angular2/http';
 
 /*
- * App Component
- * our top level component that holds all of our components
- */
+* App Component
+* our top level component that holds all of our components
+*/
 import {App} from './app';
 import {AuthService} from "./services/auth.service";
 import {AuthHttp, AuthConfig} from "./common/angular2-jwt";
@@ -20,9 +20,9 @@ import {ProfileService} from "./services/profile.service";
 import {ChatService} from "./services/chat.service";
 
 /*
- * Bootstrap our Angular app with a top level component `App` and inject
- * our Services and Providers into Angular's dependency injection
- */
+* Bootstrap our Angular app with a top level component `App` and inject
+* our Services and Providers into Angular's dependency injection
+*/
 export function main() {
     return bootstrap(App, [
         // These are dependencies of our App
@@ -39,9 +39,12 @@ export function main() {
             },
             deps: [Http]
         }),
-        provide(APP_BASE_HREF, {useValue: '/'})
-    ])
-        .catch(err => console.error(err));
+        provide(
+            LocationStrategy,
+            {useClass: HashLocationStrategy}
+)
+])
+.catch(err => console.error(err));
 }
 
 document.addEventListener('DOMContentLoaded', main);
