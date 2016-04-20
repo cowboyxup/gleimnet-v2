@@ -13,6 +13,7 @@ export class FriendsService {
     searchedFriends: Subject<Array<User>> = new Subject<Array<User>>();
     unconfirmedFriends: Subject<Array<IdInterface>> = new Subject<Array<IdInterface>>();
     friends: Subject<Array<IdInterface>> = new Subject<Array<IdInterface>>();
+    sendFriendsRequests: Subject<Array<IdInterface>> = new Subject<Array<IdInterface>>();
 
     constructor(private _http: AuthHttp) {}
 
@@ -36,6 +37,16 @@ export class FriendsService {
                 (res: Paged<IdInterface>) => {
                     // console.log(res);
                     this.unconfirmedFriends.next(res.data);
+                });
+    }
+
+    loadSendFriendsRequests() {
+        this._http.get(this.baseUrl + "/friends/sent", {headers: headers()})
+            .map((res: Response) => res.json())
+            .subscribe(
+                (res: Paged<IdInterface>) => {
+                    // console.log(res);
+                    this.sendFriendsRequests.next(res.data);
                 });
     }
 

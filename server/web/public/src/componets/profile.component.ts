@@ -137,7 +137,7 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
 
 export class ProfileComponent implements OnInit, OnDestroy {
 
-    addFriendButton = true;
+    addFriendButton = false;
 
     isMe = false;
     // timelineAvailable: boolean = false;
@@ -185,15 +185,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
                     if(indexOfMe !== -1) {
                         this.addFriendButton = false;
+                    }else {
+                        this._friendsService.loadSendFriendsRequests();
                     }
 
                 }
             });
 
+        //Wenn eine Freundschaftsanfrage besteht
+        this._friendsService.sendFriendsRequests.subscribe((users: Array<IdInterface>) => {
+            let index = indexOfId(users, this.userId);
+
+            console.log(users);
+            if(index !== -1) {
+                this.addFriendButton = false;
+            } else {
+                this.addFriendButton = true;
+            }
+        });
+
         // this._friendsService.friends.subscribe(( users: Array<IdInterface>) => {
         //     this.friends = users;
         // });
-
     }
 
     ngOnInit(): void {

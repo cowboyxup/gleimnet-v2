@@ -45,7 +45,18 @@ import {FriendRequestListItemComponent} from "./friendRequestListItem.component"
                             <hr>
                         </div>
                         
-                      
+                        <!--<div *ngIf="sendFriendsRequests">-->
+                            <!--<h4>Ihre Freundschaftsanfragen:</h4>-->
+                            <!---->
+                            <!--<div *ngFor="#userId of sendFriendsRequests" class="row">-->
+                                <!--<friendRequestListItem [userId]="userId"> </friendRequestListItem>    -->
+                            <!--</div>-->
+                            <!---->
+                           <!---->
+                            <!--<hr>-->
+                        <!--</div>-->
+                        
+                     
                         
                         <h4>Personen suchen:</h4>
                         
@@ -83,6 +94,7 @@ export class Friends {
 
     friends: Array<IdInterface>;
     unconfirmedFriends: Array<IdInterface>;
+    sendFriendsRequests: Array<IdInterface>;
     searchedFriends: Array<User>;
 
     constructor(private _friendsService: FriendsService,
@@ -94,6 +106,10 @@ export class Friends {
 
         this._friendsService.unconfirmedFriends.subscribe((users: Array<IdInterface>) => {
             this.unconfirmedFriends = users;
+        });
+
+        this._friendsService.sendFriendsRequests.subscribe((users: Array<IdInterface>) => {
+            this.sendFriendsRequests = users;
         });
 
         this._friendsService.friends.subscribe((users: Array<IdInterface>) => {
