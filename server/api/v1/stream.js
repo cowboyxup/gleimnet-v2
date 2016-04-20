@@ -12,6 +12,7 @@ internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
     const Post = server.plugins['hapi-mongo-models'].Post;
+    const Comment = server.plugins['hapi-mongo-models'].Comment;
 
     server.route([{
         method: 'GET',
@@ -61,23 +62,8 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, results);
                             });
                         }],
-                        clean: ['posts', (done, data) => {
+                        comments: ['posts', (done, data) => {
                             const posts = data.posts;
-                            let allComments = [];
-                            for (let i = 0; i < posts.length; ++i) {
-                                for (let j = 0; j < posts[i].comments.length; ++j) {
-                                    allComments.push(posts[i].comments[j]._id.toString());
-                                }
-                            }
-
-                            let clean = posts.filter(function(item) {
-                                return allComments.indexOf(item._id.toString()) === -1;
-                            });
-
-                            return done(null, clean);
-                        }],
-                        comments: ['clean', (done, data) => {
-                            const posts = data.clean;
                             let allComments = [];
                             for (let i = 0; i < posts.length; ++i) {
                                 for (let j = 0; j < posts[i].comments.length; ++j) {
@@ -89,14 +75,14 @@ internals.applyRoutes = function (server, next) {
                                     $in: allComments
                                 }
                             };
-                            Post.find(queryComments, done);
+                            Comment.find(queryComments, done);
                         }]
                     }, (err, data) => {
                         if (err) {
                             console.error('Failed to load data.'+err);
                             return reply(Boom.badRequest('not loaded'));
                         }
-                        let tempPost = data.clean;
+                        let tempPost = data.posts;
                         let comments = data.comments;
 
                         const allCommentsDict = [];
@@ -108,7 +94,6 @@ internals.applyRoutes = function (server, next) {
                             for (let j = 0; j < tempPost[i].comments.length; ++j) {
                                 const id = tempPost[i].comments[j]._id.toString()
                                 let comment = allCommentsDict[id];
-                                comment.comments = undefined;
                                 tempPost[i].comments[j] = comment;
                             }
                         }

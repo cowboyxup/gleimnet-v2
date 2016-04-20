@@ -87,9 +87,9 @@ const manifest = {
                         User: './server/models/user',
                         Timeline: './server/models/timeline',
                         Post: './server/models/post',
+                        Comment: './server/models/comment',
                         Conversation: './server/models/conversation',
-                        Message: './server/models/message',
-                        Meeting: './server/models/meeting'
+                        Message: './server/models/message'
                     },
                     autoIndex: Config.get('/hapiMongoModels/autoIndex')
                 }
@@ -241,19 +241,6 @@ const manifest = {
         {
             plugin: {
                 register: './server/api/v1/conversations',
-                options: {
-                }
-            },
-            options: {
-                select: ['web'],
-                routes: {
-                    prefix: '/api/v1'
-                }
-            }
-        },
-        {
-            plugin: {
-                register: './server/api/v1/meetings',
                 options: {
                 }
             },

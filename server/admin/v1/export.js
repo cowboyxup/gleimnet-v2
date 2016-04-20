@@ -33,7 +33,7 @@ internals.applyRoutes = function (server, next) {
                     const Conversation = server.plugins['hapi-mongo-models'].Conversation;
                     const Timeline = server.plugins['hapi-mongo-models'].Timeline;
                     const Post = server.plugins['hapi-mongo-models'].Post;
-                    const Meeting = server.plugins['hapi-mongo-models'].Meeting;
+                    const Comment = server.plugins['hapi-mongo-models'].Comment;
                     Async.auto({
                         loadUsers: (done) => {
                             User.find({}, (err, data) => {
@@ -75,19 +75,20 @@ internals.applyRoutes = function (server, next) {
                                 return done(null, data);
                             });
                         },
-                        loadMeetings: (done) => {
-                            Meeting.find({}, (err, data) => {
+                        loadComments: (done) => {
+                            Comment.find({}, (err, data) => {
                                 if (err) {
                                     return err;
                                 }
                                 return done(null, data);
                             });
                         },
-                        save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', 'loadMeetings', (done, data) => {
+                        save: ['loadUsers','loadMessages','loadConversations','loadTimelines','loadPosts', 'loadComments', (done, data) => {
                             const users = data.loadUsers;
                             const timeslines = data.loadTimelines;
                             const posts = data.loadPosts;
                             const messages = data.loadMessages;
+                            const comments = data.loadComments;
 
                             for (let i = 0; i < users.length; ++i) {
                                 const id = users[i]._id.toString();

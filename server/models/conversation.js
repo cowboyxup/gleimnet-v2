@@ -14,6 +14,7 @@ const Conversation = BaseModel.extend({
         const self = this;
         Async.auto({
             updateConveration: [function (done, results) {
+                const unread = self.authors.filter(item => item._id.toString() !== userId);
                 const pushmessages = {
                     _id: BaseModel._idClass(message._id)
                 };
@@ -22,7 +23,8 @@ const Conversation = BaseModel.extend({
                 };
                 const query = {
                     $set: {
-                        timeUpdated: message.timeCreated
+                        timeUpdated: message.timeCreated,
+                        unread: unread
                     },
                     $push: {
                         messages: {
@@ -44,6 +46,27 @@ const Conversation = BaseModel.extend({
             }
             callback(null, results.updateConveration);
         });
+    },
+    read: function(userId, callback) {
+        const self = this;
+        Async.auto({
+            updateConveration: [function (done, results) {
+                const pullauthor = {
+                    _id: BaseModel._idClass(userId)
+                };
+                const query = {
+                    $pull: {
+                        unread: pullauthor
+                    }
+                };
+                Conversation.findByIdAndUpdate(self._id,query,{safe: true, new: true, multi: true},done);
+            }]
+        }, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.updateConveration);
+        });
     }
 });
 
@@ -54,6 +77,9 @@ Conversation.schema = Joi.object().keys({
     timeCreated: Joi.date().required(),
     timeUpdated: Joi.date().required(),
     authors: Joi.array().items(Joi.object().keys({
+        _id: Joi.string().length(24).hex().required()
+    })).required(),
+    unread: Joi.array().items(Joi.object().keys({
         _id: Joi.string().length(24).hex().required()
     })).required(),
     messages: Joi.array().items(Joi.object().keys({
@@ -72,6 +98,7 @@ Conversation.create = function (userIds, callback) {
         timeCreated: new Date(),
         timeUpdated: new Date(),
         messages: [],
+        unread: [],
         authors: authors
     };
     self.insertOne(document, (err, docs) => {
@@ -109,6 +136,7 @@ Conversation.findByIdAndPaged = function (id, limit, page, callback) {
         timeCreated: undefined,
         timeUpdated: undefined,
         messages: undefined,
+        unread: undefined,
         pages: {
             current: page,
             prev: 0,
@@ -151,6 +179,7 @@ Conversation.findByIdAndPaged = function (id, limit, page, callback) {
         output.timeCreated = results.findById.timeCreated;
         output.timeUpdated = results.findById.timeUpdated;
         output.authors = results.findById.authors;
+        output.unread = results.findById.unread;
 
         output.messages = results.pagedMessages;
         output.items.total = results.findById.messages.length;
