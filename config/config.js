@@ -13,7 +13,7 @@ const config = {
         web: {
             $filter: 'env',
             test: 9000,
-            $default: 80
+            $default: 8000
         }
     },
     authAttempts: {

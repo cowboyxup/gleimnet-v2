@@ -183,9 +183,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
                     let indexOfMe = indexOfId(this.friends, this._authService.getUserId());
 
-                    if(indexOfMe !== -1) {
+                    if (indexOfMe !== -1) {
                         this.addFriendButton = false;
-                    }else {
+                    } else {
                         this._friendsService.loadSendFriendsRequests();
                     }
 
@@ -197,7 +197,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             let index = indexOfId(users, this.userId);
 
             console.log(users);
-            if(index !== -1) {
+            if (index !== -1) {
                 this.addFriendButton = false;
             } else {
                 this.addFriendButton = true;

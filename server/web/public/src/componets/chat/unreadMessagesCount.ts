@@ -10,18 +10,21 @@ import {AuthService} from "../../services/auth.service";
 })
 
 export class UnreadMessagesCount implements OnInit {
-    unreadMessagesCount: number = 0;
     private intervalConversationsReload;
+    private isStartet = false;
 
     constructor(public chatService: ChatService,
               public _authService: AuthService) {
 
-        // this._authService.authenticated$
-        //     .subscribe((isAuthenticated: boolean) => {
-        //         if (isAuthenticated) {
-        //             this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 2000);
-        //         }
-        //     });
+        this._authService.authenticated$
+            .subscribe((isAuthenticated: boolean) => {
+                if (isAuthenticated) {
+                    if (!this.isStartet) {
+                        this.isStartet = true;
+                        this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 5000);
+                    }
+                }
+            });
   }
 
   ngOnInit(): void {

@@ -35,7 +35,7 @@ internals.applyRoutes = function (server, next) {
                     const query = {
                         authors: { $elemMatch:{_id: Conversation._idClass(request.auth.credentials._id)}}
                     };
-                    const fields = '_id authors timeCreated timeUpdated';
+                    const fields = '_id authors timeCreated timeUpdated unread';
                     const sort = request.query.sort;
                     const limit = request.query.limit;
                     const page = request.query.page;
