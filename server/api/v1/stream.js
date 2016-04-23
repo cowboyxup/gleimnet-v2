@@ -91,8 +91,9 @@ internals.applyRoutes = function (server, next) {
                             allCommentsDict[id] = comments[i];
                         }
                         for (let i = 0; i < tempPost.length; ++i) {
+                            var sortedComments = tempPost[i].comments.reverse();
                             for (let j = 0; j < tempPost[i].comments.length; ++j) {
-                                const id = tempPost[i].comments[j]._id.toString()
+                                const id = sortedComments[j]._id.toString();
                                 let comment = allCommentsDict[id];
                                 tempPost[i].comments[j] = comment;
                             }
