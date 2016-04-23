@@ -27,6 +27,7 @@ import {StreamComponent} from "./componets/stream/stream.component";
 import {ProfileComponent} from "./componets/profile.component";
 import {MeetingsComponent} from "./componets/meetings.component";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
+import {ChatService} from "./services/chat.service";
 
 declare var System: any;
 
@@ -34,8 +35,7 @@ declare var System: any;
     selector: 'app',
     directives: [
         ROUTER_DIRECTIVES,
-        CORE_DIRECTIVES,
-        UnreadMessagesCount
+        CORE_DIRECTIVES
     ],
     template: `
 <div class="navbar-fixed">
@@ -50,7 +50,7 @@ declare var System: any;
                 <li><a [routerLink]="['/Stream']" >Stream</a></li>
                 <li><a [routerLink]="['/MyProfile']" >Profil</a></li>
                 <li><a [routerLink]="['/Chat']" >
-                    Nachrichten <unreadMessagesCount></unreadMessagesCount>
+                    Nachrichten <span *ngIf="unreadMessagesCount > 0" class="badge">{{unreadMessagesCount}}</span>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
@@ -61,7 +61,7 @@ declare var System: any;
                 <li><a [routerLink]="['/Stream']" >Stream</a></li>
                 <li><a [routerLink]="['/MyProfile']" >Me</a></li>
                 <li><a [routerLink]="['/Chat']" >
-                    Nachrichten <unreadMessagesCount></unreadMessagesCount>
+                    Nachrichten <span *ngIf="unreadMessagesCount > 0" class="badge">{{unreadMessagesCount}}</span>
                 </a></li>
                 <li><a [routerLink]="['/Friends']">Freunde</a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
@@ -112,12 +112,17 @@ declare var System: any;
 
 export class App {
 
-    logedIn: boolean = false;
+    private logedIn: boolean = false;
     private sub: any = null;
+
+    private unreadMessagesCount = 0;
+    private isStartet = false;
+    private intervalConversationsReload;
 
 
     constructor(private _router: Router,
-                public _authService: AuthService) {
+                private _authService: AuthService,
+                private _chatService: ChatService) {
         //enableProdMode();
     }
 
@@ -126,9 +131,23 @@ export class App {
             .subscribe((isAuthenticated: boolean) => {
                 this.logedIn = isAuthenticated;
                 //console.log('isAuthenticated: ' + this.authenticated);
-                // if (isAuthenticated) {
-                //
-                // }
+                if (isAuthenticated) {
+
+                    this._chatService.currentUnreadCoutSubject.subscribe( count => {
+                        this.unreadMessagesCount = count;
+                    });
+
+                    this._chatService.threads$.subscribe(updatedThreads => {
+                        let lentgh = updatedThreads.length;
+                    });
+
+                    if (!this.isStartet) {
+                        this.isStartet = true;
+                        this.intervalConversationsReload = setInterval(() => this._chatService.loadConversations(), 5000);
+                    }
+                } else {
+                    clearInterval(this.intervalConversationsReload);
+                }
             });
     }
 

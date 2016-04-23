@@ -47,16 +47,20 @@ export class StreamService {
 
                 newPost.comments.forEach(comment => {
 
-                    var commentIndex = -1;
-                    const length = oldPost.comments.length;
-                    for (let i = 0; i < length; i++) {
-                        if (oldPost.comments[i]._id === comment._id) {
-                            commentIndex = i;
+                    if (comment !== null) {
+                        var commentIndex = -1;
+                        const length = oldPost.comments.length;
+                        for (let i = 0; i < length; i++) {
+                            if (oldPost.comments[i] !== null) {
+                                if (oldPost.comments[i]._id === comment._id) {
+                                    commentIndex = i;
+                                }
+                            }
                         }
-                    }
 
-                    if (commentIndex === -1) {
-                        oldPost.comments.push(comment);
+                        if (commentIndex === -1) {
+                            oldPost.comments.push(comment);
+                        }
                     }
                 });
             }

@@ -47,6 +47,8 @@ import {AuthHttp} from "../common/angular2-jwt";
 
 
         setThreads(conversations: Array<Conversation>) {
+            this.currentUnreadCout = 0;
+
             conversations.forEach(conversation => {
 
                 let index: number = indexOfId(this._threads, conversation._id);
@@ -73,13 +75,27 @@ import {AuthHttp} from "../common/angular2-jwt";
                         this.threadsSubject.next(this._threads);
                     }
                 }
+
+                var userId =   localStorage.getItem('userId');
+                console.log(userId);
+
+
+                    let messageIndex: number = indexOfId(conversation.unread, userId);
+
+                    if ( messageIndex !== -1 ) {
+                        this.currentUnreadCout++;
+                    }
+
+
             });
 
+            this.currentUnreadCoutSubject.next(this.currentUnreadCout);
             this._threadsObserver.next(this._threads);
         }
 
         setCurrentThread(newThread: Thread): void {
             this.currentThread.next(newThread);
+            this.markConversationAsRead(newThread._id);
         }
 
         loadConversations() {
@@ -116,6 +132,23 @@ import {AuthHttp} from "../common/angular2-jwt";
                 });
         }
 
+        markConversationAsRead(conversationId: string): any {
+
+                console.log("markConversationAsRead: " + conversationId);
+
+            let read = true;
+            let body = JSON.stringify({read});
+
+
+            return this._http.post(this.baseUrl + "/" + conversationId + "/read", body, {headers: headers()})
+                    .map((responseData) => {
+                        return responseData.json();
+                    }).subscribe(res => {
+                        this.loadConversations();
+                    });
+
+        }
+
         sendNewMessage(content: string, conversationId: string): any {
             if ( conversationId !== "" && content !== "" ) {
 
@@ -131,6 +164,8 @@ import {AuthHttp} from "../common/angular2-jwt";
                     });
             }
         }
+
+
 
         private setMessages(messages: Array<Message>) {
             messages.forEach((message: Message) => {
@@ -149,6 +184,7 @@ export class Conversation {
     timeCreated: string;
     timeUpdated: string;
     authors: ConversationUser[];
+    unread: IdInterface[];
 }
 
 export class ConversationUser {

@@ -35,7 +35,13 @@ body{
   margin-top: 14px;
 }
 
-
+span.badge{
+  font-weight: 300;
+  font-size: 1.0rem;
+  color: rgb(22,125,165);
+  background-color: rgb(255,255,255);;
+  border-radius: 2px;
+}
 
 /* 3. Stream
    ========================================================================== */

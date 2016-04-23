@@ -14,19 +14,19 @@ import {ProfileService} from "../../services/profile.service";
     template: `
         <div class="comment mdl-color-text--grey-700">
             <header class="comment__header">
-                <a href="#/profile/{{comment.author}}">
-                    <img src="{{comment.authorAvatar}}" class="round_avatar48">
+                <a href="#/profile/{{author}}">
+                    <img src="{{authorAvatar}}" class="round_avatar48">
                 </a>
                 <div class="comment__author">
-                    <a href="#/profile/{{comment.author}}">
-                        <strong>{{comment.authorName}}</strong>
+                    <a href="#/profile/{{author}}">
+                        <strong>{{authorName}}</strong>
                     </a>
-                    <span>{{comment.timeCreated | fromNow}}</span>
+                    <span>{{timeCreated | fromNow}}</span>
                 </div>
             </header>
             <div class="comment__text">
                 <p class="flow-text">
-                    {{comment.content}}
+                    {{content}}
                 </p>
                 
             </div>
@@ -39,15 +39,27 @@ import {ProfileService} from "../../services/profile.service";
 export class CommentComponent {
     @Input() comment: Comment;
 
+    author:         string;
+    authorAvatar:   string;
+    authorName:     string;
+    timeCreated:    string;
+    content:        string;
+
     constructor(private _profileService: ProfileService) {
     }
 
     ngOnInit() {
-        this._profileService.getUserForId(this.comment.author).subscribe( user => {
-            if (user !== null) {
-                this.comment.authorName = user.givenName;
-                this.comment.authorAvatar = user.avatar;
-            }
-        });
+        if ( this.comment !== null ) {
+
+            this.timeCreated = this.comment.timeCreated;
+            this.content     = this.comment.content;
+
+            this._profileService.getUserForId(this.comment.author).subscribe( user => {
+                if (user !== null) {
+                    this.authorName = user.givenName;
+                    this.authorAvatar = user.avatar;
+                }
+            });
+        }
     }
 }

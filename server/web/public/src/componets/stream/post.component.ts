@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy} from "angular2/core";
 import {Input} from "angular2/core";
 import {Component} from "angular2/core";
 import {TimelineService} from "../../services/timeline.service";
-import {Post, indexOfId} from "../../models";
+import {Post, indexOfId, IdInterface} from "../../models";
 import {FromNowPipe} from "../../util/FromNowPipe";
 import {ProfileService} from "../../services/profile.service";
 import {CommentComponent} from "./comment.component";
@@ -20,27 +20,27 @@ import {AuthService} from "../../admin/services/auth.service";
     template: `
         <div class="card">
             <div class="mdl-color-text--grey-700 posting_header meta">
-                <a href="#/profile/{{posting.author}}">
-                    <img src="{{posting.authorAvatar}}" class="round_avatar48">
+                <a href="#/profile/{{author}}">
+                    <img src="{{authorAvatar}}" class="round_avatar48">
                 </a>
                 <div class="comment__author" >
                 
                     <span class="author">
-                        <a href="#/profile/{{posting.author}}">
-                            <strong>{{posting.authorName}}</strong>
+                        <a href="#/profile/{{author}}">
+                            <strong>{{authorName}}</strong>
                         </a>
-                        <span>{{posting.timeCreated | fromNow}}</span>
+                        <span>{{timeCreated | fromNow}}</span>
                     </span>
                 </div>
             </div>
 
                 <div class="posting_contet">
                     <p class="flow-text">
-                        {{posting.content}}
+                        {{content}}
                     </p>
                 </div>
                 <span class="like">
-                    {{posting.likes.length}}
+                    {{likes.length}}
                     <a *ngIf="likedByMe" (click)="removelike()"><i class="material-icons">favorite</i></a> 
                     <a *ngIf="!likedByMe" (click)="like()"><i class="material-icons">favorite_border</i></a> 
                 </span>
@@ -75,6 +75,15 @@ import {AuthService} from "../../admin/services/auth.service";
 export class TimeLinePostComponent {
     @Input() posting: Post;
 
+    author: string;
+    authorAvatar: string;
+    authorName: string;
+
+    timeCreated: string;
+    content: string;
+    likes: IdInterface[] = [];
+    // comments: Comment[] = []
+
     likedByMe: boolean = false;
 
     constructor(private _timelineService: TimelineService,
@@ -87,21 +96,32 @@ export class TimeLinePostComponent {
 
         this.likedByMe = index !== -1;
 
-        this._profileService.getUserForId(this.posting.author).subscribe( user => {
-            if (user !== null) {
-                this.posting.authorName = user.givenName;
-                this.posting.authorAvatar = user.avatar;
-            }
-        });
+        if (this.posting !== null) {
 
-        this.posting.comments.forEach(comment => {
-            this._profileService.getUserForId(comment.author).subscribe( user => {
+            this.timeCreated = this.posting.timeCreated;
+            this.content     = this.posting.content;
+            this.likes       = this.posting.likes;
+
+            this._profileService.getUserForId(this.posting.author).subscribe( user => {
                 if (user !== null) {
-                    comment.authorName = user.givenName;
-                    comment.authorAvatar = user.avatar;
+                    this.author = user._id;
+                    this.authorName = user.nickname;
+                    this.authorAvatar = user.avatar;
                 }
             });
-        });
+
+            // this.posting.comments.forEach(comment => {
+            //     if ( comment !== null ) {
+            //         this._profileService.getUserForId(comment.author).subscribe( user => {
+            //             if (user !== null) {
+            //                 comment.authorName = user.givenName;
+            //                 comment.authorAvatar = user.avatar;
+            //             }
+            //         });
+            //     }
+            // });
+        }
+
     }
 
     like() {

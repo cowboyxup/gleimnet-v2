@@ -100,9 +100,7 @@ export class Comment implements IdInterface {
     _id: string;
     author: string;
     content: string;
-
-    authorName: string;
-    authorAvatar: string;
+    timeCreated: string;
 }
 
 export function indexOfId(array: IdInterface[], id: string): number {
