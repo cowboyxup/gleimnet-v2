@@ -1,4 +1,4 @@
-import {Injectable, bind} from 'angular2/core';
+import {Injectable, bind, OnInit} from 'angular2/core';
 import {Http} from 'angular2/http';
 import {Router} from "angular2/router";
 import {Response} from "angular2/http";
@@ -29,11 +29,13 @@ export class AuthService {
     constructor(private _http: Http, private _router: Router) {
         this.authenticated$ = new Observable(observer =>
             this._authenticatedObserver = observer).share();
-
-
     }
 
     public doLogin(username: string, password: string) {
+
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+
         console.log("doLogin: username: " + username + " password: " + password);
 
         var url = 'api/v1/auth';
@@ -64,6 +66,16 @@ export class AuthService {
             .subscribe();
     }
 
+    tryAuth() {
+        var username = localStorage.getItem('username');
+        var password = localStorage.getItem('password');
+
+        if (username !== null && username !== "" &&
+            password !== null && password !== "") {
+            this.doLogin(username, password);
+        }
+    }
+
     public isAuthenticated(): boolean {
         return this._authenticated;
     }
@@ -77,6 +89,9 @@ export class AuthService {
         localStorage.removeItem('userId');
         localStorage.removeItem('id_token');
 
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+
         this.authenticated(false);
     }
 
@@ -85,8 +100,6 @@ export class AuthService {
         this._authenticatedObserver.next(this._authenticated);
 
     }
-
-
 
 
 }

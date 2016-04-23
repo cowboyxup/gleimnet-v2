@@ -28,17 +28,17 @@ export function main() {
         // These are dependencies of our App
         HTTP_PROVIDERS,
         ROUTER_PROVIDERS,
-        AuthService,
-        FriendsService,
-        TimelineService,
-        ProfileService,
-        ChatService,
         provide(AuthHttp, {
             useFactory: (http) => {
                 return new AuthHttp(new AuthConfig(), http);
             },
             deps: [Http]
         }),
+        AuthService,
+        FriendsService,
+        TimelineService,
+        ProfileService,
+        ChatService,
         provide(
             LocationStrategy,
             {useClass: HashLocationStrategy}

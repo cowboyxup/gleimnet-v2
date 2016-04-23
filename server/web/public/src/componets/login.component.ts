@@ -55,9 +55,10 @@ import {AuthService} from "../services/auth.service";
 
 export class LoginComponent {
 
-
     constructor(private _authService: AuthService,
-                private _router: Router) {}
+                private _router: Router) {
+        this._authService.tryAuth();
+    }
 
     ngOnInit(): void {
         this._authService.authenticated$
@@ -66,6 +67,9 @@ export class LoginComponent {
                        setTimeout( () => this._router.navigate(['Stream']) , 1);
                    }
             });
+
+
+
     }
 
     login(username: string, password: string) {

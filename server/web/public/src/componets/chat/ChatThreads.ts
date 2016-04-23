@@ -109,7 +109,6 @@ export class ChatThreads {
 
         //this._chatService.loadConversations();
 
-        
     }
 
     ngOnInit(): void {
