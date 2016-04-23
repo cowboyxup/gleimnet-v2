@@ -44,6 +44,7 @@ class ChatThread implements OnInit {
     ngOnInit(): void {
 
         this.unread = this.thread.unread;
+
         var ChatPartnerId;
 
         if (this.thread.authorIds[0] !==  this._authService.getUserId()) {
@@ -59,7 +60,7 @@ class ChatThread implements OnInit {
             }
         });
 
-        this._chatService.currentThread
+        this._chatService.currentThreadSubject
             .subscribe((currentThread: Thread) => {
                 this.selected = currentThread &&
                     this.thread &&
@@ -106,9 +107,9 @@ export class ChatThreads {
             console.log("threds: " + this.threads);
         });
 
-        this._chatService.loadConversations();
+        //this._chatService.loadConversations();
 
-        console.log("constructor");
+        
     }
 
     ngOnInit(): void {

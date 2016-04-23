@@ -12,8 +12,10 @@ import {AuthHttp} from "../common/angular2-jwt";
     @Injectable()
     export class ChatService {
 
-        currentThread: Subject<Thread> = new BehaviorSubject<Thread>(new Thread());
+        currentThreadSubject: Subject<Thread> = new BehaviorSubject<Thread>(new Thread());
         threadsSubject: Subject<Array<Thread>> = new AsyncSubject<Array<Thread>>();
+        currentThread: Thread = new Thread();
+
 
         threads$: Observable<Thread[]>;
 
@@ -36,7 +38,7 @@ import {AuthHttp} from "../common/angular2-jwt";
                 this._threadsObserver = observer;
             }).share();
 
-            this.currentThread.subscribe((thread: Thread) => {
+            this.currentThreadSubject.subscribe((thread: Thread) => {
                 if ( thread !== null ) {
                     this.loadConversation(thread._id);
                     this.currentThreadMessages = [];
@@ -83,7 +85,11 @@ import {AuthHttp} from "../common/angular2-jwt";
 
                     if ( oldThread.timeUpdated !== conversation.timeUpdated ) {
                         oldThread.timeUpdated = conversation.timeUpdated;
-                        this.loadConversation(oldThread._id);
+
+                        if (oldThread._id === this.currentThread._id) {
+                            this.loadConversation(oldThread._id);
+                        }
+
                         this.threadsSubject.next(this._threads);
                     }
                 }
@@ -94,7 +100,8 @@ import {AuthHttp} from "../common/angular2-jwt";
         }
 
         setCurrentThread(newThread: Thread): void {
-            this.currentThread.next(newThread);
+            this.currentThread = newThread;
+            this.currentThreadSubject.next(newThread);
             this.markConversationAsRead(newThread._id);
         }
 
