@@ -53,10 +53,20 @@ import {AuthHttp} from "../common/angular2-jwt";
 
                 let index: number = indexOfId(this._threads, conversation._id);
 
+                var userId =   localStorage.getItem('userId');
+                let messageIndex: number = indexOfId(conversation.unread, userId);
+                var unread = false;
+                if ( messageIndex !== -1 ) {
+                    this.currentUnreadCout++;
+                    unread = true;
+                }
+
+
                 if ( index === -1 ) {
                     var thread = new Thread();
 
                     thread._id = conversation._id;
+                    thread.unread = unread;
 
                     conversation.authors.forEach((conversationUser: ConversationUser) => {
                         thread.authorIds.push(conversationUser._id);
@@ -69,24 +79,14 @@ import {AuthHttp} from "../common/angular2-jwt";
                 } else {
                     var oldThread: Thread = this._threads[index];
 
+                    oldThread.unread = unread;
+
                     if ( oldThread.timeUpdated !== conversation.timeUpdated ) {
                         oldThread.timeUpdated = conversation.timeUpdated;
                         this.loadConversation(oldThread._id);
                         this.threadsSubject.next(this._threads);
                     }
                 }
-
-                var userId =   localStorage.getItem('userId');
-                console.log(userId);
-
-
-                    let messageIndex: number = indexOfId(conversation.unread, userId);
-
-                    if ( messageIndex !== -1 ) {
-                        this.currentUnreadCout++;
-                    }
-
-
             });
 
             this.currentUnreadCoutSubject.next(this.currentUnreadCout);

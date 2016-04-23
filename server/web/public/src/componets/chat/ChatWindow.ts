@@ -55,19 +55,20 @@ export class ChatMessage implements OnInit {
     incoming: boolean;
 
     constructor(private _authService: AuthService,
-                private _profileService: ProfileService) {}
+                private _profileService: ProfileService) {
+    }
 
     ngOnInit(): void {
         this.incoming = this.message.author !== this._authService.getUserId();
 
 
-        if (this.message.author !== null) {
-                this._profileService.getUserForId(this.message.author).subscribe(user => {
-                    if (user !== null) {
-                        this.message.authorName = user.givenName;
-                        this.message.authorAvatar = user.avatar;
-                    }
-                });
+        if ( this.message.author !== null ) {
+            this._profileService.getUserForId(this.message.author).subscribe(user => {
+                if ( user !== null ) {
+                    this.message.authorName = user.givenName;
+                    this.message.authorAvatar = user.avatar;
+                }
+            });
         }
     }
 
@@ -89,10 +90,11 @@ export class ChatMessage implements OnInit {
                 <div class="">
                 
                     <div class="scroll_messages">
-                        <chat-message
+                        <chat-message class="chat-message"
                             *ngFor="#message of messages | sortAscendingByProperty : 'timeCreated' "
                             [message]="message">
                         </chat-message>
+                        <div id="endofmassages"></div>
                     </div >
                     
                 
@@ -119,17 +121,18 @@ export class ChatMessage implements OnInit {
 })
 export class ChatWindow implements OnInit {
     messages: Array<Message> = [];
-    currentThread:  Thread;
-    draftMessage:   string = "";
+    currentThread: Thread;
+    draftMessage: string = "";
 
-    constructor(private _chatService: ChatService) {}
+    constructor(private _chatService: ChatService) {
+    }
 
     ngOnInit(): void {
 
         this._chatService.currentThread.subscribe(
             (thread: Thread) => {
                 this.currentThread = thread;
-                this. messages = [];
+                this.messages = [];
             });
 
         this._chatService.currentThreadMessagesSubject.subscribe(
@@ -139,6 +142,8 @@ export class ChatWindow implements OnInit {
                     this.scrollToBottom();
                 });
             });
+
+        this.scrollToBottom();
     }
 
     onEnter(event: any): void {
@@ -152,9 +157,12 @@ export class ChatWindow implements OnInit {
     }
 
     scrollToBottom(): void {
-        // let scrollPane: any = this.el
-        //     .nativeElement.querySelector('.scroll_messages');
-        // scrollPane.scrollTop = scrollPane.scrollHeight;
+        var objDiv = document.getElementById("endofmassages");
+        console.log("scoll to end");
+
+        if ( objDiv !== null ) {
+            objDiv.scrollIntoView();
+        }
     }
 
 }

@@ -22,6 +22,7 @@ export class Thread implements IdInterface {
     avatarSrc: string;
     timeUpdated: string;
     authorIds: string[] = [];
+    unread: boolean = false;
 }
 
 export class Message {

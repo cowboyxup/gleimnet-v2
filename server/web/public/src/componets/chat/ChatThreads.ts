@@ -22,8 +22,8 @@ import {FromNowPipe} from "../../util/FromNowPipe";
         <a (click)="clicked($event)" class="div-link">
             <li class="collection-item avatar" [ngClass]="{active: selected}">
                 <img src="{{avatar}}" alt="" class="circle">
-                <span class="title">{{thread.name}} 
-                    <span *ngIf="selected">&bull;</span>
+                <span class="title" >{{thread.name}} 
+                    <span *ngIf="unread">&bull;</span>
                 </span>
                 <p>{{thread.timeUpdated | fromNow}}</p>
             </li>
@@ -34,6 +34,7 @@ import {FromNowPipe} from "../../util/FromNowPipe";
 class ChatThread implements OnInit {
     thread: Thread;
     selected: boolean = false;
+    unread: boolean   = false;
     avatar: string;
 
     constructor(private _authService: AuthService,
@@ -42,6 +43,7 @@ class ChatThread implements OnInit {
 
     ngOnInit(): void {
 
+        this.unread = this.thread.unread;
         var ChatPartnerId;
 
         if (this.thread.authorIds[0] !==  this._authService.getUserId()) {
