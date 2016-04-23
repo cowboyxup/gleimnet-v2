@@ -7,12 +7,14 @@ import {FromNowPipe} from "../../util/FromNowPipe";
 import {ProfileService} from "../../services/profile.service";
 import {CommentComponent} from "./comment.component";
 import {AuthService} from "../../admin/services/auth.service";
+import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending.pipe";
 
 
 @Component({
     selector: 'posting',
     pipes: [
-        FromNowPipe
+        FromNowPipe,
+        SortByPropertyAscendingPipe
     ],
     directives: [
         CommentComponent,
@@ -47,7 +49,7 @@ import {AuthService} from "../../admin/services/auth.service";
                 
             <div class="posting_contet comments">
                
-                <div class="comment" *ngFor="#comment of posting.comments">
+                <div class="comment" *ngFor="#comment of posting.comments | sortAscendingByProperty : 'timeCreated'">
                      <comment [comment]="comment"></comment>
                 </div>
 
