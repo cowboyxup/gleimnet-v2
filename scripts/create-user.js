@@ -55,7 +55,7 @@ Async.auto({
     influenceplace: ['birthplace', (done, results) => {
         Promptly.prompt('Wirkungsort', { default: '' }, done);
     }],
-    setupUser: ['influenceplace', (done, results) => {
+    setupUsers: ['influenceplace', (done, results) => {
         const BaseModel = require('hapi-mongo-models').BaseModel;
         const User = require('../server/models/user');
         Async.auto({

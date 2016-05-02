@@ -1,0 +1,1090 @@
+{
+	"users": [
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd463e"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.056Z"
+			},
+			"isActive": true,
+			"username": "herderg",
+			"password": "$2a$10$Pz3NF2BqAi.wiMbjg.oFcOxoYEyEeM8gMYl24.WmJgtK93spwkDZm",
+			"givenName": "Johann Gottfried",
+			"surname": "Herder",
+			"nickname": "Johann Herder",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/herderg/avatar.png",
+			"titlePicture": "assets/img/people/herderg/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4626"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd463f"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.058Z"
+			},
+			"isActive": true,
+			"username": "bodmerjj",
+			"password": "$2a$10$bXbrMbgr2FjE2COrfQ6R2.tQT9w4g5hzO8n/bdlCixKIc2CtC/Jl6",
+			"givenName": "Johann Jakob",
+			"surname": "Bodmer",
+			"nickname": "Bodmer",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/bodmerjj/avatar.png",
+			"titlePicture": "assets/img/people/bodmerjj/cover.jpg",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4620"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4640"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.058Z"
+			},
+			"isActive": true,
+			"username": "buergerga",
+			"password": "$2a$10$Evgt3AW15Jvlo6yJcLoRI.Vf5Km759YT285m/DHZB.FPSInM5G8eK",
+			"givenName": "Gottfried August",
+			"surname": "Bürger",
+			"nickname": "Bürger",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/buergerga/avatar.png",
+			"titlePicture": "assets/img/people/buergerga/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4621"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4641"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.058Z"
+			},
+			"isActive": true,
+			"username": "eschenburgjj",
+			"password": "$2a$10$RngDPYNRi46XVXLrp7zI1OmGq2lix8uVm1xPK8Wv57UHxxbJylhJ6",
+			"givenName": "Johann Joachim",
+			"surname": "Eschenburg",
+			"nickname": "Eschenburg",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/eschenburgjj/avatar.png",
+			"titlePicture": "assets/img/people/eschenburgjj/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4622"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4642"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.059Z"
+			},
+			"isActive": true,
+			"username": "goeckingklfg",
+			"password": "$2a$10$sIl3VUkFtOhkq.zsnP89penJeo/4pmbS/8NCJ8X.X2I3.tyvPg6SK",
+			"givenName": "Leopold Friedrich Günther",
+			"surname": "Goeckingk",
+			"nickname": "Goeckingk",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/goeckingklfg/avatar.png",
+			"titlePicture": "assets/img/people/goeckingklfg/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4623"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4643"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.059Z"
+			},
+			"isActive": true,
+			"username": "goetzng",
+			"password": "$2a$10$Zy0skvgxwpfqTsPPfOmB.eHSvlqzFt.P/LJEJIE8Zkz72VkDCyfU2",
+			"givenName": "Johann Nicolaus",
+			"surname": "Götz",
+			"nickname": "Götz",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/goetzng/avatar.png",
+			"titlePicture": "assets/img/people/goetzng/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4624"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4644"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.059Z"
+			},
+			"isActive": true,
+			"username": "heinsejjw",
+			"password": "$2a$10$00EewvWeK84fntIuL6ZibuNQ06DXy2YiAavalqPcbSO3crJTqiMY6",
+			"givenName": "Johann Jacob Wilhelm",
+			"surname": "Heinse",
+			"nickname": "Heinse",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/heinsejjw/avatar.png",
+			"titlePicture": "assets/img/people/heinsejjw/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4625"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4645"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.059Z"
+			},
+			"isActive": true,
+			"username": "herderk",
+			"password": "$2a$10$0uvyCykBPmRzvnEzwlvHqOD0LJOcL1/7W6v/yhaMTKEDzAQCmSO8m",
+			"givenName": "Karoline",
+			"surname": "Herder",
+			"nickname": "Karoline Herder",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/herderk/avatar.png",
+			"titlePicture": "assets/img/people/herderk/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4627"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4646"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.060Z"
+			},
+			"isActive": true,
+			"username": "jacobifh",
+			"password": "$2a$10$FGLvgWjSo9mfJahR8Bo.werEdfU8TabfGisFNFEepEbF62SYe4eAq",
+			"givenName": "Friedrich Heinrich",
+			"surname": "Jacobi",
+			"nickname": "Friedrich Jacobi",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/jacobifh/avatar.png",
+			"titlePicture": "assets/img/people/jacobifh/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4628"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4647"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.060Z"
+			},
+			"isActive": true,
+			"username": "jacobijg",
+			"password": "$2a$10$jw4iCIFE3MJZ.lcELSlMeOEsImWyI9mxSEGgfQdm5lG78.PPhuZAG",
+			"givenName": "Johann Georg",
+			"surname": "Jacobi",
+			"nickname": "Johann Jacobi",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/jacobijg/avatar.png",
+			"titlePicture": "assets/img/people/jacobijg/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4629"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4648"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.061Z"
+			},
+			"isActive": true,
+			"username": "karschal",
+			"password": "$2a$10$DdSJl2ealPzxFCK8N8K.fe8xU93vbtisNP/mGIoDh6BpEOrxw7BXS",
+			"givenName": "Anna Louisa",
+			"surname": "Karsch",
+			"nickname": "Karsch",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/karschal/avatar.png",
+			"titlePicture": "assets/img/people/karschal/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd462a"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4649"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.062Z"
+			},
+			"isActive": true,
+			"username": "kleistec",
+			"password": "$2a$10$0LMo8S4CQ4XaD83ajnkNGeZyb1R82uM.OW63FDHWauGWO3qlATqAC",
+			"givenName": "Ewald Christian",
+			"surname": "von Kleist",
+			"nickname": "Kleist",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/kleistec/avatar.png",
+			"titlePicture": "assets/img/people/kleistec/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd462b"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd464a"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.065Z"
+			},
+			"isActive": true,
+			"username": "krausecg",
+			"password": "$2a$10$d1Qq7PUhujFghy3cbZ6VhuQcjGN1IDqeJ3oJGZDjgj/fHARs6jrea",
+			"givenName": "Christian Gottfried",
+			"surname": "Krause",
+			"nickname": "Krause",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/krausecg/avatar.png",
+			"titlePicture": "assets/img/people/krausecg/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd462e"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd464b"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.066Z"
+			},
+			"isActive": true,
+			"username": "klenckecl",
+			"password": "$2a$10$lQBhgUR0b6IWQ7zZeBy0ZuogJc2ktWMV8.t99kGM8qU7vZLpYbT3G",
+			"givenName": "Caroline Luise",
+			"surname": "von Klencke",
+			"nickname": "Klencke",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/klenckecl/avatar.png",
+			"titlePicture": "assets/img/people/klenckecl/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd462c"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd464c"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.066Z"
+			},
+			"isActive": true,
+			"username": "klopstockfg",
+			"password": "$2a$10$WOmuwGVAl32lciJS9JU28O1gB8eSA.jXIGe9faG2aBl/CfhY1HTk.",
+			"givenName": "Friedrich Gottlieb",
+			"surname": "Klopstock",
+			"nickname": "Klopstock",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/klopstockfg/avatar.png",
+			"titlePicture": "assets/img/people/klopstockfg/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd462d"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd464d"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.067Z"
+			},
+			"isActive": true,
+			"username": "muellerj",
+			"password": "$2a$10$rnecn9J6e5fwCUZ/FrQyhu.0deXX3G8ixrMEr9FaP7PxZZX/SI6mm",
+			"givenName": "Johannes",
+			"surname": "Müller",
+			"nickname": "Müller",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/muellerj/avatar.png",
+			"titlePicture": "assets/img/people/muellerj/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4631"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd464e"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.067Z"
+			},
+			"isActive": true,
+			"username": "larochems",
+			"password": "$2a$10$SrdJMEeSVGcpwQgvSbsoJ.yRLhlBXRak27t8ULObNxpR4xADPChdG",
+			"givenName": "Marie Sophie",
+			"surname": "La Roche",
+			"nickname": "La Roche",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/larochems/avatar.png",
+			"titlePicture": "assets/img/people/larochems/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd462f"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd464f"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.068Z"
+			},
+			"isActive": true,
+			"username": "lessingge",
+			"password": "$2a$10$6iGExy9LaElg7OBFeg87F.MIs1QXgi0i1YcEOJ3ocgVdZzXaP4B0e",
+			"givenName": "Gotthold Ephraim",
+			"surname": "Lessing",
+			"nickname": "Lessing",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/lessingge/avatar.png",
+			"titlePicture": "assets/img/people/lessingge/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4630"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4650"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.069Z"
+			},
+			"isActive": true,
+			"username": "nicolaicf",
+			"password": "$2a$10$6bs4oxzMkpIr0ThRjyGN1OAP65UUhEB6B/KpWVeTGQuxgKpa0TavO",
+			"givenName": "Christoph Friedrich",
+			"surname": "Nikolai",
+			"nickname": "Nikolai",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/nicolaicf/avatar.png",
+			"titlePicture": "assets/img/people/nicolaicf/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4632"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4651"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.069Z"
+			},
+			"isActive": true,
+			"username": "ramlerkw",
+			"password": "$2a$10$baWSOIcGX69Nkh5/4gOYtOSogNYM7CrVjKZgQprMIM/XHT4xCDgs.",
+			"givenName": "Karl Wilhelm",
+			"surname": "Ramler",
+			"nickname": "Ramler",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/ramlerkw/avatar.png",
+			"titlePicture": "assets/img/people/ramlerkw/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4633"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4652"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.070Z"
+			},
+			"isActive": true,
+			"username": "reckeecc",
+			"password": "$2a$10$9HpGGDaJwvbv/cfxDBRmieSql02U1AJneR4JPn56K3Ax3q38QIAnO",
+			"givenName": "Elisabeth Charlotte Constanzia",
+			"surname": "von der Recke",
+			"nickname": "Recke",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/reckeecc/avatar.png",
+			"titlePicture": "assets/img/people/reckeeckc/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4634"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4653"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.070Z"
+			},
+			"isActive": true,
+			"username": "richterjp",
+			"password": "$2a$10$RXjpepXSGEmfrfLMzpoPgOYKU5bEIN.IotheQ2bbuVegqUI9skZMu",
+			"givenName": "Johann Paul Friedrich",
+			"surname": "Richter",
+			"nickname": "Richter",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/richterjp/avatar.png",
+			"titlePicture": "assets/img/people/richterjp/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4635"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4654"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.071Z"
+			},
+			"isActive": true,
+			"username": "rodecb",
+			"password": "$2a$10$c9sPRHHgzKSya1kcfTli../UDuopt4Jo/5ApZHqiX8d4JwGptBin2",
+			"givenName": "Christian Bernhard",
+			"surname": "Rode",
+			"nickname": "Rode",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/rodecb/avatar.png",
+			"titlePicture": "assets/img/people/rodecb/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4636"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4655"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.071Z"
+			},
+			"isActive": true,
+			"username": "seumejg",
+			"password": "$2a$10$ssxGWG6CHwzwheyO5H7fnOFWyHToviqtm/nRpSInPUIaPbEGjSWTm",
+			"givenName": "Johann Gottfried",
+			"surname": "Seume",
+			"nickname": "Seume",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/seumejg/avatar.png",
+			"titlePicture": "assets/img/people/seumejg/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4637"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4656"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.072Z"
+			},
+			"isActive": true,
+			"username": "spaldingjj",
+			"password": "$2a$10$NWEKsrEEZ4Gxo.mY0gYsf.S5j36xy8roeJ9Ecwt7/x.F6lRYLq/Fi",
+			"givenName": "Johann Joachim",
+			"surname": "Spalding",
+			"nickname": "Spalding",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/spaldingjj/avatar.png",
+			"titlePicture": "assets/img/people/spaldingjj/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4638"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4657"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.073Z"
+			},
+			"isActive": true,
+			"username": "sulzerjg",
+			"password": "$2a$10$8vFd0BDlwxeOm8NyrLagdOe7MDhYWXL2xtkFZcuaApJjlGZcof3ki",
+			"givenName": "Johann Georg",
+			"surname": "Sulzer",
+			"nickname": "Sulzer",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/sulzerjg/avatar.png",
+			"titlePicture": "assets/img/people/sulzerjg/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd4639"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4658"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.074Z"
+			},
+			"isActive": true,
+			"username": "weitschpjf",
+			"password": "$2a$10$y4uGA00/NWqZMByFMdHMC.jFkt2ad8j9Wmg5O0pW6x40Jp195R9dW",
+			"givenName": "Pascha Johann Friedrich",
+			"surname": "Weitsch",
+			"nickname": "Weitsch",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/weitschpjf/avatar.png",
+			"titlePicture": "assets/img/people/weitschpjf/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd463c"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd4659"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.074Z"
+			},
+			"isActive": true,
+			"username": "wielandcm",
+			"password": "$2a$10$cwdVlDo7rzVqr49K4v89BuERRXt40YJeS8R1HUIo9bcckU7JlE3IK",
+			"givenName": "Christoph Martin",
+			"surname": "Wieland",
+			"nickname": "Wieland",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/wielandcm/avatar.png",
+			"titlePicture": "assets/img/people/wielandcm/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd463d"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd465a"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.074Z"
+			},
+			"isActive": true,
+			"username": "uzjp",
+			"password": "$2a$10$fqIJn2OP2AbGb/MoHmYbYe3AZXsE.GK18jN7j.fk8PzLM/IkwtcRC",
+			"givenName": "Johann Peter",
+			"surname": "Uz",
+			"nickname": "Uz",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/uzjp/avatar.png",
+			"titlePicture": "assets/img/people/uzjp/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd463a"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "572732e7b006859c1bfd465b"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:47.074Z"
+			},
+			"isActive": true,
+			"username": "vossjh",
+			"password": "$2a$10$EMA1LEMj0dOJq7RFoOw5XuooKG5MEF7H6VszWrtJDIF2.V8XN8sza",
+			"givenName": "Johann Heinrich",
+			"surname": "Voß",
+			"nickname": "Voß",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/vossjh/avatar.png",
+			"titlePicture": "assets/img/people/vossjh/avatar.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "572732dfb006859c1bfd463b"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
+		}
+	],
+	"messages": [],
+	"conversations": [],
+	"timelines": [
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4620"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.859Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4621"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.863Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4622"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.865Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4623"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.865Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4624"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.866Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4625"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.866Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4626"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.866Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4627"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.866Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4628"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.867Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4629"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.867Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd462a"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.867Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd462b"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.868Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd462c"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.868Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd462d"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.868Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd462e"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.868Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd462f"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.868Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4630"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.869Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4631"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.869Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4632"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.869Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4633"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.869Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4634"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.870Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4635"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.870Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4636"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.870Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4637"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.870Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4638"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.870Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd4639"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.871Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd463a"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.871Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd463b"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.871Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd463c"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.871Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "572732dfb006859c1bfd463d"
+			},
+			"timeCreated": {
+				"$date": "2016-05-02T10:58:39.871Z"
+			},
+			"posts": []
+		}
+	],
+	"posts": [],
+	"comments": []
+}

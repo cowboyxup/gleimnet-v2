@@ -88,7 +88,7 @@ internals.applyRoutes = function (server, next) {
                             });
                         },
                         loadComments: (done) => {
-                            Meeting.find({}, (err, data) => {
+                            Comment.find({}, (err, data) => {
                                 if (err) {
                                     return err;
                                 }
