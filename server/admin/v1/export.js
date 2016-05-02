@@ -14,6 +14,7 @@ internals.applyRoutes = function (server, next) {
 
     const timeslinesDict = [];
     const postsDict = [];
+    const commentsDict = [];
     const messagesDict = [];
     const userDict = [];
 
@@ -99,6 +100,10 @@ internals.applyRoutes = function (server, next) {
                                 const id = posts[i]._id.toString();
                                 postsDict[id] = posts[i];
                             }
+                            for (let i = 0; i < comments.length; ++i) {
+                                const id = comments[i]._id.toString();
+                                commentsDict[id] = comments[i];
+                            }
 
                             //timelines mit posts und comments füllen
                             for (let i = 0; i < timeslines.length; ++i) {
@@ -108,8 +113,7 @@ internals.applyRoutes = function (server, next) {
                                     let post = postsDict[id];
                                     for (let k = 0; k < post.comments.length; ++k) {
                                         let comment = post.comments[k];
-                                        post.comments[k] = postsDict[comment._id.toString()];
-                                        post.comments[k].comments = undefined;
+                                        post.comments[k] = commentsDict[comment._id.toString()];
                                     }
                                     timeslines[i].posts[j] = post;
                                 }
@@ -245,6 +249,7 @@ internals.applyRoutes = function (server, next) {
                 },
                 "header": {
                     "height": "20mm",
+                    "contents": '<div id="pageHeader"><img src="favicon-32x32.png">Gleim-net • Gleimhaus Halberstadt •  '+new Date().toLocaleString()+'</div>'
                 },
                 "footer": {
                     "height": "20mm",
