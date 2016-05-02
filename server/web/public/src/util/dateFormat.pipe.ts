@@ -13,12 +13,17 @@ import {Pipe, PipeTransform} from 'angular2/core';
 export class FormatedDateFromStringPipe implements PipeTransform {
 
     transform(dateString: string, args: string[]) : string {
-        var date = new Date(dateString);
-        var options = {
-            year: "numeric", month: "long",
-            day: "numeric"
-        };
-
-        return date.toLocaleDateString('de-de', options);
+        var document;
+        if (dateString === null) {
+            document = '';
+        } else {
+            var date = new Date(dateString);
+            var options = {
+                year: "numeric", month: "long",
+                day: "numeric"
+            };
+            document = date.toLocaleDateString('de-de', options);
+        }
+        return document;
     }
 }

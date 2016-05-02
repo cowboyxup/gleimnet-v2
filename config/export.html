@@ -61,7 +61,11 @@
                 <div class="givenName"><strong>Vorname(n): </strong>{{ this.givenName}}</div>
                 <div class="surname"><strong>Nachname: </strong>{{ this.surname}}</div>
                 <div class="nickname"><strong>Anzeigename: </strong>{{ this.surname}}</div>
-                <div class="birthdate"><strong>Geburtsdatum: </strong>{{formatDate this.birthdate day="2-digit" month="2-digit" year="numeric"}}</div>
+                <div class="birthdate"><strong>Geburtsdatum: </strong>
+                    {{#if this.birthdate}}
+                        {{formatDate this.birthdate day="2-digit" month="2-digit" year="numeric"}}
+                    {{/if}}
+                </div>
                 <div class="birthplace"><strong>Geburtsort: </strong>{{ this.birthplace}}</div>
                 <div class="influenceplace"><strong>Wirkungsort: </strong>{{ this.influenceplace}}</div>
                 <div class="tags"><strong>Tags: </strong>{{tags this.tags}}</div>

@@ -35,7 +35,7 @@ Async.auto({
         Promptly.prompt('Kurz- oder Spitzname:', { default: null }, done);
     }],
     birthdate: ['nickname', (done, results) => {
-        Promptly.prompt('Geburtsdatum im Format: DD-MM-YYYY', { default: null }, done);
+        Promptly.prompt('Geburtsdatum im Format: DD-MM-YYYY', { default: '' }, done);
     }],
     description: ['birthdate', (done, results) => {
         Promptly.prompt('Informationstext', { default: '' }, done);

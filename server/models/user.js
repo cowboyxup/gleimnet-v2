@@ -138,8 +138,14 @@ User.generatePasswordHash = function (password, callback) {
 User.generateBirthdate = function(birthdate, callback) {
     Async.auto({
         date: function (results) {
-            const dateArray = birthdate.trim().split("-");
-            const dateObj = new Date(dateArray[2], (dateArray[1]-1), dateArray[0],6,0,0);
+            let dateObj;
+            if (birthdate === null ||birthdate === '') {
+                dateObj = null;
+            }
+            else {
+                const dateArray = birthdate.trim().split("-");
+                dateObj = new Date(dateArray[2], (dateArray[1]-1), dateArray[0],6,0,0);
+            }
             results(null, dateObj);
         }
     }, (err, results) => {
