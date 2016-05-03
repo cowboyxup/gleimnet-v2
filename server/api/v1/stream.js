@@ -24,7 +24,7 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
                 query: {
-                    limit: Joi.number().default(20),
+                    limit: Joi.number().default(40),
                     page: Joi.number().default(1)
                 }
             },

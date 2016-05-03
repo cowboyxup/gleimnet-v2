@@ -23,7 +23,7 @@ internals.applyRoutes = function (server, next) {
                     _id: Joi.string().length(24).hex().required()
                 },
                 query: {
-                    limit: Joi.number().default(20),
+                    limit: Joi.number().default(50),
                     page: Joi.number().default(1)
                 }
             },

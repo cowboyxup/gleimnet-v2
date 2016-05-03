@@ -17,7 +17,7 @@ import {ProfileService} from "../../services/profile.service";
             <div class="col s8">
                 <div >
                     <a href="#/profile/{{userId._id}}">
-                        {{givenName}}
+                        <h5>{{givenName}} {{surname}}</h5>
                     </a>
                     <div>
                         <a (click)="removeFriend(userId._id)">Freundschaft beenden</a>
@@ -34,6 +34,7 @@ export class FriendListItemComponent {
 
     avatar: string;
     givenName: string;
+    surname: string;
     description: string;
 
     constructor(private _friendsService: FriendsService,
@@ -46,6 +47,7 @@ export class FriendListItemComponent {
             if (user !== null) {
                 this.avatar = user.avatar;
                 this.givenName = user.givenName;
+                this.surname = user.surname;
                 this.description = user.description;
             }
         });

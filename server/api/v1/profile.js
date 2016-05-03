@@ -22,7 +22,7 @@ internals.applyRoutes = function (server, next) {
                     search: Joi.string().token().lowercase(),
                     fields: Joi.string(),
                     sort: Joi.string().default('_id'),
-                    limit: Joi.number().default(20),
+                    limit: Joi.number().default(40),
                     page: Joi.number().default(1)
                 }
             },

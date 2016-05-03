@@ -16,7 +16,7 @@ import {AuthService} from "../../services/auth.service";
             <div class="col s10">
                 <div >
                     <a href="#/profile/{{user._id}}">
-                        {{user.givenName}}
+                        <h5>{{user.givenName}}      {{user.surname}}</h5>
                     </a>
                     
                     <div class="">

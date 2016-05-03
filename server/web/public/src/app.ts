@@ -123,7 +123,6 @@ export class App {
     constructor(private _router: Router,
                 private _authService: AuthService,
                 private _chatService: ChatService) {
-        //enableProdMode();
     }
 
     ngOnInit(): void {

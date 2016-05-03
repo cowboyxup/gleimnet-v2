@@ -17,7 +17,7 @@ import {ProfileService} from "../../services/profile.service";
             <div class="col s10">
                 <div >
                     <a href="#/profile/{{userId._id}}">
-                        {{givenName}}
+                        <h5> {{givenName}} {{surname}}</h5>
                     </a>
                     
                     <div class="">
@@ -38,6 +38,7 @@ export class FriendRequestListItemComponent implements OnInit {
     avatar: string;
     givenName: string;
     description: string;
+    surname: string;
 
     constructor(private _friendsService: FriendsService,
                 private _authService: AuthService,
@@ -51,6 +52,7 @@ export class FriendRequestListItemComponent implements OnInit {
                 this.avatar = user.avatar;
                 this.givenName = user.givenName;
                 this.description = user.description;
+                this.surname = user.surname;
             }
         });
     }

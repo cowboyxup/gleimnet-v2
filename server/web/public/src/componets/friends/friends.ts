@@ -125,7 +125,7 @@ export class Friends {
     }
 
     private findNewFriend(friendName: string) {
-        if (this._authService.isAuthenticated()) {
+        if (this._authService.isAuthenticated() && friendName !== "") {
             this._friendsService.findNewFriend(friendName);
         }
     }
