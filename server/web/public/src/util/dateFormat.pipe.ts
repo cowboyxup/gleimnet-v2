@@ -13,8 +13,9 @@ import {Pipe, PipeTransform} from 'angular2/core';
 export class FormatedDateFromStringPipe implements PipeTransform {
 
     transform(dateString: string, args: string[]) : string {
+        console.log("formatedDateFromString :" + dateString);
         var document;
-        if (dateString === null) {
+        if (dateString === null || dateString !== ""  ||dateString === undefined) {
             document = '';
         } else {
             var date = new Date(dateString);
