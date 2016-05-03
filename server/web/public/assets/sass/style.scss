@@ -23,6 +23,15 @@ body{
   background-image: url("../img/bgimage.jpg");
   background-size: cover;
   background-attachment:fixed;
+  min-height:100%;
+  min-width: 100%;
+}
+
+html{
+  height:100%;
+  min-height:100%;
+  width: 100%;
+  min-width: 100%;
 }
 
 /* 2. Navigation
