@@ -8,7 +8,7 @@ import {ProfileService} from "../../services/profile.service";
 import {CommentComponent} from "./comment.component";
 import {AuthService} from "../../admin/services/auth.service";
 import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending.pipe";
-
+import {UserListItemComponent} from  "../friends/userListItem.component"
 
 @Component({
     selector: 'posting',
@@ -18,6 +18,7 @@ import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending
     ],
     directives: [
         CommentComponent,
+        UserListItemComponent
     ],
     template: `
         <div class="card">
@@ -42,6 +43,12 @@ import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending
                     </p>
                 </div>
                 <span class="like">
+                    Likes:
+                     
+                     <div *ngFor="#userId of likes" class="" style="display: inline">
+                        <userListItem [userId]="userId"></userListItem>    
+                     </div>
+                     
                     {{likes.length}}
                     <a *ngIf="likedByMe" (click)="removelike()"><i class="material-icons">favorite</i></a> 
                     <a *ngIf="!likedByMe" (click)="like()"><i class="material-icons">favorite_border</i></a> 
@@ -77,6 +84,7 @@ import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending
 export class TimeLinePostComponent {
     @Input() posting: Post;
 
+    id:string;
     author: string;
     authorAvatar: string;
     authorName: string;
@@ -84,6 +92,7 @@ export class TimeLinePostComponent {
     timeCreated: string;
     content: string;
     likes: IdInterface[] = [];
+    
     // comments: Comment[] = []
 
     likedByMe: boolean = false;
@@ -100,6 +109,7 @@ export class TimeLinePostComponent {
 
         if (this.posting !== null) {
 
+            this.id          = this.posting._id;
             this.timeCreated = this.posting.timeCreated;
             this.content     = this.posting.content;
             this.likes       = this.posting.likes;

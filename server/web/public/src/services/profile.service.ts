@@ -34,6 +34,71 @@ export class ProfileService {
 
                 currentUser.next(user);
                 currentUser.complete();
+
+            } else {
+                // console.log("User ist nicht enthalten");
+
+                let http = this._http;
+                let baseUrl = this.baseUrl;
+
+                http.get(baseUrl + id, {headers: headers()})
+                    .map((res: Response) => {
+                        return res.json();
+                    })
+                    .subscribe(
+                        (res: User) => {
+                            //console.log(res);
+                            this._userArray.push(res);
+                            currentUser.next(res);
+                            currentUser.complete();
+                        },
+                        error => {
+                            console.log(error);
+                            currentUser.complete();
+                        }
+                    );
+            }
+        }
+        return currentUser;
+    }
+
+    forceGetUserForId(id: string): Subject<User> {
+        var currentUser: Subject<User> = new AsyncSubject<User>();
+
+        if (this._authService.isAuthenticated()) {
+            let index = indexOfId(this._userArray, id);
+
+            if (index !== -1) {
+                // console.log("User ist enthalten");
+                let user: User = this._userArray[index];
+
+                currentUser.next(user);
+
+                let http = this._http;
+                let baseUrl = this.baseUrl;
+
+                http.get(baseUrl + id, {headers: headers()})
+                    .map((res: Response) => {
+                        return res.json();
+                    })
+                    .subscribe(
+                        (res: User) => {
+                            console.log("forceGetUserForId: " + res);
+
+                            if (index !== -1) {
+                                this._userArray.push(res);
+                            }else {
+                                this._userArray[index] = res;
+                            }
+
+                            currentUser.next(res);
+                            currentUser.complete();
+                        },
+                        error => {
+                            console.log(error);
+                            currentUser.complete();
+                        }
+                    );
             } else {
                 // console.log("User ist nicht enthalten");
 

@@ -14,7 +14,7 @@ export class FormatedDateFromStringPipe implements PipeTransform {
 
     transform(dateString: string, args: string[]) : string {
         console.log("formatedDateFromString :" + dateString);
-        
+
         if (dateString === null || dateString === ""  || dateString === undefined) {
             return '';
         } else {

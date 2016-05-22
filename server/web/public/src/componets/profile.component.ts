@@ -211,6 +211,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this._friendsService.loadFriends();
+
+        this._profileService.forceGetUserForId(this.userId)
+            .subscribe( user => {
+                if (user != null) {
+                    this.init(user);
+                    this.friends = user.friends;
+
+                    let indexOfMe = indexOfId(this.friends, this._authService.getUserId());
+
+                    if (indexOfMe !== -1) {
+                        this.addFriendButton = false;
+                    } else {
+                        this._friendsService.loadSendFriendsRequests();
+                    }
+
+                }
+            });
     }
 
     init( user: User ) {

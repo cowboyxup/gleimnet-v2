@@ -19,9 +19,12 @@ export class UnreadMessagesCount implements OnInit {
         this._authService.authenticated$
             .subscribe((isAuthenticated: boolean) => {
                 if (isAuthenticated) {
+                    this.chatService.loadConversations();
+
                     if (!this.isStartet) {
                         this.isStartet = true;
                         this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 5000);
+
                     }
                 }
             });

@@ -26,14 +26,14 @@ import {AuthService} from "../services/auth.service";
                 <form>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input #username type="text" class="" type="text" autofocus>
+                            <input value="{{savedUsername}}" #username type="text" class="" type="text" autofocus>
                             <label for="password">Benutzername</label>
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="input-field col s12">
-                            <input #password type="text" class=""type="password">
+                            <input value="{{savedPassword}}" #password type="text" class=""type="password">
                             <label for="password">Password</label>
                         </div>
                     </div>
@@ -55,9 +55,14 @@ import {AuthService} from "../services/auth.service";
 
 export class LoginComponent {
 
+    savedUsername:string;
+    savedPassword:string;
+
     constructor(private _authService: AuthService,
                 private _router: Router) {
-        this._authService.tryAuth();
+        this.savedUsername = localStorage.getItem('username');
+        this.savedPassword = localStorage.getItem('password');
+        // this._authService.tryAuth();
     }
 
     ngOnInit(): void {

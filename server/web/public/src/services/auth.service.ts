@@ -66,15 +66,15 @@ export class AuthService {
             .subscribe();
     }
 
-    tryAuth() {
-        var username = localStorage.getItem('username');
-        var password = localStorage.getItem('password');
-
-        if (username !== null && username !== "" &&
-            password !== null && password !== "") {
-            this.doLogin(username, password);
-        }
-    }
+    // tryAuth() {
+    //     var username = localStorage.getItem('username');
+    //     var password = localStorage.getItem('password');
+    //
+    //     if (username !== null && username !== "" &&
+    //         password !== null && password !== "") {
+    //         this.doLogin(username, password);
+    //     }
+    // }
 
     public isAuthenticated(): boolean {
         return this._authenticated;

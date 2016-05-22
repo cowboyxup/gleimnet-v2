@@ -9,6 +9,7 @@ import {ChatService} from "../../services/chat.service";
 import {AuthService} from "../../services/auth.service";
 import {ProfileService} from "../../services/profile.service";
 import {FromNowPipe} from "../../util/FromNowPipe";
+import {SortByPropertyPipe} from "../../util/sort-by-property-pipe";
 
 @Component({
     inputs: [
@@ -56,22 +57,32 @@ class ChatThread implements OnInit {
         this._profileService.getUserForId(ChatPartnerId).subscribe( user => {
             if (user !== null) {
                 this.avatar = user.avatar;
-                this.thread.name = user.givenName;
+                this.thread.name = user.nickname;
             }
         });
 
         this._chatService.currentThreadSubject
             .subscribe((currentThread: Thread) => {
-                this.selected = currentThread &&
+                this.selected =
+                    currentThread &&
                     this.thread &&
                     (currentThread._id === this.thread._id);
+
             });
+
+        // this._chatService.currentThreadSubject.subscribe(
+        //     (thread: Thread) => {
+        //         this.unread = true;
+        //     });
 
     }
 
     clicked(event: any): void {
         this._chatService.setCurrentThread(this.thread);
         event.preventDefault();
+
+        this._chatService.markConversationAsRead(this.thread._id);
+        this.unread = false;
     }
 }
 
@@ -82,6 +93,7 @@ class ChatThread implements OnInit {
         ChatThread
     ],
     //changeDetection: ChangeDetectionStrategy.OnPush,
+    
     template: `
         <div class="card">
             <div class=" scroll">

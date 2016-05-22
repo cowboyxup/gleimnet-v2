@@ -28,6 +28,7 @@ import {ProfileComponent} from "./componets/profile.component";
 import {MeetingsComponent} from "./componets/meetings.component";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
 import {ChatService} from "./services/chat.service";
+import {ProfileService} from "./services/profile.service";
 
 declare var System: any;
 
@@ -48,7 +49,12 @@ declare var System: any;
             
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a [routerLink]="['/Stream']" >Stream</a></li>
-                <li><a [routerLink]="['/MyProfile']" >Profil</a></li>
+                <li>
+                    <a [routerLink]="['/MyProfile']" title="Profil" >
+                        <img *ngIf="avatar" class="" src="{{avatar}}" alt="...">
+                        {{profilLableText}}
+                    </a>
+                </li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <span *ngIf="unreadMessagesCount > 0" class="badge">{{unreadMessagesCount}}</span>
                 </a></li>
@@ -59,7 +65,11 @@ declare var System: any;
             
             <ul class="side-nav" id="mobile-demo">
                 <li><a [routerLink]="['/Stream']" >Stream</a></li>
-                <li><a [routerLink]="['/MyProfile']" >Me</a></li>
+                <li>
+                    <a [routerLink]="['/MyProfile']" title="Profil" >
+                        {{profilLableText}}
+                    </a>
+                </li>
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <span *ngIf="unreadMessagesCount > 0" class="badge">{{unreadMessagesCount}}</span>
                 </a></li>
@@ -119,10 +129,14 @@ export class App {
     private isStartet = false;
     private intervalConversationsReload;
 
+    private profilLableText = "Profil";
+    private avatar;
+
 
     constructor(private _router: Router,
                 private _authService: AuthService,
-                private _chatService: ChatService) {
+                private _chatService: ChatService,
+                private _profileService:ProfileService) {
     }
 
     ngOnInit(): void {
@@ -144,6 +158,12 @@ export class App {
                         this.isStartet = true;
                         this.intervalConversationsReload = setInterval(() => this._chatService.loadConversations(), 5000);
                     }
+
+                    this._profileService.getUserForId(this._authService.getUserId()).subscribe( user => {
+                        this.profilLableText = user.nickname;
+                        this.avatar = user.avatar;
+                    });
+
                 } else {
                     clearInterval(this.intervalConversationsReload);
                 }
@@ -159,6 +179,8 @@ export class App {
     }
 
     doLogout() {
+        this.profilLableText = "Profil";
+        this.avatar = null;
         this._authService.doLogout();
     }
 }
