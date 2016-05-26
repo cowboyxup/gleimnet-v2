@@ -20,8 +20,8 @@ import {AuthService} from "../services/auth.service";
                 <p>{{description}}</p>
                 <h5>Wirkungsort:</h5>
                 <p>{{influenceplace}}</p>
-                <h5>Geburtsort:</h5>
-                <p>{{birthplace}}</p>
+                <!--<h5>Geburtsort:</h5>-->
+                <!--<p>{{birthplace}}</p>-->
                 
                 <h5>Tags:</h5>
                 
@@ -50,9 +50,9 @@ import {AuthService} from "../services/auth.service";
                 
                 <input placeholder="Wirkungsort" [(ngModel)]="influenceplace" type="text">
                 
-                <h5>Geburtsort:</h5>
-                
-                <input placeholder="Wirkungsort" [(ngModel)]="birthplace" type="text">
+                <!--<h5>Geburtsort:</h5>-->
+                <!---->
+                <!--<input placeholder="Wirkungsort" [(ngModel)]="birthplace" type="text">-->
                 
                 <h5>Tags:</h5>
                 
