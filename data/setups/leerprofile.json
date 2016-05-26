@@ -12,7 +12,7 @@
 			"password": "$2a$10$Pz3NF2BqAi.wiMbjg.oFcOxoYEyEeM8gMYl24.WmJgtK93spwkDZm",
 			"givenName": "Johann Gottfried",
 			"surname": "Herder",
-			"nickname": "Johann Herder",
+			"nickname": "Herder",
 			"birthdate": null,
 			"description": "",
 			"avatar": "assets/img/people/herderg/avatar.png",
@@ -228,7 +228,7 @@
 			"password": "$2a$10$FGLvgWjSo9mfJahR8Bo.werEdfU8TabfGisFNFEepEbF62SYe4eAq",
 			"givenName": "Friedrich Heinrich",
 			"surname": "Jacobi",
-			"nickname": "Friedrich Jacobi",
+			"nickname": "Friedrich Heinrich Jacobi",
 			"birthdate": null,
 			"description": "",
 			"avatar": "assets/img/people/jacobifh/avatar.png",
@@ -255,7 +255,7 @@
 			"password": "$2a$10$jw4iCIFE3MJZ.lcELSlMeOEsImWyI9mxSEGgfQdm5lG78.PPhuZAG",
 			"givenName": "Johann Georg",
 			"surname": "Jacobi",
-			"nickname": "Johann Jacobi",
+			"nickname": "Johann Georg Jacobi",
 			"birthdate": null,
 			"description": "",
 			"avatar": "assets/img/people/jacobijg/avatar.png",
@@ -443,7 +443,7 @@
 			"username": "larochems",
 			"password": "$2a$10$SrdJMEeSVGcpwQgvSbsoJ.yRLhlBXRak27t8ULObNxpR4xADPChdG",
 			"givenName": "Marie Sophie",
-			"surname": "La Roche",
+			"surname": "von La Roche",
 			"nickname": "La Roche",
 			"birthdate": null,
 			"description": "",
@@ -809,6 +809,33 @@
 			"friends": [],
 			"unconfirmedFriends": [],
 			"sentFriends": []
+		},
+		{
+			"_id": {
+				"$oid": "574578d520acb0a813f20aa2"
+			},
+			"timeCreated": {
+				"$date": "2016-05-25T10:05:09.513Z"
+			},
+			"isActive": true,
+			"username": "gleim",
+			"password": "$2a$10$A1l65FR4SkpnW5vCGAyvd.icO9xDPDD2oC08IlHLDWQv0oTCr3862",
+			"givenName": "Johann Wilhelm Ludwig",
+			"surname": "Gleim",
+			"nickname": "Gleim",
+			"birthdate": null,
+			"description": "",
+			"avatar": "assets/img/people/gleim/avatar.png",
+			"titlePicture": "assets/img/people/gleim/cover.png",
+			"tags": [],
+			"birthplace": "",
+			"influenceplace": "",
+			"timeline": {
+				"$oid": "574578d520acb0a813f20aa1"
+			},
+			"friends": [],
+			"unconfirmedFriends": [],
+			"sentFriends": []
 		}
 	],
 	"messages": [],
@@ -1081,6 +1108,15 @@
 			},
 			"timeCreated": {
 				"$date": "2016-05-02T10:58:39.871Z"
+			},
+			"posts": []
+		},
+		{
+			"_id": {
+				"$oid": "574578d520acb0a813f20aa1"
+			},
+			"timeCreated": {
+				"$date": "2016-05-25T10:05:09.263Z"
 			},
 			"posts": []
 		}
