@@ -55,8 +55,8 @@ import {AuthService} from "../services/auth.service";
 
 export class LoginComponent {
 
-    savedUsername:string;
-    savedPassword:string;
+    savedUsername: string;
+    savedPassword: string;
 
     constructor(private _authService: AuthService,
                 private _router: Router) {

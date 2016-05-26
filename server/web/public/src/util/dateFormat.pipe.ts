@@ -13,7 +13,7 @@ import {Pipe, PipeTransform} from 'angular2/core';
 export class FormatedDateFromStringPipe implements PipeTransform {
 
     transform(dateString: string, args: string[]) : string {
-        console.log("formatedDateFromString :" + dateString);
+        //console.log("formatedDateFromString :" + dateString);
 
         if (dateString === null || dateString === ""  || dateString === undefined) {
             return '';

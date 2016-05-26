@@ -196,7 +196,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this._friendsService.sendFriendsRequests.subscribe((users: Array<IdInterface>) => {
             let index = indexOfId(users, this.userId);
 
-            console.log(users);
+            // console.log(users);
             if (index !== -1) {
                 this.addFriendButton = false;
             } else {
@@ -210,11 +210,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        console.log("ngOnInit");
+
         this._friendsService.loadFriends();
 
         this._profileService.forceGetUserForId(this.userId)
             .subscribe( user => {
                 if (user != null) {
+
                     this.init(user);
                     this.friends = user.friends;
 
@@ -232,6 +235,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     init( user: User ) {
         this.user = user;
+
+        console.log("forceGetUserForId: " + this.user.birthdate );
+
         console.log("timeline: " + this.user.timeline);
         this._timelineService.setTimeLineID(this.user.timeline);
         this.loadTimeline();

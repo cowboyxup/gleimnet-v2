@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "angular2/core";
+import {Component, Input, OnInit, ChangeDetectionStrategy, OnChanges} from "angular2/core";
 import {User} from "../models";
 import {ProfileService} from "../services/profile.service";
 import {FormatedDateFromStringPipe} from "../util/dateFormat.pipe";
@@ -88,7 +88,8 @@ import {AuthService} from "../services/auth.service";
     // changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ProfileInfoComponent implements OnInit {
+export class ProfileInfoComponent implements OnChanges {
+
 
     @Input()
     user: User;
@@ -108,7 +109,7 @@ export class ProfileInfoComponent implements OnInit {
 
     }
 
-    ngOnInit() {
+    ngOnChanges(changes: {}): any {
         if (this.user != null) {
             this.description = this.user.description;
             this.influenceplace = this.user.influenceplace;
@@ -131,6 +132,7 @@ export class ProfileInfoComponent implements OnInit {
                 this.isMe = true;
             }
         }
+        return null;
     }
 
     private editProfile() {

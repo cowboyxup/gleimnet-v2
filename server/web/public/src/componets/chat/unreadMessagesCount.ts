@@ -16,15 +16,22 @@ export class UnreadMessagesCount implements OnInit {
     constructor(public chatService: ChatService,
               public _authService: AuthService) {
 
-        this._authService.authenticated$
+        console.log("UnreadMessagesCount");
+
+        this._authService.authenticatedSubject
             .subscribe((isAuthenticated: boolean) => {
+
+                console.log("UnreadMessagesCount isAuthenticated");
+
                 if (isAuthenticated) {
+
+
+
                     this.chatService.loadConversations();
 
                     if (!this.isStartet) {
                         this.isStartet = true;
                         this.intervalConversationsReload = setInterval(() => this.chatService.loadConversations(), 5000);
-
                     }
                 }
             });

@@ -6,7 +6,7 @@ import {Pipe, PipeTransform} from "angular2/core";
 })
 export class SortByPropertyAscendingPipe {
     transform(list, [propertyName, order]) {
-        
+
         return list.sort((a, b) => {
             let aValue = getNestedValue(a, propertyName);
             let bValue = getNestedValue(b, propertyName);
@@ -15,7 +15,6 @@ export class SortByPropertyAscendingPipe {
             if (aValue < bValue) return -1;
             return 0;
         });
-        
     }
 }
 

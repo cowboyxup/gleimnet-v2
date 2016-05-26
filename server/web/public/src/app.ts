@@ -136,14 +136,14 @@ export class App {
     constructor(private _router: Router,
                 private _authService: AuthService,
                 private _chatService: ChatService,
-                private _profileService:ProfileService) {
+                private _profileService: ProfileService) {
     }
 
     ngOnInit(): void {
-        this._authService.authenticated$
+        this._authService.authenticatedSubject
             .subscribe((isAuthenticated: boolean) => {
                 this.logedIn = isAuthenticated;
-                //console.log('isAuthenticated: ' + this.authenticated);
+                console.log('isAuthenticated: ' + this.authenticated);
                 if (isAuthenticated) {
 
                     this._chatService.currentUnreadCoutSubject.subscribe( count => {
@@ -156,8 +156,9 @@ export class App {
 
                     if (!this.isStartet) {
                         this.isStartet = true;
-                        this.intervalConversationsReload = setInterval(() => this._chatService.loadConversations(), 5000);
+                        this.intervalConversationsReload = setInterval(() => this._chatService.loadConversations(), 2000);
                     }
+                    this._chatService.loadConversations();
 
                     this._profileService.getUserForId(this._authService.getUserId()).subscribe( user => {
                         this.profilLableText = user.nickname;

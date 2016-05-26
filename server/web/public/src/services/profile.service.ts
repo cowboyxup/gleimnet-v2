@@ -72,7 +72,7 @@ export class ProfileService {
                 // console.log("User ist enthalten");
                 let user: User = this._userArray[index];
 
-                currentUser.next(user);
+                // currentUser.next(user);
 
                 let http = this._http;
                 let baseUrl = this.baseUrl;
@@ -83,7 +83,7 @@ export class ProfileService {
                     })
                     .subscribe(
                         (res: User) => {
-                            console.log("forceGetUserForId: " + res);
+                            // console.log("forceGetUserForId: " + res.nickname);
 
                             if (index !== -1) {
                                 this._userArray.push(res);

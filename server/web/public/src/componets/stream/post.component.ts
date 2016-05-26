@@ -8,7 +8,7 @@ import {ProfileService} from "../../services/profile.service";
 import {CommentComponent} from "./comment.component";
 import {AuthService} from "../../admin/services/auth.service";
 import {SortByPropertyAscendingPipe} from "../../util/sort-by-property-ascending.pipe";
-import {UserListItemComponent} from  "../friends/userListItem.component"
+import {UserListItemComponent} from  "../friends/userListItem.component";
 
 @Component({
     selector: 'posting',
@@ -84,7 +84,7 @@ import {UserListItemComponent} from  "../friends/userListItem.component"
 export class TimeLinePostComponent {
     @Input() posting: Post;
 
-    id:string;
+    id: string;
     author: string;
     authorAvatar: string;
     authorName: string;
@@ -92,7 +92,7 @@ export class TimeLinePostComponent {
     timeCreated: string;
     content: string;
     likes: IdInterface[] = [];
-    
+
     // comments: Comment[] = []
 
     likedByMe: boolean = false;

@@ -93,7 +93,7 @@ class ChatThread implements OnInit {
         ChatThread
     ],
     //changeDetection: ChangeDetectionStrategy.OnPush,
-    
+
     template: `
         <div class="card">
             <div class=" scroll">

@@ -4,7 +4,7 @@ import {Router} from "angular2/router";
 import {Response} from "angular2/http";
 
 import {Subject} from "rxjs/Subject";
-import {BehaviorSubject} from "rxjs/Rx";
+import {BehaviorSubject, ReplaySubject} from "rxjs/Rx";
 import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
 import {headers} from "./common";
@@ -13,6 +13,8 @@ import {JwtHelper} from "../common/angular2-jwt";
 
 @Injectable()
 export class AuthService {
+
+    public authenticatedSubject: Subject<boolean> = new ReplaySubject<boolean>();
 
     public authenticated$: Observable<boolean>;
     private _authenticated: boolean = false;
@@ -36,7 +38,7 @@ export class AuthService {
         localStorage.setItem('username', username);
         localStorage.setItem('password', password);
 
-        console.log("doLogin: username: " + username + " password: " + password);
+        // console.log("doLogin: username: " + username + " password: " + password);
 
         var url = 'api/v1/auth';
         let body = JSON.stringify({username, password});
@@ -54,6 +56,7 @@ export class AuthService {
 
                         this._userId = this._decodedToken._id;
                         localStorage.setItem('userId', this._userId);
+
 
                         this.authenticated(true);
                     }
@@ -99,6 +102,7 @@ export class AuthService {
         this._authenticated = is;
         this._authenticatedObserver.next(this._authenticated);
 
+        this.authenticatedSubject.next(this._authenticated);
     }
 
 
