@@ -56,7 +56,7 @@ export class CommentComponent {
 
             this._profileService.getUserForId(this.comment.author).subscribe( user => {
                 if (user !== null) {
-                    this.authorName = user.givenName;
+                    this.authorName = user.nickname;
                     this.authorAvatar = user.avatar;
                 }
             });

@@ -19,9 +19,9 @@ import {ProfileService} from "../../services/profile.service";
                     <a href="#/profile/{{userId._id}}">
                         <h5>{{givenName}} {{surname}}</h5>
                     </a>
-                    <div>
-                        <a (click)="removeFriend(userId._id)">Freundschaft beenden</a>
-                    </div>
+                    // <div>
+                    //     <a (click)="removeFriend(userId._id)">Freundschaft beenden</a>
+                    // </div>
                 </div>
             </div>
         </div>

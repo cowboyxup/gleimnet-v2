@@ -12,7 +12,7 @@ import {ProfileService} from "../../services/profile.service";
         <span class="chip">
             <a href="#/profile/{{userId._id}}">
                 <img src="{{avatar}}" alt="">
-                {{givenName}} {{surname}}
+                {{name}}
             </a>
         </span>
       
@@ -24,9 +24,8 @@ export class UserListItemComponent implements OnInit {
     @Input() userId: IdInterface;
 
     avatar: string;
-    givenName: string;
+    name: string;
     description: string;
-    surname: string;
 
     constructor(private _friendsService: FriendsService,
                 private _authService: AuthService,
@@ -38,9 +37,8 @@ export class UserListItemComponent implements OnInit {
 
             if (user !== null) {
                 this.avatar = user.avatar;
-                this.givenName = user.givenName;
+                this.name = user.nickname;
                 this.description = user.description;
-                this.surname = user.surname;
             }
         });
     }

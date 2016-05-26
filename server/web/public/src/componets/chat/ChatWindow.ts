@@ -65,7 +65,7 @@ export class ChatMessage implements OnInit {
         if ( this.message.author !== null ) {
             this._profileService.getUserForId(this.message.author).subscribe(user => {
                 if ( user !== null ) {
-                    this.message.authorName = user.givenName;
+                    this.message.authorName = user.nickname;
                     this.message.authorAvatar = user.avatar;
                 }
             });
