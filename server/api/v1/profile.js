@@ -19,7 +19,7 @@ internals.applyRoutes = function (server, next) {
             },
             validate: {
                 query: {
-                    search: Joi.string().token().lowercase(),
+                    search: Joi.string().lowercase(),
                     fields: Joi.string(),
                     sort: Joi.string().default('_id'),
                     limit: Joi.number().default(40),
