@@ -29,6 +29,8 @@ import {MeetingsComponent} from "./componets/meetings.component";
 import {UnreadMessagesCount} from "./componets/chat/unreadMessagesCount";
 import {ChatService} from "./services/chat.service";
 import {ProfileService} from "./services/profile.service";
+import {FriendsService} from "./services/friends.service";
+import {IdInterface} from "./models";
 
 declare var System: any;
 
@@ -58,7 +60,9 @@ declare var System: any;
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <span *ngIf="unreadMessagesCount > 0" class="badge">{{unreadMessagesCount}}</span>
                 </a></li>
-                <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a [routerLink]="['/Friends']">
+                    Freunde <span *ngIf="unconfirmedFriendsCount > 0" class="badge">{{unconfirmedFriendsCount}} </span>
+                </a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
@@ -73,7 +77,9 @@ declare var System: any;
                 <li><a [routerLink]="['/Chat']" >
                     Nachrichten <span *ngIf="unreadMessagesCount > 0" class="badge">{{unreadMessagesCount}}</span>
                 </a></li>
-                <li><a [routerLink]="['/Friends']">Freunde</a></li>
+                <li><a [routerLink]="['/Friends']">
+                    Freunde <span *ngIf="unconfirmedFriendsCount > 0" class="badge">{{unconfirmedFriendsCount}} </span>
+                </a></li>
                 <li><a *ngIf="!authenticated" (click)="goToLogin()"   href="#">Login</a></li>
                 <li><a *ngIf="authenticated"  (click)="doLogout()"    href="#">Logout</a></li>
             </ul>
@@ -126,8 +132,11 @@ export class App {
     private sub: any = null;
 
     private unreadMessagesCount = 0;
+    private unconfirmedFriendsCount = 0;
+
     private isStartet = false;
     private intervalConversationsReload;
+    private intervalFrieendReload;
 
     private profilLableText = "Profil";
     private avatar;
@@ -136,7 +145,8 @@ export class App {
     constructor(private _router: Router,
                 private _authService: AuthService,
                 private _chatService: ChatService,
-                private _profileService: ProfileService) {
+                private _profileService: ProfileService,
+                private _friendsService: FriendsService) {
     }
 
     ngOnInit(): void {
@@ -154,11 +164,21 @@ export class App {
                         let lentgh = updatedThreads.length;
                     });
 
+                    this._friendsService.unconfirmedFriends.subscribe((users: Array<IdInterface>) => {
+                        this.unconfirmedFriendsCount = users.length;
+                        console.log("unconfirmedFriends : " + this.unconfirmedFriendsCount);
+
+                    });
+
                     if (!this.isStartet) {
                         this.isStartet = true;
+
                         this.intervalConversationsReload = setInterval(() => this._chatService.loadConversations(), 2000);
+                        this.intervalFrieendReload = setInterval(() => this._friendsService.loadUnconfirmedFriends(), 20000);
                     }
+
                     this._chatService.loadConversations();
+                    this._friendsService.loadUnconfirmedFriends();
 
                     this._profileService.getUserForId(this._authService.getUserId()).subscribe( user => {
                         this.profilLableText = user.nickname;

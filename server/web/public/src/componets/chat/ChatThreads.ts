@@ -68,12 +68,11 @@ class ChatThread implements OnInit {
                     this.thread &&
                     (currentThread._id === this.thread._id);
 
+
+
             });
 
-        // this._chatService.currentThreadSubject.subscribe(
-        //     (thread: Thread) => {
-        //         this.unread = true;
-        //     });
+
 
     }
 
@@ -99,7 +98,7 @@ class ChatThread implements OnInit {
             <div class=" scroll">
             
                 <ul class="collection">
-                    <chat-thread *ngFor="#thread of threads" [thread]="thread"> 
+                    <chat-thread *ngFor="#thread of threads" [thread]="thread" [ngClass]="{unread: thread.unread}"> 
                         
                     </chat-thread>
                 </ul>
