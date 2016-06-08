@@ -92,8 +92,8 @@ export class AuthService {
         localStorage.removeItem('userId');
         localStorage.removeItem('id_token');
 
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
+        // localStorage.removeItem('username');
+        // localStorage.removeItem('password');
 
         this.authenticated(false);
     }

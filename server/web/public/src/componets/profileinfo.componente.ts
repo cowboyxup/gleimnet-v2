@@ -35,7 +35,7 @@ import {AuthService} from "../services/auth.service";
             </div>
             <div *ngIf="editMode" class="card-content">
                 <h4>Exposé 
-                    <a (click)="cancel()"><i class="material-icons">delete</i></a>                
+                    <a (click)="cancel()"><i class="material-icons" style="margin-right: 20px;" >delete</i></a>
                     <a (click)="saveEdits()"><i class="material-icons">check</i></a>
                 </h4>
                 
