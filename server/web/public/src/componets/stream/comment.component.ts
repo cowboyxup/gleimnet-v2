@@ -58,6 +58,7 @@ export class CommentComponent {
                 if (user !== null) {
                     this.authorName = user.nickname;
                     this.authorAvatar = user.avatar;
+                    this.author = user._id;
                 }
             });
         }

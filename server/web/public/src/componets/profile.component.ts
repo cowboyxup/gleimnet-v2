@@ -52,11 +52,11 @@ import {ProfileInfoComponent} from  "./profileinfo.componente";
 
             
             <button *ngIf="!isMe" data-target="modal1" class="btn modal-trigger"
-                onclick="$('#modal1').openModal();" >Nachricht senden</button>
+                onclick="$('#modal1').openModal();" >Nachricht schreiben</button>
             
             <div id="modal1" class="modal">
                 <div class="modal-content">
-                    <h4>Nachricht an {{user.givenName}}</h4>
+                    <h4>Nachricht an {{user.nickname}}</h4>
                     <div class="input-field col s12">
                         <textarea #newMessage id="textarea1" class="materialize-textarea"></textarea>
                         <label for="textarea1">Nachricht</label>
@@ -178,7 +178,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this._profileService.getUserForId(this.userId)
             .subscribe( user => {
                 if (user != null) {
-                    this.init(user);
+                    this.initTimeLine(user);
                     this.friends = user.friends;
 
                     let indexOfMe = indexOfId(this.friends, this._authService.getUserId());
@@ -218,7 +218,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
             .subscribe( user => {
                 if (user != null) {
 
-                    this.init(user);
+                    console.log("subscribe" + Date.now());
+
                     this.friends = user.friends;
 
                     let indexOfMe = indexOfId(this.friends, this._authService.getUserId());
@@ -233,15 +234,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
             });
     }
 
-    init( user: User ) {
+    initTimeLine( user: User ) {
+
         this.user = user;
 
         console.log("forceGetUserForId: " + this.user.birthdate );
 
         console.log("timeline: " + this.user.timeline);
+
         this._timelineService.setTimeLineID(this.user.timeline);
-        this.loadTimeline();
-        this.interval = setInterval(() => this.loadTimeline(), 5000);
+
+         this.loadTimeline();
+        this.interval = setInterval(() => this.loadTimeline(), 10000);
     }
 
     ngOnDestroy() {
@@ -249,6 +253,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     loadTimeline() {
+
         if (this._authService.isAuthenticated()) {
             this._timelineService.load();
         }

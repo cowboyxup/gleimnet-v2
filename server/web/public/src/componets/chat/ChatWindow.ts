@@ -103,15 +103,18 @@ export class ChatMessage implements OnInit {
                         <hr> 
                         
                         <div class="input-field col s10">
-                            <input type="text" 
-                                (keydown.enter)="onEnter($event)"
-                                [(ngModel)]="draftMessage" />
-                             <label for="password">Verfasse eine Nachricht</label>
+                            <input #newMessage type="text" 
+                                (keyup.enter)="sendMessage(newMessage.value); newMessage.value=''"
+                                type="text" class="mdl-textfield__input"
+                            >
+                            <label for="password">Verfasse eine Nachricht</label>
                         </div>
                    
                         <span class="input-group-btn col s1">
                             <button class="waves-effect waves-light btn"
-                                (click)="onEnter($event)"><i class="material-icons">send</i></button>
+                                (click)="sendMessage(newMessage.value); newMessage.value=''">
+                                <i class="material-icons">send</i>
+                            </button>
                         </span>
                     </div>
                 </div>
@@ -146,13 +149,18 @@ export class ChatWindow implements OnInit {
         this.scrollToBottom();
     }
 
-    onEnter(event: any): void {
-        this.sendMessage();
-        event.preventDefault();
-    }
+    // onEnter(event: any): void {
+    //     this.sendMessage();
+    //     event.preventDefault();
+    // }
 
-    sendMessage(): void {
-        this._chatService.sendNewMessage(this.draftMessage, this.currentThread._id);
+    // sendMessage(): void {
+    //     this._chatService.sendNewMessage(this.draftMessage, this.currentThread._id);
+    //     this.draftMessage = "";
+    // }
+
+    sendMessage(draftMessage:string): void {
+        this._chatService.sendNewMessage(draftMessage, this.currentThread._id);
         this.draftMessage = "";
     }
 

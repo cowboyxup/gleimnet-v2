@@ -45,16 +45,16 @@ import {FriendRequestListItemComponent} from "./friendRequestListItem.component"
                             <hr>
                         </div>
                         
-                        <!--<div *ngIf="sendFriendsRequests">-->
-                            <!--<h4>Ihre Freundschaftsanfragen:</h4>-->
-                            <!---->
-                            <!--<div *ngFor="#userId of sendFriendsRequests" class="row">-->
-                                <!--<friendRequestListItem [userId]="userId"> </friendRequestListItem>    -->
-                            <!--</div>-->
-                            <!---->
-                           <!---->
-                            <!--<hr>-->
-                        <!--</div>-->
+                        <div *ngIf="sendFriendsRequests">
+                            <h4>Ihre Freundschaftsanfragen:</h4>
+                            
+                            <div *ngFor="#userId of sendFriendsRequests" class="row">
+                                <friendRequestListItem [userId]="userId"> </friendRequestListItem>    
+                            </div>
+                            
+                           
+                            <hr>
+                        </div>
                         
                      
                         

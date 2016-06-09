@@ -17,9 +17,12 @@ export class FriendsService {
 
     constructor(private _http: AuthHttp) {}
 
+    lastSearch:string = "";
 
     findNewFriend(name: string) {
         if (name !== "" || name !== " ") {
+
+            this.lastSearch = name;
             this._http.get(this.baseUrl + "/profile" + "?search=" + name, {headers: headers()})
                 .map((res: Response) => res.json())
                 .subscribe(
@@ -28,6 +31,10 @@ export class FriendsService {
                         this.searchedFriends.next(res.data);
                     });
         }
+    }
+
+    redoSearch(){
+        this.findNewFriend(this.lastSearch);
     }
 
     loadUnconfirmedFriends() {

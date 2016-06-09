@@ -40,7 +40,7 @@ import {AuthService} from "../services/auth.service";
                 </h4>
                 
                 <h5>Geburtsdatum:</h5>
-                <input [(ngModel)]="birthdate" type="date" max="1859-12-31" min="1650-01-02">
+                <input [(ngModel)]="birthdate" type="date" max="1859-12-31" min="1698-01-01">
                 
                 <h5>Beschreibung:</h5>
                 

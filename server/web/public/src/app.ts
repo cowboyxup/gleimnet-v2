@@ -173,7 +173,7 @@ export class App {
                     if (!this.isStartet) {
                         this.isStartet = true;
 
-                        this.intervalConversationsReload = setInterval(() => this._chatService.loadConversations(), 2000);
+                        this.intervalConversationsReload = setInterval(() => this._chatService.loadConversations(), 10000);
                         this.intervalFrieendReload = setInterval(() => this._friendsService.loadUnconfirmedFriends(), 20000);
                     }
 

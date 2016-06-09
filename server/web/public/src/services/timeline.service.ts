@@ -27,7 +27,7 @@ export class TimelineService {
     }
 
     load() {
-        if (this.timelineId != null) {
+        if ( this.timelineId != null ) {
             return this._authHttp.get(this._baseUrl + this.timelineId, {headers: headers()})
                 .map((res: Response) => {
                     return res.json();
@@ -122,37 +122,40 @@ export class TimelineService {
 
     private setPosts(posts: Array<Post>) {
 
+
         posts.forEach(newPost => {
-            let index: number = indexOfId(this._posts, newPost._id);
+                let index: number = indexOfId(this._posts, newPost._id);
 
-            if (index === -1) {
-                this._posts.push(newPost);
-                this.postSubject.next(newPost);
+                if ( index === -1 ) {
+                    this._posts.push(newPost);
+                    this.postSubject.next(newPost);
 
-            } else {
-                var oldPost: Post = this._posts[index];
+                } else {
+                    var oldPost: Post = this._posts[index];
 
-                oldPost.likes = newPost.likes;
-                newPost.comments.forEach(comment => {
+                    oldPost.likes = newPost.likes;
+                    newPost.comments.forEach(comment => {
 
-                    if (comment !== null) {
-                        var commentIndex = -1;
-                        const length = oldPost.comments.length;
-                        for (let i = 0; i < length; i++) {
-                            if (oldPost.comments[i] !== null) {
-                                if (oldPost.comments[i]._id === comment._id) {
-                                    commentIndex = i;
+                        if ( comment !== null ) {
+                            var commentIndex = -1;
+                            const length = oldPost.comments.length;
+                            for ( let i = 0; i < length; i++ ) {
+                                if ( oldPost.comments[i] !== null ) {
+                                    if ( oldPost.comments[i]._id === comment._id ) {
+                                        commentIndex = i;
+                                    }
                                 }
                             }
-                        }
 
-                        if (commentIndex === -1) {
-                            oldPost.comments.push(comment);
+                            if ( commentIndex === -1 ) {
+                                oldPost.comments.push(comment);
+                            }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+
+
     }
 }
 
